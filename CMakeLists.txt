@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(template)
+project(arterra)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -10,4 +10,5 @@ if (${TEST_ENABLE})
     add_subdirectory(test)
 endif()
 
-add_subdirectory(template)
+add_subdirectory(ext)
+add_subdirectory(arterra)

@@ -1,0 +1,9 @@
+[submodule "ext/glfw"]
+	path = ext/glfw
+	url = git@github.com:glfw/glfw.git
+[submodule "ext/glad"]
+	path = ext/glad
+	url = git@github.com:Dav1dde/glad.git
+[submodule "ext/glm"]
+	path = ext/glm
+	url = git@github.com:g-truc/glm.git
