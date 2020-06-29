@@ -18,7 +18,7 @@ public:
 	Logger();
 
 	// Singleton getter
-	Logger& Get();
+	static Logger& Get();
 
 	// Log function
 	void Log(const char* message, Severity severity);
