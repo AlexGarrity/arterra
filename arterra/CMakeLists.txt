@@ -1,11 +1,27 @@
 
+# Require OpenGL, invoking `FindOpenGL.cmake`.  Exit if not found
+find_package(OpenGL REQUIRED)
+
+# Finds all files in `src` ending with `.cpp` and puts them into a variable called `SOURCES`
 FILE(GLOB_RECURSE SOURCES src/*.cpp)
 
+# Creates an executable out of all of the `SOURCES`
 add_executable(arterra ${SOURCES})
 
+# Specifies include directories to compile using
 target_include_directories(arterra PRIVATE include)
-target_link_libraries(arterra gl3w glfw glm)
 
+# Adds `OPENGL_INCLUDE_DIRS` variable created by `FindOpenGL.cmake` to executable
+target_include_directories(arterra PRIVATE ${OPENGL_INCLUDE_DIRS})
+
+# Link OpenGL to executable using `OPENGL_LIBRARIES` variable created by `FindOpenGL.cmake`
+target_link_libraries(arterra ${OPENGL_LIBRARIES})
+
+# Link other libraries to executable
+target_link_libraries(arterra glad glfw glm)
+
+# Export compile commands (for clangd)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# Install target does something
 install(TARGETS arterra)
