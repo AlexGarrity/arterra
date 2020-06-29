@@ -5,6 +5,7 @@
 namespace arterra {
 
 class Logger {
+public:
 	// Severity levels as an enum classes
 	// (Enum classes are scoped-ish)
 	enum class Severity { Info,
@@ -13,7 +14,6 @@ class Logger {
 		Error,
 		Fatal };
 
-public:
 	// Ctor
 	Logger();
 
