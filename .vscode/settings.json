@@ -70,6 +70,10 @@
         "random": "cpp",
         "string_view": "cpp",
         "fstream": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "map": "cpp",
+        "set": "cpp",
+        "unordered_set": "cpp",
+        "xtree": "cpp"
     }
 }
