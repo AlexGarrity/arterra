@@ -3,7 +3,7 @@
 find_package(OpenGL REQUIRED)
 
 # Finds all files in `src` ending with `.cpp` and puts them into a variable called `SOURCES`
-FILE(GLOB_RECURSE SOURCES src/*.cpp)
+FILE(GLOB_RECURSE SOURCES src/**.cpp)
 
 # Creates an executable out of all of the `SOURCES`
 add_executable(arterra ${SOURCES})
