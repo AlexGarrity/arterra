@@ -56,7 +56,6 @@ int main()
 		}
 	}
 
-	// Hello there
-	std::cout << "Hello world" << std::endl;
+	// Exit successfully
 	return 0;
 }
