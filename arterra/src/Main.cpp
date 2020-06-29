@@ -4,11 +4,13 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
-#include "Window.hpp"
+#include "renderer/Window.hpp"
+
+using namespace arterra;
 
 int main()
 {   
-	arterra::Window window {1280, 720, "Arterra"};
+	Window window {1280, 720, "Arterra"};
 	window.SetVsync(true);
 	window.SetClearColour(0.0f, 1.0f, 1.0f, 1.0f);
 	
@@ -28,11 +30,13 @@ int main()
 		// Check for events and swap buffers
 		window.Update();
 
+		Time::CalculateDeltaTime();
+		Logger::Get().Log(std::to_string(Time::GetDeltaTime()).data(), Logger::Severity::Debug);
+
 		if (window.IsKeyPressed(GLFW_KEY_ESCAPE)) {
 			window.SetShouldClose(true);
 		}
 	}
-
 
 	// Exit successfully
 	return 0;

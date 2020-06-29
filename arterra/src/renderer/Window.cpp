@@ -18,14 +18,14 @@ namespace arterra {
 	    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
         // Create a unique ptr to the window
-        _window = std::make_unique<GLFWwindow>(glfwCreateWindow(width, height, title.data(), nullptr, nullptr));
+        _window.swap(std::unique_ptr<GLFWwindow, GLFWwindowDeleter> (glfwCreateWindow(width, height, title.data(), nullptr, nullptr)));
 
         // Make this window the active GL context
         glfwMakeContextCurrent(_window.get());
     }
 
     Window::~Window() {
-        glfwDestroyWindow(_window.get());
+        _window.reset();
         glfwTerminate();
     }
 
@@ -56,6 +56,7 @@ namespace arterra {
         SetClearColour(fRed, fGreen, fBlue, fAlpha);
     }
 
+
     // Clear the window
     inline void Window::Clear() {
         glClear(GL_COLOR_BUFFER_BIT);
@@ -72,6 +73,7 @@ namespace arterra {
         _shouldClose = shouldClose;
         glfwSetWindowShouldClose(_window.get(), shouldClose);
     }
+
 
     void Window::Update() {
         PollEvents();

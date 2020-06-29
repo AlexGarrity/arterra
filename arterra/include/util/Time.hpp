@@ -8,8 +8,8 @@ namespace arterra {
 			// Calculate time delta
 			static void CalculateDeltaTime();
 			
-			// Inline const getters
-			inline float GetDeltaTime() const { return _deltaTime; }
+			// Inline getters
+			static inline float GetDeltaTime() { return _deltaTime; }
 			
 		private:
 			static float _deltaTime;

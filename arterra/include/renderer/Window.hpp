@@ -5,6 +5,12 @@
 
 namespace arterra {
 
+    struct GLFWwindowDeleter {
+        void operator()(GLFWwindow *window) {
+            glfwDestroyWindow(window);
+        }
+    };
+
     class Window {
         public:
             // ctor
@@ -42,7 +48,7 @@ namespace arterra {
         private:
             // Unique ptr to window
             // Automatically deleted when the class is destroyed.  Can only be one instance.
-            std::unique_ptr<GLFWwindow> _window;
+            std::unique_ptr<GLFWwindow, GLFWwindowDeleter> _window;
 
             // Cache width, height, and title
             uint32_t _width;
