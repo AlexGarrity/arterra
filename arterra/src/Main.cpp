@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
-#include "renderer/Window.hpp"
+#include "window/Window.hpp"
 
 using namespace arterra;
 
