@@ -24,6 +24,8 @@ namespace arterra {
             void Clear();
             // Turn vsync on / off
             void SetVsync(bool vsync);
+            // Set the window to close
+            void SetShouldClose(bool shouldClose);
             // Helper for updating
             void Update();
 
@@ -32,6 +34,10 @@ namespace arterra {
             inline uint32_t GetHeight() const { return _height; }
             inline bool IsVsyncEnabled() const { return _vsyncEnabled; }
             inline std::string GetTitle() const { return _title; }
+
+            inline bool ShouldClose() const { return _shouldClose; }
+            inline bool IsKeyPressed(uint32_t glfwKeycode) const { return (glfwGetKey(_window.get(), glfwKeycode) == GLFW_PRESS); }
+            inline GLFWwindow *GetHandle() { return _window.get(); }
 
         private:
             // Unique ptr to window
@@ -43,6 +49,7 @@ namespace arterra {
             uint32_t _height;
             std::string _title;
             bool _vsyncEnabled;
+            bool _shouldClose;
     };
 
 }

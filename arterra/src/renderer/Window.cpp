@@ -68,6 +68,11 @@ namespace arterra {
         (vsync)? glfwSwapInterval(1) : glfwSwapInterval(0);
     }
 
+    inline void Window::SetShouldClose(bool shouldClose) {
+        _shouldClose = shouldClose;
+        glfwSetWindowShouldClose(_window.get(), shouldClose);
+    }
+
     void Window::Update() {
         PollEvents();
         SwapBuffers();
