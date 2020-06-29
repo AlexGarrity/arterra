@@ -4,10 +4,12 @@ namespace arterra {
 	
 	class Time {
 		
-		public:	
-			static float DeltaTime();
-			
+		public:
+			// Calculate time delta
 			static void CalculateDeltaTime();
+			
+			// Inline const getters
+			inline float GetDeltaTime() const { return _deltaTime; }
 			
 		private:
 			static float _deltaTime;
