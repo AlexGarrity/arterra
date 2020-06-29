@@ -18,7 +18,8 @@ namespace arterra {
 	    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
         // Create a unique ptr to the window
-        _window.swap(std::unique_ptr<GLFWwindow, GLFWwindowDeleter> (glfwCreateWindow(width, height, title.data(), nullptr, nullptr)));
+        auto x = std::unique_ptr<GLFWwindow, GLFWwindowDeleter> (glfwCreateWindow(width, height, title.data(), nullptr, nullptr));
+        _window.swap(x);
 
         SetShouldClose(false);
 
