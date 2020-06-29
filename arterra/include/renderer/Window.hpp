@@ -1,7 +1,7 @@
 #pragma once
 
 #include "PCH.hpp"
-#include <glfw/glfw3.h>
+#include <GLFW/glfw3.h>
 
 namespace arterra {
 
@@ -55,7 +55,7 @@ namespace arterra {
             uint32_t _height;
             std::string _title;
             bool _vsyncEnabled;
-            bool _shouldClose;
+            bool _shouldClose { false };
     };
 
 }

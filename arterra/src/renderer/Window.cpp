@@ -20,6 +20,8 @@ namespace arterra {
         // Create a unique ptr to the window
         _window.swap(std::unique_ptr<GLFWwindow, GLFWwindowDeleter> (glfwCreateWindow(width, height, title.data(), nullptr, nullptr)));
 
+        SetShouldClose(false);
+
         // Make this window the active GL context
         glfwMakeContextCurrent(_window.get());
     }
@@ -30,17 +32,17 @@ namespace arterra {
     }
 
     // Poll for events
-    inline void Window::PollEvents() {
+    void Window::PollEvents() {
         glfwPollEvents();
     }
 
     // Swap the current buffer
-    inline void Window::SwapBuffers() {
+    void Window::SwapBuffers() {
         glfwSwapBuffers(_window.get());
     }
 
     // Set colour to specified 0-1 floats
-    inline void Window::SetClearColour(float_t red, float_t green, float_t blue, float_t alpha) {
+    void Window::SetClearColour(float_t red, float_t green, float_t blue, float_t alpha) {
         glClearColor(red, green, blue, alpha);
     }
 
@@ -58,18 +60,18 @@ namespace arterra {
 
 
     // Clear the window
-    inline void Window::Clear() {
+    void Window::Clear() {
         glClear(GL_COLOR_BUFFER_BIT);
     }
 
     // Turn vsync on / off
-    inline void Window::SetVsync(bool vsync) {
+    void Window::SetVsync(bool vsync) {
         _vsyncEnabled = vsync;
         // Ternary - if vsync == true then set vsync on, otherwise off
         (vsync)? glfwSwapInterval(1) : glfwSwapInterval(0);
     }
 
-    inline void Window::SetShouldClose(bool shouldClose) {
+    void Window::SetShouldClose(bool shouldClose) {
         _shouldClose = shouldClose;
         glfwSetWindowShouldClose(_window.get(), shouldClose);
     }
