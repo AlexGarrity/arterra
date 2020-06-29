@@ -18,9 +18,5 @@ namespace arterra {
 		_previousTime = now;
 	}
 	
-	float Time::DeltaTime() {
-		return _deltaTime;
-	}
-	
 }
 
