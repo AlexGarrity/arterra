@@ -21,24 +21,25 @@ namespace arterra {
 		if (sLevel > _minSLevel) {
 			switch (severity) {
 			case Severity::Info:
-				std::cout << "<INFO> \"" << message << "\"\n";
+				std::cout << "<INFO> \"" << message << "\"";
 				break;
 			case Severity::Debug:
-				std::cout << "<DEBUG> \"" << message << "\"\n";
+				std::cout << "<DEBUG> \"" << message << "\"";
 				break;
 			case Severity::Warning:
-				std::cout << "<WARN> \"" << message << "\"\n";
+				std::cout << "<WARN> \"" << message << "\"";
 				break;
 			case Severity::Error:
-				std::cerr << "<ERROR> \"" << message << "\"\n";
+				std::cerr << "<ERROR> \"" << message << "\"";
 				break;
 			case Severity::Fatal:
-				std::cerr << "<FATAL> \"" << message << "\"\n";
+				std::cerr << "<FATAL> \"" << message << "\"";
 				// Exit the program - something wen't badly wrong
 				exit(-1);
 				break;
 			}
 		}
+		std::endl(std::cout);
 	}
 
 	inline void Logger::SetMinimumLogLevel(Logger::Severity severity)
