@@ -7,7 +7,7 @@ namespace arterra {
     }
 
     bool ShaderManager::LoadShader(std::string fragPath, std::string vertPath, std::string identifier) {
-        _shaders[identifier] = Shader();
+        _shaders[identifier] = ShaderProgram();
         bool result = _shaders[identifier].Create(vertPath, fragPath);
         char buffer[256];
         if (result) {

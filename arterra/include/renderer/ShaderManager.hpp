@@ -20,7 +20,7 @@ namespace arterra {
         private:
             void BindAttributes();
 
-            std::unordered_map<std::string, Shader> _shaders;
+            std::unordered_map<std::string, ShaderProgram> _shaders;
             GLuint _activeShader;
 
             GLuint _posAttrib;

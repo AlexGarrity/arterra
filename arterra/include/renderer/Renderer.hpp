@@ -8,17 +8,20 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "renderer/ShaderManager.hpp"
+#include "renderer/Camera.hpp"
 
 namespace arterra {
     class Renderer {
         public:
-            Renderer();
+            Renderer(Camera &camera);
 
             void GenerateVAO();
             void GenerateVBO();
             void GenerateEBO();
 
-            void DrawPoints(std::vector<GLfloat> points, std::vector<GLuint> elements);
+            void Update();
+
+            void DrawPoints(std::vector<GLfloat> &points, std::vector<GLuint> &elements);
             void DrawTestCube();
 
         private:
@@ -27,19 +30,19 @@ namespace arterra {
             GLuint _ebo;
 
             ShaderManager _shaderManager;
+            Camera *_camera;
+
+            GLint _viewProjectionUniform;
 
             std::vector<GLfloat> _vertices = {
-                // Front
-                -0.5f,  0.5f, 0.5, 1.0, 0.0, 0.0, // Top-left
-                0.5f,  0.5f, 0.5f, 0.0, 1.0, 0.0, // Top-right
-                0.5f, -0.5f, 0.5f, 0.0, 0.0, 1.0, // Bottom-right
-                -0.5f, -0.5f, 0.5f, 1.0, 1.0, 0.0, // Bottom-left
-
-                // Back
-                -0.5f,  0.5f, -0.5f, 0.5, 0.5, 0.0, // Top-left
-                0.5f,  0.5f, -0.5f, 0.0, 0.5, 0.5, // Top-right
-                0.5f, -0.5f, -0.5f, 0.0, 0.0, 0.0, // Bottom-right
-                -0.5f, -0.5f, -0.5f, 1.0, 1.0, 1.0  // Bottom-left
+                -0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f,	// Front Top Left		- Red	- 0
+                0.5f,  0.5f, 0.5f, 0.0f, 1.0f, 0.0f,	// Front Top Right		- Green	- 1
+                0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,	// Front Bottom Right		- Blue	- 2
+                -0.5f,-0.5f, 0.5f, 0.0f, 1.0f, 1.0f,	// Front Bottom Left		- Cyan	- 3
+                -0.5f, 0.5f,-0.5f, 1.0f, 0.0f, 1.0f,	// Back Top Left		- Pink	- 4
+                0.5f,  0.5f,-0.5f, 1.0f, 1.0f, 0.0f,	// Back Top Right		- Yellow- 5
+                0.5f, -0.5f,-0.5f, 0.1f, 0.1f, 0.1f,	// Back Bottom Right		- White - 6
+                -0.5f,-0.5f,-0.5f, 1.0f, 1.0f, 1.0f,	// Back Bottom Left		- Gray  - 7
             };
 
             std::vector<GLuint> _elements = {

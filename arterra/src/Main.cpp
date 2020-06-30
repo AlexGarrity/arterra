@@ -6,6 +6,7 @@
 
 #include "window/Window.hpp"
 #include "renderer/Renderer.hpp"
+#include "renderer/Camera.hpp"
 
 using namespace arterra;
 
@@ -16,12 +17,15 @@ int main(int argc, char **argv)
 	window.SetVsync(true);
 	window.SetClearColour(0.0f, 0.0f, 0.0f, 1.0f);
 
-	Renderer renderer;
+	Camera camera;
+	Renderer renderer {camera};
 	
 	// While window shouldn't close
 	while (!window.ShouldClose()) {
 		// Clear the window
 		window.Clear();
+		camera.Update(window);
+		renderer.Update();
 		renderer.DrawTestCube();
 		// Check for events and swap buffers
 		window.Update();

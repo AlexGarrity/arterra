@@ -2,7 +2,7 @@
 
 namespace arterra {
 
-    Renderer::Renderer() {
+    Renderer::Renderer(Camera &camera) : _camera{&camera} {
         // Load GL core using GLAD, if it fails then error and return
         if (!gladLoadGL()) {
             Logger::Get().Log("GLAD failed to initialise", Logger::Severity::Fatal);
@@ -17,6 +17,8 @@ namespace arterra {
 
         _shaderManager.LoadShader("res/shaders/basic.frag", "res/shaders/basic.vert", "basic");
         _shaderManager.UseShader("basic");
+
+        _viewProjectionUniform = glGetUniformLocation(_shaderManager.ActiveProgram(), "viewProjection");
 
         glEnable(GL_DEPTH_TEST);
     }
@@ -37,8 +39,11 @@ namespace arterra {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo);
     }
 
+    void Renderer::Update() {
+        glUniformMatrix4fv(_viewProjectionUniform, 1, GL_FALSE, glm::value_ptr(_camera->ViewProjectionUniform()));
+    }
 
-    void Renderer::DrawPoints(std::vector<GLfloat> points, std::vector<GLuint> elements) {
+    void Renderer::DrawPoints(std::vector<GLfloat> &points, std::vector<GLuint> &elements) {
         glBindBuffer(GL_ARRAY_BUFFER, _vbo);
         glBufferData(GL_ARRAY_BUFFER, points.size() * sizeof(GLfloat), points.data(), GL_STATIC_DRAW);
     
