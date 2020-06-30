@@ -6,11 +6,14 @@
 
 #include "window/Window.hpp"
 #include "window/Input.hpp"
+#include "renderer/Renderer.hpp"
+#include "renderer/Camera.hpp"
 
 using namespace arterra;
 
-int main()
+int main(int argc, char **argv)
 {   
+	Logger::Get().Log(argv[0], Logger::Severity::Debug);
 	Window window {1280, 720, "Arterra"};
 	window.SetVsync(true);
 	window.SetClearColour(0.0f, 1.0f, 1.0f, 1.0f);
@@ -26,16 +29,20 @@ int main()
 	// Give GLAD the GLFW extension loader function
 	gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
 
+	Camera camera;
+	Renderer renderer {camera};
+	
 	// While window shouldn't close
 	while (!window.ShouldClose()) {
 		// Clear the window
 		window.Clear();
+		camera.Update(window);
+		renderer.Update();
+		renderer.DrawTestCube();
 		// Check for events and swap buffers
 		window.Update();
 
 		Time::CalculateDeltaTime();
-		Logger::Get().Log(std::to_string(Time::GetDeltaTime()).data(), Logger::Severity::Debug);
-		
 		if (window.IsKeyPressed(GLFW_KEY_ESCAPE)) {
 			window.SetShouldClose(true);
 		}

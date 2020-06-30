@@ -29,6 +29,10 @@
 #include <random>
 // Fixed-width types
 #include <cstdint>
+// Filestystem
+#include <filesystem>
+// Iterators
+#include <iterator>
 
 // Lists
 #include <vector>
