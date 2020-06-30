@@ -9,20 +9,20 @@
 
 using namespace arterra;
 
-int main()
+int main(int argc, char **argv)
 {   
+	Logger::Get().Log(argv[0], Logger::Severity::Debug);
 	Window window {1280, 720, "Arterra"};
 	window.SetVsync(true);
 	window.SetClearColour(0.0f, 1.0f, 1.0f, 1.0f);
 
 	Renderer renderer;
-	renderer.Init();
 	
 	// While window shouldn't close
 	while (!window.ShouldClose()) {
 		// Clear the window
 		window.Clear();
-		renderer.Update();
+		renderer.DrawTestCube();
 		// Check for events and swap buffers
 		window.Update();
 
