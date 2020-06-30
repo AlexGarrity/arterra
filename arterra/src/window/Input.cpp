@@ -55,15 +55,15 @@ namespace arterra {
 	}
 	
 	void Input::PrintInformation() {
-		Logger::Get().Log("===================", Logger::Severity::Debug);
-		Logger::Get().Log(" KEY INPUTS STORED ", Logger::Severity::Debug);
+		Logger::Get().Log(Logger::Debug, "===================");
+		Logger::Get().Log(Logger::Debug, " KEY INPUTS STORED ");
 		
 		for (auto& i: _pressedKeys) {
 			std::cout << "Key: " << i.first << " n: " << i.second._name << " t: " << i.second._timeHeld
 			<< " a: " << i.second._active << std::endl;
 		}
 		
-		Logger::Get().Log("===================", Logger::Severity::Debug);
+		Logger::Get().Log(Logger::Debug, "===================");
 	}
 	
 }

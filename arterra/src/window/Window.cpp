@@ -9,7 +9,7 @@ namespace arterra {
         // Initialise GLFW
         if (!glfwInit()) {
             // If that fails, error and return
-            Logger::Get().Log("GLFW failed to initialise", Logger::Severity::Fatal);
+            Logger::Get().Log(Logger::Fatal, "GLFW failed to initialise");
         }
 
         // Sets GL Version to 4.0

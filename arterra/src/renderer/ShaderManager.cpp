@@ -15,13 +15,12 @@ namespace arterra {
         char buffer[256];
         // Check if it worked or not
         if (result) {
-            snprintf(buffer, 256, "Shader '%s' loaded successfully", identifier.c_str());
-            Logger::Get().Log(buffer, Logger::Severity::Debug);
+            Logger::Get().Log(Logger::Debug, "Shader [", identifier, "] loaded successfully");
             return true;
         }
         else {
             snprintf(buffer, 256, "Shader '%s' failed to load", identifier.c_str());
-            Logger::Get().Log(buffer, Logger::Severity::Warning);
+            Logger::Get().Log(Logger::Warning, "Shader [", identifier, "] failed to load");
             // It didn't work so don't save it
             _shaders.erase(identifier);
             return false;

@@ -5,7 +5,7 @@ namespace arterra {
     Renderer::Renderer(Camera &camera) : _camera{&camera} {
         // Load GL core using GLAD, if it fails then error and return
         if (!gladLoadGL()) {
-            Logger::Get().Log("GLAD failed to initialise", Logger::Severity::Fatal);
+            Logger::Get().Log(Logger::Fatal, "GLAD failed to initialise");
         }
 
         // Give GLAD the GLFW extension loader function

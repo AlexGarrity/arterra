@@ -13,7 +13,7 @@ using namespace arterra;
 
 int main(int argc, char **argv)
 {   
-	Logger::Get().Log(argv[0], Logger::Severity::Debug);
+	Logger::Get().Log(Logger::Debug, "Executable directory: '", argv[0], "'");
 	Window window {1280, 720, "Arterra"};
 	window.SetVsync(true);
 	window.SetClearColour(0.0f, 1.0f, 1.0f, 1.0f);

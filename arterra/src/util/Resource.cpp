@@ -3,7 +3,7 @@
 namespace arterra {
 	
 	Resource::Resource() {
-		Logger::Get().Log("Resource Manager Initialised", Logger::Severity::Debug);
+		Logger::Get().Log(Logger::Debug, "Resource Manager Initialised");
 	}
 	
 	Resource &Resource::Get() {
@@ -16,8 +16,7 @@ namespace arterra {
 	bool Resource::Load(std::string name) {
 		// Only load a specific resource once
 		if (_resources.find(name) != _resources.end()) {
-			std::string msg = "Resource: " + name + " is already loaded";
-			Logger::Get().Log(msg.data(), Logger::Severity::Error);
+			Logger::Get().Log(Logger::Error, "Resource '", name, "' is already loaded");
 			return false;
 		}
 		// Get the full path to the resource
@@ -31,8 +30,7 @@ namespace arterra {
 		}
 		catch(const std::exception& e)
 		{
-			std::string msg = "Could not load resource: " + name;
-			Logger::Get().Log(msg.data(), Logger::Severity::Error);
+			Logger::Get().Log(Logger::Error, "Could not load resource '", name, "'");
 			return false;
 		}
 		

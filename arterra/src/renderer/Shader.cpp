@@ -39,7 +39,7 @@ namespace arterra {
         auto relPath = std::filesystem::current_path() / path;
         // Check it exists
         if (!std::filesystem::exists(relPath)) {
-            Logger::Get().Log("Shader not found", Logger::Severity::Warning);
+            Logger::Get().Log(Logger::Warning, "Shader not found");
             return "";
         }
         // Read an entire file in two lines because why not
@@ -54,14 +54,13 @@ namespace arterra {
         glGetShaderiv(shader, GL_COMPILE_STATUS, &result);
         // Get the compile status
         glGetShaderInfoLog(shader, 512, nullptr, buffer);
-        Logger::Get().Log(buffer, Logger::Severity::Warning);
 
         if (result == GL_FALSE) {
-            Logger::Get().Log("Shader failed to compile", Logger::Severity::Warning);
+            Logger::Get().Log(Logger::Warning, "Shader failed to compile");
+            Logger::Get().Log(Logger::Warning, "Shader error log: ", buffer);
             return false;
         }
-        else
-            Logger::Get().Log("Shader compiled successfully", Logger::Severity::Debug);
+        Logger::Get().Log(Logger::Debug, "Shader compiled successfully");
         return true;
     }
 
