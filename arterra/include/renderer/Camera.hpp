@@ -17,7 +17,7 @@ namespace arterra {
             Camera() {
                 _projection = glm::perspective(glm::radians(45.0f), 16.f/9.f, 0.1f, 100.0f);
 
-                _position = glm::vec3(0.0f, 0.0f, 10.0f);
+                _position = glm::vec3(0.0f, 0.0f, 0.0f);
 
                 _forward = glm::vec3(0.0f, 0.0f, -1.0f);
                 _up = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -56,7 +56,7 @@ namespace arterra {
                 _view = glm::rotate(_view, glm::radians(_rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
                 _view = glm::rotate(_view, glm::radians(_rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
                 _view = glm::rotate(_view, glm::radians(_rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-                _viewProjection = _view * _projection;
+                _viewProjection = _projection * _view;
             }
 
 
