@@ -8,6 +8,7 @@
 #include <fstream>
 // String Streams
 #include <sstream>
+#include <filesystem>
 
 // Modern C++ Ptrs
 #include <memory>
@@ -39,6 +40,7 @@
 // Sets (lists w/o duplication)
 #include <set>
 #include <unordered_set>
+#include <iterator>
 
 
 #include "util/Logger.hpp"

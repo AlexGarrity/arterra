@@ -17,8 +17,17 @@ target_include_directories(arterra PRIVATE ${OPENGL_INCLUDE_DIRS})
 # Link OpenGL to executable using `OPENGL_LIBRARIES` variable created by `FindOpenGL.cmake`
 target_link_libraries(arterra ${OPENGL_LIBRARIES})
 
+
 # Link other libraries to executable
 target_link_libraries(arterra glad glfw glm)
+
+# Move the res directory next to the build
+if (${MSVC})
+    file(COPY res DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/Debug")
+    file(COPY res DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/Release")
+else()
+    file(COPY res DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+endif()
 
 # Export compile commands (for clangd)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
