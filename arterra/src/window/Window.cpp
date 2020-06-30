@@ -1,4 +1,5 @@
 #include "window/Window.hpp"
+#include "window/Input.hpp"
 
 namespace arterra {
 
@@ -80,6 +81,7 @@ namespace arterra {
 
     void Window::Update() {
         PollEvents();
+		Input::Update();
         SwapBuffers();
     }
 

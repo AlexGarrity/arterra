@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 
 #include "window/Window.hpp"
+#include "window/Input.hpp"
 
 using namespace arterra;
 
@@ -13,6 +14,8 @@ int main()
 	Window window {1280, 720, "Arterra"};
 	window.SetVsync(true);
 	window.SetClearColour(0.0f, 1.0f, 1.0f, 1.0f);
+	
+	glfwSetKeyCallback(window.GetHandle(), &Input::KeyCallback);
 	
 	// Load GL core using GLAD, if it fails then error and return
 	if (!gladLoadGL()) {
@@ -32,7 +35,7 @@ int main()
 
 		Time::CalculateDeltaTime();
 		Logger::Get().Log(std::to_string(Time::GetDeltaTime()).data(), Logger::Severity::Debug);
-
+		
 		if (window.IsKeyPressed(GLFW_KEY_ESCAPE)) {
 			window.SetShouldClose(true);
 		}
