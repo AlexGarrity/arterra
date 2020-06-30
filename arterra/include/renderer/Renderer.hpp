@@ -15,13 +15,19 @@ namespace arterra {
         public:
             Renderer(Camera &camera);
 
+            // Generate a new vertex array object
             void GenerateVAO();
+            // Generate a new vertex buffer object
             void GenerateVBO();
+            // Generate a new element buffer object
             void GenerateEBO();
 
+            // Update the renderer to account for input
             void Update();
 
+            // Draw point using elements
             void DrawPoints(std::vector<GLfloat> &points, std::vector<GLuint> &elements);
+            // Draw a rainbow cube
             void DrawTestCube();
 
         private:
@@ -34,6 +40,8 @@ namespace arterra {
 
             GLint _viewProjectionUniform;
 
+
+            // Test cube
             std::vector<GLfloat> _vertices = {
                 -0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f,	// Front Top Left		- Red	- 0
                 0.5f,  0.5f, 0.5f, 0.0f, 1.0f, 0.0f,	// Front Top Right		- Green	- 1

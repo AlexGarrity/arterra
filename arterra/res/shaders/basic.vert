@@ -8,5 +8,5 @@ uniform mat4 viewProjection;
 void main()
 {
     Color = color;
-    gl_Position = vec4(position, 1.0); //* viewProjection;
+    gl_Position = viewProjection * vec4(position, 1.0);
 }
