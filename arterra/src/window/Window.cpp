@@ -1,4 +1,4 @@
-#include "renderer/Window.hpp"
+#include "window/Window.hpp"
 
 namespace arterra {
 
@@ -62,7 +62,7 @@ namespace arterra {
 
     // Clear the window
     void Window::Clear() {
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
     // Turn vsync on / off
