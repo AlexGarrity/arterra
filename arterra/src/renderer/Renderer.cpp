@@ -15,15 +15,16 @@ namespace arterra {
         GenerateVBO();
         GenerateEBO();
 
-        _shader.Create("shaders/basic.vert", "shaders/basic.frag");
-        glUseProgram(_shader.GetProgram());
+        _shaderManager.LoadShader("res/shaders/basic.frag", "res/shaders/basic.vert", "basic");
+        _shaderManager.UseShader("basic");
 
-        GLuint posAttrib = glGetAttribLocation(_shader.GetProgram(), "position");
+        GLuint posAttrib = glGetAttribLocation(_shaderManager.ActiveProgram(), "position");
         glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), 0);
         glEnableVertexAttribArray(posAttrib);
 
         glEnable(GL_DEPTH_TEST);
     }
+
 
     void Renderer::GenerateVAO() {
         glGenVertexArrays(1, &_vao);

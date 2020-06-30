@@ -17,7 +17,7 @@ namespace arterra {
                 glDeleteProgram(_shaderProgram);
             }
 
-            void Create(std::string vertPath, std::string fragPath) {
+            bool Create(std::string vertPath, std::string fragPath) {
                 std::string vertSrc { ReadShaderFile(vertPath) };
                 std::string fragSrc { ReadShaderFile(fragPath) };
                 
@@ -28,14 +28,16 @@ namespace arterra {
                 shaderSrc = vertSrc.data();
                 glShaderSource(_vertShader, 1, &shaderSrc, nullptr);
                 glCompileShader(_vertShader);
-                CheckShaderCompilation(_vertShader);
+                if (!CheckShaderCompilation(_vertShader))
+                    return false;
 
                 Logger::Get().Log(fragPath.c_str(), Logger::Severity::Debug);
                 _fragShader = glCreateShader(GL_FRAGMENT_SHADER);
                 shaderSrc = fragSrc.data();
                 glShaderSource(_fragShader, 1, &shaderSrc, nullptr);
                 glCompileShader(_fragShader);
-                CheckShaderCompilation(_fragShader);
+                if (!CheckShaderCompilation(_fragShader))
+                    return false;
 
                 _shaderProgram = glCreateProgram();
                 glAttachShader(_shaderProgram, _vertShader);
@@ -44,6 +46,7 @@ namespace arterra {
 
                 glDeleteShader(_vertShader);
                 glDeleteShader(_fragShader);
+                return true;
             }
 
 
@@ -62,7 +65,7 @@ namespace arterra {
                 return {std::istreambuf_iterator<char>(reader), {}};
             }
 
-            static void CheckShaderCompilation(GLuint shader) {
+            static bool CheckShaderCompilation(GLuint shader) {
                 GLint result;
                 glGetShaderiv(shader, GL_COMPILE_STATUS, &result);
                 if (result == GL_FALSE) {
@@ -70,10 +73,11 @@ namespace arterra {
                     glGetShaderInfoLog(shader, 512, nullptr, buffer);
                     Logger::Get().Log("Shader failed to compile", Logger::Severity::Warning);
                     Logger::Get().Log(buffer, Logger::Severity::Warning);
+                    return false;
                 }
                 else
                     Logger::Get().Log("Shader compiled successfully", Logger::Severity::Debug);
-                
+                return true;
             }
 
             GLuint _vertShader;

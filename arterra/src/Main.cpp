@@ -14,7 +14,7 @@ int main(int argc, char **argv)
 	Logger::Get().Log(argv[0], Logger::Severity::Debug);
 	Window window {1280, 720, "Arterra"};
 	window.SetVsync(true);
-	window.SetClearColour(0.0f, 1.0f, 1.0f, 1.0f);
+	window.SetClearColour(0.0f, 0.0f, 0.0f, 1.0f);
 
 	Renderer renderer;
 	
@@ -25,8 +25,6 @@ int main(int argc, char **argv)
 		renderer.DrawTestCube();
 		// Check for events and swap buffers
 		window.Update();
-
-		
 
 		Time::CalculateDeltaTime();
 		if (window.IsKeyPressed(GLFW_KEY_ESCAPE)) {

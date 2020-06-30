@@ -7,7 +7,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "renderer/Shader.hpp"
+#include "renderer/ShaderManager.hpp"
 
 namespace arterra {
     class Renderer {
@@ -26,9 +26,10 @@ namespace arterra {
             GLuint _vao;
             GLuint _ebo;
 
+            ShaderManager _shaderManager;
             Shader _shader;
 
-            std::vector<float> _vertices = {
+            std::vector<GLfloat> _vertices = {
                 // Front
                 -0.5f,  0.5f, 0.5, 1.0, 0.0, 0.0, // Top-left
                 0.5f,  0.5f, 0.5f, 0.0, 1.0, 0.0, // Top-right
