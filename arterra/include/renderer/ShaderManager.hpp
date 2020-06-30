@@ -18,8 +18,13 @@ namespace arterra {
 
 
         private:
+            void BindAttributes();
+
             std::unordered_map<std::string, Shader> _shaders;
             GLuint _activeShader;
+
+            GLuint _posAttrib;
+            GLuint _colAttrib;
 
     };
 

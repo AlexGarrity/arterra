@@ -27,7 +27,6 @@ namespace arterra {
             GLuint _ebo;
 
             ShaderManager _shaderManager;
-            Shader _shader;
 
             std::vector<GLfloat> _vertices = {
                 // Front

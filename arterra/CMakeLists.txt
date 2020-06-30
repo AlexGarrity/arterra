@@ -23,11 +23,8 @@ target_link_libraries(arterra glad glfw glm)
 
 # Move the res directory next to the build
 if (${MSVC})
-    if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-        file(COPY res DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/Debug")
-    else()
+    file(COPY res DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/Debug")
     file(COPY res DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/Release")
-    endif()
 else()
     file(COPY res DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 endif()

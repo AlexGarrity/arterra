@@ -40,6 +40,7 @@ namespace arterra {
         auto id = GetShader(identifier);
         _activeShader = id;
         glUseProgram(id);
+        BindAttributes();
         return true;
     }
 
@@ -50,6 +51,16 @@ namespace arterra {
             return 0;
         }
         return i->second.GetProgram();
+    }
+
+    void ShaderManager::BindAttributes() {
+        GLuint posAttrib = glGetAttribLocation(ActiveProgram(), "position");
+        glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), 0);
+        glEnableVertexAttribArray(posAttrib);
+
+        GLuint colAttrib = glGetAttribLocation(ActiveProgram(), "color");
+        glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+        glEnableVertexAttribArray(colAttrib);
     }
 
 }

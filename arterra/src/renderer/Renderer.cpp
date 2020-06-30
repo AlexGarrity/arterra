@@ -18,10 +18,6 @@ namespace arterra {
         _shaderManager.LoadShader("res/shaders/basic.frag", "res/shaders/basic.vert", "basic");
         _shaderManager.UseShader("basic");
 
-        GLuint posAttrib = glGetAttribLocation(_shaderManager.ActiveProgram(), "position");
-        glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), 0);
-        glEnableVertexAttribArray(posAttrib);
-
         glEnable(GL_DEPTH_TEST);
     }
 
@@ -49,7 +45,7 @@ namespace arterra {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, elements.size() * sizeof(GLuint), elements.data(), GL_STATIC_DRAW);
 
-        glDrawElements(GL_TRIANGLES, elements.size(), GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(elements.size()), GL_UNSIGNED_INT, 0);
     }
 
     void Renderer::DrawTestCube() {
