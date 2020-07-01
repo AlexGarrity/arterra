@@ -8,5 +8,5 @@ uniform vec4 fragmentColour;
 
 void main()
 {
-    outColour = texture(fragmentTexture, fragmentTextureCoords) * fragmentColour;
+    outColour = texture(fragmentTexture, fragmentTextureCoords);
 }
