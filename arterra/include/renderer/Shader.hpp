@@ -24,9 +24,12 @@ namespace arterra {
                 // Get a handle to the resource
                 auto dataHandle = Resource::Get().Get(path);
                 // Get the data from the resource
-                auto src = dataHandle._resource->_data.data();
+                auto src = std::string(
+                    dataHandle._resource->_data.begin(),
+                    dataHandle._resource->_data.end()
+                );
                 // Convert uint8_t* to char*
-                auto cSrc = reinterpret_cast<const char*>(src);
+                auto cSrc = src.c_str();
 
                 switch (shaderType) {
                     case ShaderType::Fragment:

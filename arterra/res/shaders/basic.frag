@@ -1,4 +1,4 @@
-#version 150 core
+#version 400 core
 out vec4 outColor;
 in vec3 Color;
 void main()
