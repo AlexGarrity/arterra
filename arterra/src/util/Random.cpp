@@ -25,7 +25,7 @@ namespace arterra {
 	long Random::Generate()
 	{
 		// Just run the generator.
-		return _engine();
+		return static_cast<long>(_engine());
 	}
 
 }
