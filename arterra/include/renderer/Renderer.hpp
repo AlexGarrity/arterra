@@ -2,6 +2,7 @@
 #include "PCH.hpp"
 
 #include <glad/glad.h>
+
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -9,6 +10,7 @@
 
 #include "renderer/ShaderManager.hpp"
 #include "renderer/Camera.hpp"
+#include "renderer/Texture.hpp"
 
 namespace arterra {
     class Renderer {
@@ -37,20 +39,21 @@ namespace arterra {
 
             ShaderManager _shaderManager;
             Camera *_camera;
+            TextureHandle _stoneTexture;
 
             GLint _viewProjectionUniform;
 
 
             // Test cube
             std::vector<GLfloat> _vertices = {
-                -0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f,	// Front Top Left		- Red	- 0
-                0.5f,  0.5f, 0.5f, 0.0f, 1.0f, 0.0f,	// Front Top Right		- Green	- 1
-                0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,	// Front Bottom Right		- Blue	- 2
-                -0.5f,-0.5f, 0.5f, 0.0f, 1.0f, 1.0f,	// Front Bottom Left		- Cyan	- 3
-                -0.5f, 0.5f,-0.5f, 1.0f, 0.0f, 1.0f,	// Back Top Left		- Pink	- 4
-                0.5f,  0.5f,-0.5f, 1.0f, 1.0f, 0.0f,	// Back Top Right		- Yellow- 5
-                0.5f, -0.5f,-0.5f, 0.1f, 0.1f, 0.1f,	// Back Bottom Right		- White - 6
-                -0.5f,-0.5f,-0.5f, 1.0f, 1.0f, 1.0f,	// Back Bottom Left		- Gray  - 7
+                -0.5f, 0.5f, 0.5f, 0.0f, 0.0f,	// Front Top Left
+                0.5f,  0.5f, 0.5f, 1.0f, 0.0f,	// Front Top Right
+                0.5f, -0.5f, 0.5f, 1.0f, 1.0f,  // Front Bottom Right
+                -0.5f,-0.5f, 0.5f, 0.0f, 1.0f,	// Front Bottom Left
+                -0.5f, 0.5f,-0.5f, 1.0f, 1.0f,	// Back Top Left
+                0.5f,  0.5f,-0.5f, 0.0f, 1.0f,	// Back Top Right
+                0.5f, -0.5f,-0.5f, 0.0f, 0.0f,	// Back Bottom Right
+                -0.5f,-0.5f,-0.5f, 1.0f, 0.0f	// Back Bottom Left
             };
 
             std::vector<GLuint> _elements = {

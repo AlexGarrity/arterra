@@ -35,3 +35,13 @@ add_subdirectory(glfw)
 
 ### GLM (No settings)
 add_subdirectory(glm)
+
+### stb_image
+project (stb_image C)
+add_library(stb_image INTERFACE)
+target_include_directories(
+  stb_image
+  INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/stb>
+            $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+
+install(TARGETS stb_image)

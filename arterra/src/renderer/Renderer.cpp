@@ -20,6 +20,8 @@ namespace arterra {
         _shaderManager.LoadShader("shaders/basic.frag", "shaders/basic.vert", "basic");
         _shaderManager.UseShader("basic");
 
+        _stoneTexture.Load("textures/stone.png");
+
         // Enable depth testing
         glEnable(GL_DEPTH_TEST);
     }
@@ -46,9 +48,12 @@ namespace arterra {
     void Renderer::Update() {
         // Set the camera view projection so the world renders in perspective
         _shaderManager.ActiveProgram().SetUniform("viewProjection", _camera->ViewProjection());
+        _shaderManager.ActiveProgram().SetUniform("fragmentColour", {1.0f});
     }
 
     void Renderer::DrawPoints(std::vector<GLfloat> &points, std::vector<GLuint> &elements) {
+        glBindTexture(GL_TEXTURE_2D, _stoneTexture.Handle());
+
         // Bind the vertex buffer so we can buffer data to it
         glBindBuffer(GL_ARRAY_BUFFER, _vbo);
         // Buffer the element data
