@@ -18,11 +18,11 @@ namespace arterra {
 
             Shader(ShaderType shaderType, std::string path) : _shaderType {shaderType} {
                 // Load the shader resource
-                auto loadResult = Resource::Get().Load(path);
+                auto loadResult = ResourceManager::Get().Load(path);
                 if (!loadResult) return;
 
                 // Get a handle to the resource
-                auto dataHandle = Resource::Get().Get(path);
+                auto dataHandle = ResourceManager::Get().GetHandle(path);
                 // Get the data from the resource
                 auto src = std::string(
                     dataHandle._resource->_data.begin(),

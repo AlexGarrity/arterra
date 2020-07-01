@@ -2,17 +2,17 @@
 
 namespace arterra {
 
-	Resource::Resource() { Logger::Get().Log(Logger::Debug, "Resource Manager Initialised"); }
+	ResourceManager::ResourceManager() { Logger::Get().Log(Logger::Debug, "Resource Manager Initialised"); }
 
-	Resource& Resource::Get()
+	ResourceManager& ResourceManager::Get()
 	{
 		// Create a local static resource.
-		static Resource resource;
+		static ResourceManager resource;
 		// Return the resource as a reference (can't be null).
 		return resource;
 	}
 
-	bool Resource::Load(std::string name)
+	bool ResourceManager::Load(std::string name)
 	{
 		// Only load a specific resource once into memory.
 		if (_resources.find(name) != _resources.end()) {
@@ -49,7 +49,7 @@ namespace arterra {
 		data.insert(data.begin(), std::istream_iterator<char>(file), std::istream_iterator<char>());
 
 		// Create new resource data and add it to the list.
-		_resources[name] = ResourceData { data };
+		_resources[name] = Data { data };
 		_memoryUsage += _resources[name]._data.size();
 
 		Logger::Get().Log(
@@ -58,14 +58,14 @@ namespace arterra {
 		return true;
 	}
 
-	void Resource::Unload()
+	void ResourceManager::Unload()
 	{
 		// No resources to check, to return early.
 		if (_resources.empty())
 			return;
 
 		Logger::Get().Log(Logger::Debug, "Running automatic resource unloading");
-		std::vector<std::unordered_map<std::string, ResourceData>::iterator> unloadObjects;
+		std::vector<std::unordered_map<std::string, Data>::iterator> unloadObjects;
 		// Iterate all currently loaded resources.
 		for (auto i = _resources.begin(); i != _resources.end(); i++) {
 			// Check that it's not in use before unloading it.
@@ -93,7 +93,7 @@ namespace arterra {
 			Logger::Debug, "Freed ", memory - _memoryUsage, " Bytes (", memory, "B => ", _memoryUsage, "B)");
 	}
 
-	ResourceHandle Resource::Get(std::string name)
+	ResourceManager::Handle ResourceManager::GetHandle(std::string name)
 	{
 		// Check that the resource exists.
 		auto resource = _resources.find(name);

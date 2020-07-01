@@ -4,65 +4,65 @@
 
 namespace arterra {
 
-	struct ResourceData : public DataObject {
+	class ResourceManager {
 
-		// Resource properties.
-		uint32_t handleCount = 0;
-		std::vector<uint8_t> _data;
+		struct Data : public DataObject {
 
-		ResourceData() = default;
+			// Resource properties.
+			uint32_t handleCount = 0;
+			std::vector<uint8_t> _data;
 
-		// ctor
-		ResourceData(std::vector<uint8_t> data) { _data = data; }
+			Data() = default;
 
-		// Log the resource data.
-		void DumpToLog(std::string title = "ResourceData") override
-		{
-			// Write handle count and data size.
-			Logger::Get().Log("\t", title, " - ", "handleCount: ", handleCount, "; Data size:", _data.size());
-		}
+			// ctor
+			Data(std::vector<uint8_t> data) { _data = data; }
 
-		// Serialise resource data.
-		std::vector<uint8_t> Serialize() override { return _data; }
-	};
+			// Log the resource data.
+			void DumpToLog(std::string title = "Resource.Data") override
+			{
+				// Write handle count and data size.
+				Logger::Get().Log("\t", title, " - ", "handleCount: ", handleCount, "; Data size:", _data.size());
+			}
 
-	struct ResourceHandle : public DataObject {
+			// Serialise resource data.
+			std::vector<uint8_t> Serialize() override { return _data; }
+		};
 
-		// Pointer to the resource.
-		ResourceData* _resource;
+		struct Handle : public DataObject {
 
-		// ctor
-		ResourceHandle(ResourceData* resource)
-		{
-			// Increase the resource use since there is a new pointer
-			// pointing to it.
-			_resource = resource;
-			_resource->handleCount += 1;
-		}
+			// Pointer to the resource.
+			Data* _resource;
 
-		// dtor
-		~ResourceHandle()
-		{
-			// Decrease the resource use since a pointer pointing to
-			// it is getting deleted.
-			_resource->handleCount -= 1;
-		}
+			// ctor
+			Handle(Data* resource)
+			{
+				// Increase the resource use since there is a new pointer
+				// pointing to it.
+				_resource = resource;
+				_resource->handleCount += 1;
+			}
 
-		// Dump the resource handle
-		void DumpToLog(std::string title = "ResourceHandle") override
-		{
-			Logger::Get().Log("\n\t", title, " - ", "handleCount: ", _resource);
-		}
-	};
+			// dtor
+			~Handle()
+			{
+				// Decrease the resource use since a pointer pointing to
+				// it is getting deleted.
+				_resource->handleCount -= 1;
+			}
 
-	class Resource {
+			// Log the resource data handle.
+			void DumpToLog(std::string title = "Resource.Handle") override
+			{
+				Logger::Get().Log("\n\t", title, " - ", "handleCount: ", _resource);
+			}
+		};
 
 	public:
 		// ctor
-		Resource();
+		ResourceManager();
 
 		// Singleton getter
-		static Resource& Get();
+		static ResourceManager& Get();
 
 		// Load a specific resource.
 		bool Load(std::string name);
@@ -71,12 +71,12 @@ namespace arterra {
 		void Unload();
 		// Get a resource handle, which has a pointer to the resource
 		// and marks the resource for unload if its not in use anymore.
-		ResourceHandle Get(std::string name);
+		Handle GetHandle(std::string name);
 
 	private:
 		// Loaded resources,
 		// string = path to file (name), ResourceData = data for this resource.
-		std::unordered_map<std::string, ResourceData> _resources;
+		std::unordered_map<std::string, Data> _resources;
 		// Memory footprint of all loaded resources in bytes.
 		uint64_t _memoryUsage;
 	};

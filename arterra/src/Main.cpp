@@ -63,7 +63,7 @@ int main(int argc, char** argv)
 		// Every 5 seconds, perform garbage collection
 		timeToResourceUnload -= Time::GetDeltaTime();
 		if (timeToResourceUnload < 0.0f) {
-			Resource::Get().Unload();
+			ResourceManager::Get().Unload();
 			timeToResourceUnload = 5.0f;
 		}
 	}
