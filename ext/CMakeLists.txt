@@ -35,6 +35,3 @@ add_subdirectory(glfw)
 
 ### GLM (No settings)
 add_subdirectory(glm)
-
-### ImGUI
-add_subdirectory(imgui)

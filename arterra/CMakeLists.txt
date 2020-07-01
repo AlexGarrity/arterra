@@ -22,7 +22,7 @@ target_link_libraries(arterra ${OPENGL_LIBRARIES})
 
 
 # Link other libraries to executable
-target_link_libraries(arterra glad glfw glm imgui)
+target_link_libraries(arterra glad glfw glm)
 
 # Move the res directory next to the build
 if (${MSVC})
