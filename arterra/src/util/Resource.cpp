@@ -22,7 +22,7 @@ namespace arterra {
 		// Get the full path to the resource
 		std::string path = (std::filesystem::current_path()/ "res" / name).string();
 		// Open the file
-		std::vector<char> data;
+		std::vector<uint8_t> data;
 		std::ifstream file;
 		try
 		{

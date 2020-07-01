@@ -4,22 +4,36 @@
 
 namespace arterra {
 	
-	struct ResourceData {
+	struct ResourceData : public DataObject {
 		
 		// Resource properties
-		int handleCount = 0;
-		std::vector<char> _data;
+		uint32_t handleCount = 0;
+		std::vector<uint8_t> _data;
 		
 		ResourceData() = default;
 		
 		// ctor
-		ResourceData(std::vector<char> data) {
+		ResourceData(std::vector<uint8_t> data) {
 			_data = data;
+		}
+
+		// DataObject overrides
+		void DumpToLog(std::string title = "ResourceData") override {
+			// Write handle count and data size
+			Logger::Get().Log(
+				"\t", title, 
+				" - ", "handleCount: ", handleCount, 
+				"; Data size:", _data.size()
+			);
+		}
+
+		std::vector<uint8_t> Serialize() override {
+			return _data;
 		}
 		
 	};
 	
-	struct ResourceHandle {
+	struct ResourceHandle : public DataObject {
 		
 		// Pointer to the resource
 		ResourceData* _resource;
@@ -39,6 +53,14 @@ namespace arterra {
 			_resource->handleCount -= 1;
 		}
 		
+		// Dump the resource handle
+		void DumpToLog(std::string title = "ResourceHandle") override {
+			Logger::Get().Log(
+				"\n\t", title, 
+				" - ", "handleCount: ", _resource
+			);
+		}
+
 	};
 	
 	class Resource {

@@ -3,7 +3,7 @@
 
 namespace arterra {
 	
-	struct KeyBind {
+	struct KeyBind : public DataObject {
 		
 		// Keybind properties
 		std::string _name = "";
@@ -16,6 +16,24 @@ namespace arterra {
 			for (auto i: _subscribers) {
 				i(_timeHeld);
 			}
+		}
+
+		void DumpToLog(std::string title = "KeyBind") override {
+			Logger::Get().Log(
+				"\t", title, 
+				" - name: ", _name, 
+				"; active:", _active,
+				"; time held:", _timeHeld,
+				"; sub count: ", _subscribers.size()
+			);
+		}
+
+		std::vector<uint8_t> Serialize() override {
+			std::vector<uint8_t> out;
+			for (auto c : _name) {
+				out.push_back(c);
+			}
+			return out;
 		}
 		
 	};

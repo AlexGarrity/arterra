@@ -7,9 +7,9 @@
 
 namespace arterra {
 
-    class ShaderProgram {
+    class ShaderProgram : public DataObject {
 
-        struct Shader {
+        struct Shader : public DataObject {
             enum ShaderType {Fragment, Vertex, Geometry};
             ShaderType _shaderType;
             GLuint _ID;
@@ -31,7 +31,18 @@ namespace arterra {
 
                 glShaderSource(_ID, 1, &cSrc, nullptr);
                 glCompileShader(_ID);
+            }
 
+            void DumpToLog(std::string title = "Shader") override {
+                Logger::Get().Log(
+                    "\t", title, 
+                    " - type: ", _shaderType, 
+                    "; handle:", _ID
+			    );
+            }
+
+            std::vector<uint8_t> Serialize() override {
+                return {};
             }
         };
 
@@ -79,6 +90,14 @@ namespace arterra {
                 auto uniform = GetUniform(uniformName.c_str());
                 glUniform3fv(uniform, 1, glm::value_ptr(vector));
             } 
+
+
+            void DumpToLog(std::string title = "ShaderProgram") {
+                Logger::Get().Log(
+                    "\t", title, 
+                    " - ", "handle: ", _shaderProgram
+			    );
+            }
 
 
         private:

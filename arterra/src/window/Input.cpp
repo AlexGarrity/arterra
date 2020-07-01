@@ -46,7 +46,7 @@ namespace arterra {
 		}
 		
 		// DEBUG
-		PrintInformation();
+		// PrintInformation();
 	}
 	
 	void Input::RegisterKeySubscriber(int key, std::function<void(float)> callback) {
@@ -59,8 +59,7 @@ namespace arterra {
 		Logger::Get().Log(Logger::Debug, " KEY INPUTS STORED ");
 		
 		for (auto& i: _pressedKeys) {
-			std::cout << "Key: " << i.first << " n: " << i.second._name << " t: " << i.second._timeHeld
-			<< " a: " << i.second._active << std::endl;
+			i.second.DumpToLog();
 		}
 		
 		Logger::Get().Log(Logger::Debug, "===================");
