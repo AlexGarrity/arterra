@@ -1,5 +1,5 @@
-# Set minimum version to 3.12 (Totally arbitrary.  Think 3.8 is the lowest I can use)
-cmake_minimum_required(VERSION 3.12)
+# Set minimum version to 3.16 (required for pre-compiled header)
+cmake_minimum_required(VERSION 3.16)
 
 # Define the project
 project(arterra)

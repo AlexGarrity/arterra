@@ -8,6 +8,9 @@ FILE(GLOB_RECURSE SOURCES src/**.cpp)
 # Creates an executable out of all of the `SOURCES`
 add_executable(arterra ${SOURCES})
 
+# Pre-compile the pre-compiled header
+target_precompile_headers(arterra PRIVATE include/PCH.hpp)
+
 # Specifies include directories to compile using
 target_include_directories(arterra PRIVATE include)
 

@@ -19,7 +19,6 @@ namespace arterra {
             return true;
         }
         else {
-            snprintf(buffer, 256, "Shader '%s' failed to load", identifier.c_str());
             Logger::Get().Log(Logger::Warning, "Shader [", identifier, "] failed to load");
             // It didn't work so don't save it
             _shaders.erase(identifier);

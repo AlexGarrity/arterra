@@ -21,6 +21,7 @@ namespace arterra {
 		}
 		// Get the full path to the resource
 		std::string path = (std::filesystem::current_path()/ "res" / name).string();
+		if (!std::filesystem::exists(path)) return false;
 		// Open the file
 		std::vector<uint8_t> data;
 		std::ifstream file;
@@ -51,17 +52,43 @@ namespace arterra {
 		
 		// Add data to the resource list
 		_resources[name] = ResourceData { data };
+		_memoryUsage += _resources[name]._data.size();
+
+		Logger::Get().Log(
+			Logger::Debug, "Loaded a new resource '", name, "'; size=", _resources[name]._data.size(), " Bytes"
+		);
 		
 		return true;
 	}
 	
 	void Resource::Unload() {
+		// No resources to check
+		if (_resources.empty()) return;
+		Logger::Get().Log(Logger::Debug, "Running automatic resource unloading");
+		std::vector<std::unordered_map<std::string, ResourceData>::iterator> unloadObjects;
+		// Iterate all resources currently loaded
 		for (auto i = _resources.begin(); i != _resources.end(); i++) {
 			// Check that it's not in use before unloading it
 			if (i->second.handleCount == 0) {
-				_resources.erase(i);
+				unloadObjects.push_back(i);
 			}
 		}
+		// No objects to unload
+		if (unloadObjects.empty()) return;
+		Logger::Get().Log(
+			Logger::Debug, "Unloading ", unloadObjects.size(), " resource", (unloadObjects.size() == 1)?"":"s"
+		);
+		// Get memory usage before running
+		auto memory = _memoryUsage;
+		for (auto o : unloadObjects) {
+			Logger::Get().Log(Logger::Debug, "Unloading a resource '", o->first, "'");
+			_memoryUsage -= o->second._data.size();
+			_resources.erase(o);
+		}
+		// Log memory saving
+		Logger::Get().Log(
+			Logger::Debug, "Freed ", memory - _memoryUsage, " Bytes (", memory, "B => ", _memoryUsage, "B)"
+		);
 	}
 	
 	ResourceHandle Resource::Get(std::string name) {

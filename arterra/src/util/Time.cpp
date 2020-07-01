@@ -4,7 +4,7 @@ using namespace std::chrono;
 
 namespace arterra {
 	
-	float Time::_deltaTime;
+	float Time::_deltaTime {0.016f};
 	high_resolution_clock::time_point Time::_previousTime;
 	
 	void Time::CalculateDeltaTime() {

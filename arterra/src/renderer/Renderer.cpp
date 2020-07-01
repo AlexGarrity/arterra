@@ -17,7 +17,7 @@ namespace arterra {
         GenerateEBO();
 
         // Load the basic shader and use it
-        _shaderManager.LoadShader("res/shaders/basic.frag", "res/shaders/basic.vert", "basic");
+        _shaderManager.LoadShader("shaders/basic.frag", "shaders/basic.vert", "basic");
         _shaderManager.UseShader("basic");
 
         // Enable depth testing

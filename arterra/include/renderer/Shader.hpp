@@ -1,6 +1,8 @@
 #pragma once
 #include "PCH.hpp"
 
+#include "util/Resource.hpp"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glad/glad.h>
@@ -15,8 +17,17 @@ namespace arterra {
             GLuint _ID;
 
             Shader(ShaderType shaderType, std::string path) : _shaderType {shaderType} {
-                std::string src = ReadShaderFile(path);
-                const char *cSrc = src.data();
+                // Load the shader resource
+                auto loadResult = Resource::Get().Load(path);
+                if (!loadResult) return;
+
+                // Get a handle to the resource
+                auto dataHandle = Resource::Get().Get(path);
+                // Get the data from the resource
+                auto src = dataHandle._resource->_data.data();
+                // Convert uint8_t* to char*
+                auto cSrc = reinterpret_cast<const char*>(src);
+
                 switch (shaderType) {
                     case ShaderType::Fragment:
                         _ID = glCreateShader(GL_FRAGMENT_SHADER);
@@ -101,7 +112,6 @@ namespace arterra {
 
 
         private:
-            static std::string ReadShaderFile(std::string path);
             static bool CheckShaderCompilation(GLuint shader);
 
             std::vector<Shader> _shaders;

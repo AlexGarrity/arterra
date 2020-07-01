@@ -10,6 +10,8 @@
 #include "util/Time.hpp"
 #include "window/Window.hpp"
 
+#include "ecs/component/Transform.hpp"
+
 namespace arterra {
 
     class Camera {
@@ -19,51 +21,53 @@ namespace arterra {
                 _projection = glm::perspective(glm::radians(76.0f), 16.f/9.f, 0.1f, 100.0f);
 
                 // Init position and rotation
-                _position = glm::vec3 { 0.0f };
-                _rotation = glm::vec3 { 0.0f };
+                _transform._position = glm::vec3 { 0.0f };
+                _transform._rotation = glm::vec3 { 0.0f };
 
                 // Set camera axis
-                _forward = glm::vec3(0.0f, 0.0f, -1.0f);
-                _up = glm::vec3(0.0f, 1.0f, 0.0f);
-                _right = glm::vec3(1.0f, 0.0f, 0.0f);
+                _transform._forward = glm::vec3(0.0f, 0.0f, -1.0f);
+                _transform._up = glm::vec3(0.0f, 1.0f, 0.0f);
+                _transform._right = glm::vec3(1.0f, 0.0f, 0.0f);
             }
 
             void Update(Window &window) {
 
                 // Set speed to account for deltaTime
                 _speed = Time::GetDeltaTime() * 2.0f;
-                // Update right so rotation works properly
-                _right = -glm::normalize(glm::cross(_up, _forward));
+                _transform.Update();
 
                 // Whole bunch of input handling
                 if (glfwGetKey(window.GetHandle(), GLFW_KEY_W) == GLFW_PRESS) {
-                    _position -= _forward * _speed;
+                    _transform._position -= _transform._forward * _speed;
                 }
                 if (glfwGetKey(window.GetHandle(), GLFW_KEY_S) == GLFW_PRESS) {
-                   _position += _forward * _speed;
+                   _transform._position += _transform._forward * _speed;
                 }
 
                 if (glfwGetKey(window.GetHandle(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-                    _position -= _up * _speed;
+                    _transform._position -= _transform._up * _speed;
                 }
                 if (glfwGetKey(window.GetHandle(), GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
-                    _position += _up * _speed;
+                    _transform._position += _transform._up * _speed;
                 }
 
                 if (glfwGetKey(window.GetHandle(), GLFW_KEY_A) == GLFW_PRESS) {
-                    _position += _right * _speed;
+                    _transform._position += _transform._right * _speed;
                 }
                 if (glfwGetKey(window.GetHandle(), GLFW_KEY_D) == GLFW_PRESS) {
-                    _position -= _right * _speed;
+                    _transform._position -= _transform._right * _speed;
                 }
 
                 // Update the view projection to account for movement
                 _view = glm::mat4 { 1.0f };
                 _viewProjection = glm::mat4 { 1.0f };
-                _view = glm::translate(_view, _position);
-                _view = glm::rotate(_view, glm::radians(_rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-                _view = glm::rotate(_view, glm::radians(_rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-                _view = glm::rotate(_view, glm::radians(_rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+                _view = glm::translate(_view, _transform._position);
+                // Convert Quaternion to Euler angles
+                auto euler = glm::eulerAngles(_transform._rotation);
+                _view = glm::rotate(_view, glm::radians(euler.x), glm::vec3(1.0f, 0.0f, 0.0f));
+                _view = glm::rotate(_view, glm::radians(euler.y), glm::vec3(0.0f, 1.0f, 0.0f));
+                _view = glm::rotate(_view, glm::radians(euler.z), glm::vec3(0.0f, 0.0f, 1.0f));
+                // Create the view projection
                 _viewProjection = _projection * _view;
             }
 
@@ -77,11 +81,7 @@ namespace arterra {
             glm::mat4 _view;
             glm::mat4 _viewProjection;
 
-            glm::vec3 _position;
-            glm::vec3 _rotation;
-            glm::vec3 _forward;
-            glm::vec3 _up;
-            glm::vec3 _right;
+            Transform _transform;
 
     };
 

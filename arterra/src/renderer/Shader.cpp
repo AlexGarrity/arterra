@@ -33,20 +33,6 @@ namespace arterra {
         return true;
     }
 
-
-    std::string ShaderProgram::ReadShaderFile(std::string path) {
-        // Get the shader path
-        auto relPath = std::filesystem::current_path() / path;
-        // Check it exists
-        if (!std::filesystem::exists(relPath)) {
-            Logger::Get().Log(Logger::Warning, "Shader not found");
-            return "";
-        }
-        // Read an entire file in two lines because why not
-        std::ifstream reader(relPath, std::ios::in);
-        return {std::istreambuf_iterator<char>(reader), {}};
-    }
-
     bool ShaderProgram::CheckShaderCompilation(GLuint shader) {
         GLint result;
         char buffer[512];

@@ -13,7 +13,9 @@ using namespace arterra;
 
 int main(int argc, char **argv)
 {   
-	Logger::Get().Log(Logger::Debug, "Executable directory: '", argv[0], "'");
+	// Set working directory to executable directory
+	std::filesystem::current_path(std::filesystem::path(argv[0]).parent_path());
+	Logger::Get().Log(Logger::Debug, "Executable directory: '", std::filesystem::current_path(), "'");
 	Window window {1280, 720, "Arterra"};
 	window.SetVsync(true);
 	window.SetClearColour(0.0f, 1.0f, 1.0f, 1.0f);
@@ -31,9 +33,15 @@ int main(int argc, char **argv)
 
 	Camera camera;
 	Renderer renderer {camera};
+
+	float_t timeToResourceUnload = 5.0f;
 	
+	Time::CalculateDeltaTime();
+
 	// While window shouldn't close
 	while (!window.ShouldClose()) {
+		Time::CalculateDeltaTime();
+
 		// Clear the window
 		window.Clear();
 		camera.Update(window);
@@ -41,10 +49,15 @@ int main(int argc, char **argv)
 		renderer.DrawTestCube();
 		// Check for events and swap buffers
 		window.Update();
-
-		Time::CalculateDeltaTime();
+		
 		if (window.IsKeyPressed(GLFW_KEY_ESCAPE)) {
 			window.SetShouldClose(true);
+		}
+
+		timeToResourceUnload -= Time::GetDeltaTime();
+		if (timeToResourceUnload < 0.0f) {
+			Resource::Get().Unload();
+			timeToResourceUnload = 5.0f;
 		}
 	}
 

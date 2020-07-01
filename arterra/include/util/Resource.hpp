@@ -85,6 +85,7 @@ namespace arterra {
 			// Loaded resources
 			// string = path to file (name), ResourceData = data for this resource
 			std::unordered_map<std::string, ResourceData> _resources;
+			uint64_t _memoryUsage;
 		
 		
 	};
