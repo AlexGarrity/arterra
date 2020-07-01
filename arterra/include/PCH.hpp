@@ -4,11 +4,11 @@
 #include <iostream>
 // Strings
 #include <string>
-// File IO
+// File IO and Filesystem
 #include <fstream>
+#include <filesystem>
 // String Streams
 #include <sstream>
-#include <filesystem>
 
 // Modern C++ Ptrs
 #include <memory>
@@ -29,10 +29,6 @@
 #include <random>
 // Fixed-width types
 #include <cstdint>
-// Filestystem
-#include <filesystem>
-// Iterators
-#include <iterator>
 
 // Lists
 #include <vector>
@@ -44,9 +40,10 @@
 // Sets (lists w/o duplication)
 #include <set>
 #include <unordered_set>
+// Iterators
 #include <iterator>
 
-
+// Utility classes
 #include "util/Logger.hpp"
 #include "util/Time.hpp"
 #include "util/DataObject.hpp"

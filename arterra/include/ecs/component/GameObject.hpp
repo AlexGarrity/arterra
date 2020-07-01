@@ -7,12 +7,12 @@
 
 namespace arterra {
 
-    struct GameObject : public ComponentBase {
-        Transform _transform;
+	struct GameObject : public ComponentBase {
+		// The transform for this object in the world.
+		Transform _transform;
 
-        void Update() override {
-            _transform.Update();
-        }
-    };
+		// Update function for all objects.
+		void Update() override { _transform.Update(); }
+	};
 
 }
