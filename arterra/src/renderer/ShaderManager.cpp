@@ -12,7 +12,6 @@ namespace arterra {
         _shaders[identifier] = ShaderProgram();
         // Create the shader
         bool result = _shaders[identifier].Create(vertPath, fragPath);
-        char buffer[256];
         // Check if it worked or not
         if (result) {
             Logger::Get().Log(Logger::Debug, "Shader [", identifier, "] loaded successfully");
@@ -75,14 +74,14 @@ namespace arterra {
         // Get the handle for the position attribute
         GLuint posAttrib = glGetAttribLocation(ActiveProgram().GetProgram(), "position");
         // Describe how to handle the data given
-        glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), 0);
+        glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), 0);
         // Enable the attribute
         glEnableVertexAttribArray(posAttrib);
 
-        // Same but for colour
-        GLuint colAttrib = glGetAttribLocation(ActiveProgram().GetProgram(), "color");
-        glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
-        glEnableVertexAttribArray(colAttrib);
+        // Same but for texture coords
+        GLuint texCoordsAttrib = glGetAttribLocation(ActiveProgram().GetProgram(), "textureCoords");
+        glVertexAttribPointer(texCoordsAttrib, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+        glEnableVertexAttribArray(texCoordsAttrib);
     }
 
 }

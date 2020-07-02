@@ -23,7 +23,7 @@ namespace arterra {
         glAttachShader(_shaderProgram, vert._ID);
         glAttachShader(_shaderProgram, frag._ID);
         // Bind the fragment data
-        glBindFragDataLocation(_shaderProgram, 0, "outColor");
+        glBindFragDataLocation(_shaderProgram, 0, "outColour");
         // Link the program
         glLinkProgram(_shaderProgram);
 
