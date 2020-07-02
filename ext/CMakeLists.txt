@@ -45,3 +45,6 @@ target_include_directories(
             $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
 install(TARGETS stb_image)
+
+### miniOBJ
+add_subdirectory(miniOBJ)
