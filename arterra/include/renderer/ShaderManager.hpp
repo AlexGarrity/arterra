@@ -5,31 +5,28 @@
 
 namespace arterra {
 
-class ShaderManager {
-public:
-    ShaderManager();
+	class ShaderManager {
+	public:
+		ShaderManager();
 
-    // Load a shader using the give paths and save it to the shader index
-    bool LoadShader(std::string fragPath, std::string vertPath, std::string identifier);
-    // Unload a shader
-    bool UnloadShader(std::string identifier);
-    // Set a shader as active
-    bool UseShader(std::string identifier);
+		// Load a shader using the given paths and save it to the shader index.
+		bool LoadShader(std::string fragPath, std::string vertPath, std::string identifier);
+		// Unload a shader and delete it from memory.
+		bool UnloadShader(std::string identifier);
+		// Set a shader as active.
+		bool UseShader(std::string identifier);
 
-    // Get a shader ID by identifier
-    GLuint GetShader(std::string identifier);
-    // Get a shader ID by index position
-    GLuint GetShader(std::unordered_map<std::string, ShaderProgram>::iterator it);
+		// Get a shader program gl id by name.
+		GLuint GetShader(std::string identifier);
+		// Get a shader program gl id by index position in the index.
+		GLuint GetShader(std::unordered_map<std::string, ShaderProgram>::iterator it);
 
-    inline ShaderProgram ActiveProgram() const { return _activeShader->second; }
+		inline ShaderProgram ActiveProgram() const { return _activeShader->second; }
 
-private:
-    // Bind attributes
-    void BindAttributes();
-
-    // Shader map and reference to active shader
-    std::unordered_map<std::string, ShaderProgram> _shaders;
-    std::unordered_map<std::string, ShaderProgram>::iterator _activeShader;
-};
+	private:
+		// Map of loaded shader programs.
+		std::unordered_map<std::string, ShaderProgram> _shaders;
+		std::unordered_map<std::string, ShaderProgram>::iterator _activeShader;
+	};
 
 }

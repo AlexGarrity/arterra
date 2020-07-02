@@ -10,13 +10,24 @@
 
 #include "model/Model.hpp"
 #include "renderer/Camera.hpp"
-#include "renderer/ShaderManager.hpp"
-#include "renderer/Texture.hpp"
+#include "renderer/VertexArray.hpp"
 
 namespace arterra {
-class Renderer {
-public:
-    Renderer(Camera& camera);
+    class Renderer {
+        public:
+            Renderer(Camera &camera);
+			
+            // Update the renderer to account for input
+            void Update();
+
+            // Draw a rainbow cube
+            void DrawTestCube();
+
+        private:
+            
+			VertexArray vao;
+			VertexBuffer vbP;
+			VertexBuffer vbC;
 
     // Generate a new vertex array object
     void GenerateVAO();
@@ -27,13 +38,105 @@ public:
     // Draw a rainbow cube
     void DrawTestCube();
 
-private:
-    GLuint _vao;
+            // Test cube vertices
+            std::vector<float> _positions = {
+				// FRONT
+                0.5f, 0.5f, 0.5f, 		// 1
+				0.5f, -0.5f, 0.5f, 	// 2
+				-0.5f, -0.5f, 0.5f, 	// 3
+				
+				0.5f, 0.5f, 0.5f, 		// 1
+				-0.5f, -0.5f, 0.5f, 	// 3
+				-0.5f, 0.5f, 0.5f, 	// 4
+				
+				// BACK
+				-0.5f, 0.5f, -0.5f, 	// 8
+				-0.5f, -0.5f, -0.5f, 	// 7
+				0.5f, -0.5f, -0.5f, 	// 6
+				
+				-0.5f, 0.5f, -0.5f, 	// 8
+				0.5f, -0.5f, -0.5f, 	// 6
+				0.5f, 0.5f, -0.5f, 	// 5
+				
+				// TOP
+				0.5f, 0.5f, -0.5f, 	// 5
+				0.5f, 0.5f, 0.5f, 		// 1
+				-0.5f, 0.5f, 0.5f, 	// 4
+				
+				0.5f, 0.5f, -0.5f, 	// 5
+				-0.5f, 0.5f, 0.5f, 	// 4
+				-0.5f, 0.5f, -0.5f, 	// 8
+				
+				// BOTTOM
+				0.5f, -0.5f, 0.5f, 	// 2
+				0.5f, -0.5f, -0.5f, 	// 6
+				-0.5f, -0.5f, -0.5f, 	// 7
+				
+				0.5f, -0.5f, 0.5f, 	// 2
+				-0.5f, -0.5f, -0.5f, 	// 7
+				-0.5f, -0.5f, 0.5f, 	// 3
+				
+				// RIGHT
+				0.5f, 0.5f, -0.5f, 	// 5
+				0.5f, -0.5f, -0.5f, 	// 6
+				0.5f, -0.5f, 0.5f, 	// 2
+				
+				0.5f, 0.5f, -0.5f, 	// 5
+				0.5f, -0.5f, 0.5f, 	// 2
+				0.5f, 0.5f, 0.5f, 		// 1
+				
+				// LEFT
+				-0.5f, 0.5f, 0.5f, 	// 4
+				-0.5f, -0.5f, 0.5f, 	// 3
+				-0.5f, -0.5f, -0.5f, 	// 7
+				
+				-0.5f, 0.5f, 0.5f, 	// 4
+				-0.5f, -0.5f, -0.5f, 	// 7
+				-0.5f, 0.5f, -0.5f, // 8
+				
+            };
+			
+			std::vector<float> _colours = {
+					1.0f, 0.0f, 0.0f,
+					0.0f, 1.0f, 0.0f,
+					0.0f, 0.0f, 1.0f,
+					1.0f, 0.0f, 0.0f,
+					0.0f, 0.0f, 1.0f,
+					1.0f, 1.0f, 1.0f,
+					1.0f, 0.0f, 1.0f,
+					0.0f, 1.0f, 1.0f,
+					1.0f, 1.0f, 0.0f,
+					1.0f, 0.0f, 1.0f,
+					1.0f, 1.0f, 0.0f,
+					0.0f, 0.0f, 0.0f,
+					0.0f, 0.0f, 0.0f,
+					1.0f, 0.0f, 0.0f,
+					1.0f, 1.0f, 1.0f,
+					0.0f, 0.0f, 0.0f,
+					1.0f, 1.0f, 1.0f,
+					1.0f, 0.0f, 1.0f,
+					0.0f, 1.0f, 0.0f,
+					1.0f, 1.0f, 0.0f,
+					0.0f, 1.0f, 1.0f,
+					0.0f, 1.0f, 0.0f,
+					0.0f, 1.0f, 1.0f,
+					0.0f, 0.0f, 1.0f,
+					0.0f, 0.0f, 0.0f,
+					1.0f, 1.0f, 0.0f,
+					0.0f, 1.0f, 0.0f,
+					0.0f, 0.0f, 0.0f,
+					0.0f, 1.0f, 0.0f,
+					1.0f, 0.0f, 0.0f,
+					1.0f, 1.0f, 1.0f,
+					0.0f, 0.0f, 1.0f,
+					0.0f, 1.0f, 1.0f,
+					1.0f, 1.0f, 1.0f,
+					0.0f, 1.0f, 1.0f,
+					1.0f, 0.0f, 1.0f	
+			};
 
-    ShaderManager _shaderManager;
-    Camera* _camera;
-    TextureHandle _stoneTexture;
-    Model _cubeModel;
+
+    };
 
     GLint _viewProjectionUniform;
 };

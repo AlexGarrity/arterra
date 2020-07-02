@@ -2,45 +2,50 @@
 
 namespace arterra {
 
-    Renderer::Renderer(Camera &camera) : _camera{&camera} {
-        // Load GL core using GLAD, if it fails then error and return
-        if (!gladLoadGL()) {
-            Logger::Get().Log(Logger::Fatal, "GLAD failed to initialise");
-        }
+	Renderer::Renderer(Camera& camera)
+		: _camera { &camera }
+	{
+		// Load GL core using GLAD, if it fails then error and return
+		if (!gladLoadGL()) {
+			Logger::Get().Log(Logger::Fatal, "GLAD failed to initialise");
+		}
 
-        // Give GLAD the GLFW extension loader function
-        gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
-    
-        // Generate buffers
-        GenerateVAO();
+		// Give GLAD the GLFW extension loader function
+		gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
 
-        // Load the basic shader and use it
-        _shaderManager.LoadShader("shaders/basic.frag", "shaders/basic.vert", "basic");
+		vao.Bind();
 
-        _stoneTexture.Load("textures/stone.png");
-        _cubeModel.Create("models/torus.mobj");
+		// Create buffer layout, this is the same for all buffers.
+		VertexBufferLayout layout;
+		layout.Push<float>(3);
 
-        // Enable depth testing
-        glEnable(GL_DEPTH_TEST);
-    }
+		// Assign position buffer.
+		vbP.Create(_positions.data(), 3 * 36 * sizeof(float));
+		vao.AddBuffer(vbP, layout);
 
+		// Assign colour buffer.
+		vbC.Create(_colours.data(), 3 * 36 * sizeof(float));
+		vao.AddBuffer(vbC, layout);
 
-    void Renderer::GenerateVAO() {
-        // Generate the vertex array and bind it
-        glGenVertexArrays(1, &_vao);
-        glBindVertexArray(_vao);
-    }
+		// Load the basic shader and use it
+		_shaderManager.LoadShader("shaders/basic.frag", "shaders/basic.vert", "basic");
+		_shaderManager.UseShader("basic");
 
-    void Renderer::Update() {
-        // Set the camera view projection so the world renders in perspective
-    }
+		// Enable depth testing
+		glEnable(GL_DEPTH_TEST);
+	}
 
-    void Renderer::DrawTestCube() {
-        glBindTexture(GL_TEXTURE_2D, _stoneTexture.Handle());
-        _shaderManager.UseShader("basic");
-        _shaderManager.ActiveProgram().SetUniform("viewProjection", _camera->ViewProjection());
-        _shaderManager.ActiveProgram().SetUniform("fragmentColour", {1.0f});
-        _cubeModel.Render();
-    }
+	void Renderer::Update()
+	{
+		// Set the camera view projection so the world renders in perspective
+		_shaderManager.ActiveProgram().SetUniform("viewProjection", _camera->ViewProjection());
+	}
+
+	void Renderer::DrawTestCube()
+	{
+		_shaderManager.UseShader("basic");
+		vao.Bind();
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+	}
 
 }
