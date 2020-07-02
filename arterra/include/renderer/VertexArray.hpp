@@ -1,0 +1,26 @@
+#include "PCH.hpp"
+#include <glad/glad.h>
+
+namespace arterra {
+
+	class VertexArray {
+
+	public:
+		// ctor creates a new vertex array.
+		VertexArray();
+		// dtor calls the glDeleteVertexArray function.
+		~VertexArray();
+
+		void AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout);
+
+		// Sets this vertex array as the current vertex array to work on.
+		void Bind() const;
+		// Sets the current vertex array to 0.
+		void Unbind() const;
+
+	private:
+		// The unique opengl id for this vertex array.
+		GLuint _glID;
+	};
+
+}
