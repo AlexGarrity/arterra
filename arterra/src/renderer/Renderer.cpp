@@ -33,6 +33,12 @@ namespace arterra {
 
 		// Enable depth testing
 		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_BLEND);
+		
+		// Enable face culling
+		glFrontFace(GL_CW);
+		glCullFace(GL_BACK);
+		glEnable(GL_CULL_FACE);
 	}
 
 	void Renderer::Update()

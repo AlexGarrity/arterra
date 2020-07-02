@@ -20,7 +20,7 @@ namespace arterra {
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 		// Sets GL profile to core
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
+		
 		// Create a unique ptr to the window
 		auto x = std::unique_ptr<GLFWwindow, GLFWwindowDeleter>(
 			glfwCreateWindow(width, height, title.data(), nullptr, nullptr));
