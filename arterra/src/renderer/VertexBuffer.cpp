@@ -2,7 +2,11 @@
 
 namespace arterra {
 
-	VertexBuffer::VertexBuffer(const void* data, unsigned int size)
+	VertexBuffer::VertexBuffer() {}
+
+	VertexBuffer::~VertexBuffer() { glDeleteBuffers(1, &_glID); }
+
+	void VertexBuffer::Create(const void* data, unsigned int size)
 	{
 		// Generate a new buffer for this vertex buffer.
 		glGenBuffers(1, &_glID);
@@ -11,8 +15,6 @@ namespace arterra {
 		// Pass in the vertex data into the buffer
 		glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
 	}
-
-	VertexBuffer::~VertexBuffer() { glDeleteBuffers(1, &_glID); }
 
 	void VertexBuffer::Bind() const { glBindBuffer(GL_ARRAY_BUFFER, _glID); }
 

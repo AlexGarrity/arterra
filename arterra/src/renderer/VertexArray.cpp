@@ -1,5 +1,4 @@
 #include "renderer/VertexArray.hpp"
-#include "renderer/VertexBuffer.hpp"
 
 namespace arterra {
 
@@ -21,9 +20,12 @@ namespace arterra {
 		// Get all individual defined elements (vector properties) for this buffer layout.
 		const auto& elements = layout.GetElements();
 		unsigned int offset = 0;
-		for (GLuint i = 0; i < elements.size(); i++) {
+		// temp is used to increase _lastBoundAttribute by however many iteration (i)
+		// cycles happen.
+		GLuint temp;
+		for (GLuint i = _lastBoundAttribute; i < _lastBoundAttribute + elements.size(); i++) {
 			// For each element, enable it in the Vertex Attribute Array.
-			const auto& element = elements[i];
+			const auto& element = elements[i - _lastBoundAttribute];
 			glEnableVertexAttribArray(i);
 			// Set the attribute pointer to the correct value, e.g.
 			//		For a position vector
@@ -38,7 +40,9 @@ namespace arterra {
 			// Increase the offset by the element total size, e.g.
 			//		position is a vec3, so 3 (floats) * sizeof(float)
 			offset += element._count * VertexBufferLayout::Element::GetSizeOfType(element._type);
+			temp = i;
 		}
+		_lastBoundAttribute = temp + 1;
 	}
 
 	void VertexArray::Bind() const { glBindVertexArray(_glID); }

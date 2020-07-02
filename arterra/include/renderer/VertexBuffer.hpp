@@ -6,6 +6,10 @@ namespace arterra {
 	class VertexBuffer {
 
 	public:
+		VertexBuffer();
+		// dtor calls the glDeleteBuffers function.
+		~VertexBuffer();
+		
 		// A vertex buffer contains data used to describe information
 		// about vertices, such as position, colour, uv, normals etc.
 		// When drawing a vao, you can define multiple vertex buffers
@@ -15,9 +19,7 @@ namespace arterra {
 		//
 		// data = array making up the data.
 		// size = total size of the array in bytes.
-		VertexBuffer(const void* data, unsigned int size);
-		// dtor calls the glDeleteBuffers function.
-		~VertexBuffer();
+		void Create(const void* data, unsigned int size);
 
 		// Set this buffer to be the current buffer to work on.
 		void Bind() const;
@@ -52,6 +54,7 @@ namespace arterra {
 				return 0;
 			}
 		};
+		
 
 		VertexBufferLayout()
 			: _stride(0)
