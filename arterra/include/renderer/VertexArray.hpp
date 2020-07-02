@@ -1,3 +1,5 @@
+#pragma once
+
 #include "PCH.hpp"
 #include <glad/glad.h>
 

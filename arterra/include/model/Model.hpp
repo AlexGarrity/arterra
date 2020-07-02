@@ -46,12 +46,12 @@ public:
     bool Create(std::string filepath)
     {
         // Load and get handle to the resource
-        auto resource = Resource::Get().Load(filepath);
+        auto resource = ResourceManager::Get().Load(filepath);
         if (!resource) {
             Logger::Get().Log(Logger::Warning, "Failed to load model '", filepath, "'");
             return false;
         }
-        auto resourceHandle = Resource::Get().Get(filepath);
+        auto resourceHandle = ResourceManager::Get().GetHandle(filepath);
 
         // Load the model. Scoped to ensure deletion
         {

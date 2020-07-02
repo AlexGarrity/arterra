@@ -28,7 +28,7 @@ namespace arterra {
 		vao.AddBuffer(vbC, layout);
 
 		// Load the basic shader and use it
-		_shaderManager.LoadShader("shaders/basic.frag", "shaders/basic.vert", "basic");
+		_shaderManager.LoadShader("shaders/basicColour.frag", "shaders/basicColour.vert", "basic");
 		_shaderManager.UseShader("basic");
 
 		// Enable depth testing

@@ -16,7 +16,7 @@ class ShaderProgram : public DataObject {
             Vertex,
             Geometry };
         ShaderType _shaderType;
-        GLuint _ID;
+        GLuint _glID;
 
         Shader(ShaderType shaderType, std::string path)
             : _shaderType { shaderType }
@@ -33,22 +33,22 @@ class ShaderProgram : public DataObject {
                 dataHandle._resource->_data.begin(),
                 dataHandle._resource->_data.end());
             // Convert uint8_t* to char*
-            auto cSrc = src.c_str();
+            const char* cSrc = src.c_str();
 
             switch (shaderType) {
             case ShaderType::Fragment:
-                _ID = glCreateShader(GL_FRAGMENT_SHADER);
+                _glID = glCreateShader(GL_FRAGMENT_SHADER);
                 break;
             case ShaderType::Vertex:
-                _ID = glCreateShader(GL_VERTEX_SHADER);
+                _glID = glCreateShader(GL_VERTEX_SHADER);
                 break;
             case ShaderType::Geometry:
-                _ID = glCreateShader(GL_GEOMETRY_SHADER);
+                _glID = glCreateShader(GL_GEOMETRY_SHADER);
                 break;
             }
 
-            glShaderSource(_ID, 1, &cSrc, nullptr);
-            glCompileShader(_ID);
+            glShaderSource(_glID, 1, &cSrc, nullptr);
+            glCompileShader(_glID);
         }
 
         void DumpToLog(std::string title = "Shader") override
@@ -56,7 +56,7 @@ class ShaderProgram : public DataObject {
             Logger::Get().Log(
                 "\t", title,
                 " - type: ", _shaderType,
-                "; handle:", _ID);
+                "; handle:", _glID);
         }
 
         std::vector<uint8_t> Serialize() override
@@ -77,19 +77,19 @@ public:
     // Delete the program
     ~ShaderProgram()
     {
-        glDeleteProgram(_shaderProgram);
+        glDeleteProgram(_glID);
     }
 
     // Create a new shader - return whether or not it worked
     bool Create(std::string vertPath, std::string fragPath);
 
     // Inline returns the program handle
-    inline GLuint GetProgram() const { return _shaderProgram; }
+    inline GLuint GetProgram() const { return _glID; }
 
     // Inlines for setting uniforms in shaders
     inline GLint GetUniform(const char* name)
     {
-        return glGetUniformLocation(_shaderProgram, name);
+        return glGetUniformLocation(_glID, name);
     }
 
     inline void SetUniform(std::string uniformName, glm::mat4 matrix)
@@ -126,14 +126,14 @@ public:
     {
         Logger::Get().Log(
             "\t", title,
-            " - ", "handle: ", _shaderProgram);
+            " - ", "handle: ", _glID);
     }
 
 private:
     static bool CheckShaderCompilation(GLuint shader);
 
     std::vector<Shader> _shaders;
-    GLuint _shaderProgram;
+    GLuint _glID;
 };
 
 };

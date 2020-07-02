@@ -10,6 +10,7 @@
 
 #include "model/Model.hpp"
 #include "renderer/Camera.hpp"
+#include "renderer/ShaderManager.hpp"
 #include "renderer/VertexArray.hpp"
 
 namespace arterra {
@@ -28,15 +29,6 @@ namespace arterra {
 			VertexArray vao;
 			VertexBuffer vbP;
 			VertexBuffer vbC;
-
-    // Generate a new vertex array object
-    void GenerateVAO();
-
-    // Update the renderer to account for input
-    void Update();
-
-    // Draw a rainbow cube
-    void DrawTestCube();
 
             // Test cube vertices
             std::vector<float> _positions = {
@@ -134,11 +126,12 @@ namespace arterra {
 					0.0f, 1.0f, 1.0f,
 					1.0f, 0.0f, 1.0f	
 			};
-
+		
+		GLint _viewProjectionUniform;
+		Camera* _camera;
+		ShaderManager _shaderManager;
 
     };
 
-    GLint _viewProjectionUniform;
-};
-
+    
 }
