@@ -10,6 +10,3 @@
 [submodule "ext/stb"]
 	path = ext/stb
 	url = https://github.com/nothings/stb.git
-[submodule "ext/miniOBJ"]
-	path = ext/miniOBJ
-	url = https://github.com/AlexGarrity/miniOBJ.git
