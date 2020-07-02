@@ -16,7 +16,7 @@ namespace arterra {
 		Bind();
 		// Bind the vertex buffer it it's not already bound.
 		vb.Bind();
-		
+
 		// Get all individual defined elements (vector properties) for this buffer layout.
 		const auto& elements = layout.GetElements();
 		unsigned int offset = 0;
