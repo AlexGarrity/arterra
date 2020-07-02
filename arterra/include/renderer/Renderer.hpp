@@ -20,16 +20,10 @@ namespace arterra {
 
             // Generate a new vertex array object
             void GenerateVAO();
-            // Generate a new vertex buffer object
-            void GenerateVBO();
-            // Generate a new element buffer object
-            void GenerateEBO();
 
             // Update the renderer to account for input
             void Update();
 
-            // Draw point using elements
-            void DrawPoints(std::vector<GLfloat> &points, std::vector<GLuint> &elements);
             // Draw a rainbow cube
             void DrawTestCube();
 

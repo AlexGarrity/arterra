@@ -9,3 +9,8 @@ compile_commands.json
 
 # Helper scripts
 **.ps1
+
+# Resource files
+*.png
+*.obj
+*.exe

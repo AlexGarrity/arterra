@@ -11,7 +11,6 @@ uniform mat4 viewProjection;
 void main()
 {
     // Pass relevant attributes to fragment shader
-    
     fragmentTextureCoords = textureCoords;
     fragmentNormalCoords = normalCoords;
 

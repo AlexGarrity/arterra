@@ -16,10 +16,9 @@ namespace arterra {
 
         // Load the basic shader and use it
         _shaderManager.LoadShader("shaders/basic.frag", "shaders/basic.vert", "basic");
-        _shaderManager.UseShader("basic");
 
         _stoneTexture.Load("textures/stone.png");
-        _cubeModel.Create("models/cube.mobj");
+        _cubeModel.Create("models/torus.mobj");
 
         // Enable depth testing
         glEnable(GL_DEPTH_TEST);
@@ -34,16 +33,13 @@ namespace arterra {
 
     void Renderer::Update() {
         // Set the camera view projection so the world renders in perspective
-        _shaderManager.ActiveProgram().SetUniform("viewProjection", _camera->ViewProjection());
-        _shaderManager.ActiveProgram().SetUniform("fragmentColour", {1.0f});
-    }
-
-    void Renderer::DrawPoints(std::vector<GLfloat> &points, std::vector<GLuint> &elements) {
-        
     }
 
     void Renderer::DrawTestCube() {
         glBindTexture(GL_TEXTURE_2D, _stoneTexture.Handle());
+        _shaderManager.UseShader("basic");
+        _shaderManager.ActiveProgram().SetUniform("viewProjection", _camera->ViewProjection());
+        _shaderManager.ActiveProgram().SetUniform("fragmentColour", {1.0f});
         _cubeModel.Render();
     }
 

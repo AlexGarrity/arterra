@@ -67,6 +67,7 @@ private:
         case Fatal:
             return "FATAL";
         }
+        return "?????";
     }
 
     // Minimum level for something to be logged

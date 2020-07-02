@@ -13,10 +13,6 @@ namespace arterra {
             std::vector<float_t> _normals {};
             std::vector<float_t> _uvs {};
 
-            std::vector<uint16_t> _indicesV {};
-            std::vector<uint16_t> _indicesT {};
-            std::vector<uint16_t> _indicesN {};
-
 
         public:
             OBJ() = default;
@@ -39,104 +35,109 @@ namespace arterra {
                 uint16_t vertexLength = 0;
                 uint16_t textureLength = 0;
                 uint16_t normalCount = 0;
+                uint16_t iV, iT, iN;
 
-                uint16_t iV = 0;
-                uint16_t iT = 0;
-                uint16_t iN = 0;
+                // Declare a load of vectors
+                std::vector<uint16_t> ivV, ivT, ivN;
+                std::vector<float_t> vertices, uvs, normals;
 
                 // Extract relevant data from the header
-                vertexLength = data[4] | data[5] << 8;
-                textureLength = data[6] | data[7] << 8;
-                normalCount = data[8] | data[9] << 8;
+                vertexLength = static_cast<uint16_t>(data[4]) | static_cast<uint16_t>(data[5]) << 8;
+                textureLength = static_cast<uint16_t>(data[6]) | static_cast<uint16_t>(data[7]) << 8;
+                normalCount = static_cast<uint16_t>(data[8]) | static_cast<uint16_t>(data[9]) << 8;
                 
-                iV = data[10] | data[11] << 8;
-                iT = data[12] | data[13] << 8;
-                iN = data[14] | data[15] << 8;
+                iV = static_cast<uint16_t>(data[10]) | static_cast<uint16_t>(data[11]) << 8;
+                iT = static_cast<uint16_t>(data[12]) | static_cast<uint16_t>(data[13]) << 8;
+                iN = static_cast<uint16_t>(data[14]) | static_cast<uint16_t>(data[15]) << 8;
 
-                _vertices.resize(vertexLength);
-                _uvs.resize(textureLength);
-                _normals.resize(normalCount);
+                vertices.reserve(vertexLength);
+                uvs.reserve(textureLength);
+                normals.reserve(normalCount);
 
-                _indicesV.resize(iV);
-                _indicesT.resize(iT);
-                _indicesN.resize(iN);
+                ivV.reserve(iV);
+                ivT.reserve(iT);
+                ivN.reserve(iN);
 
                 // Set the offset to the current read position
                 // = Where the header ends (after iN)
-                auto of = 16;
+                size_t of = 16;
                 for (auto x = 0; x < vertexLength * 4; x += 4) {
-                    uint32_t val = data[of+x] | data[of+x+1] << 8 | data[of+x+2] << 16 | data[of+x+3] << 24;
+                    uint32_t val = data[of] | data[of+1] << 8 | data[of+2] << 16 | data[of+3] << 24;
                     float_t fVal = *reinterpret_cast<float_t*>(&val);
-                    _vertices[x/4] = fVal;
+                    vertices.emplace_back(fVal);
+                    // Increase offset 4 bytes to account for read
+                    of += 4;
                 }
 
-                // 3 coords per vertex
-                of += 3 * vertexLength;
                 for (auto x = 0; x < textureLength * 4; x += 4) {
-                    uint32_t val = data[of+x] | data[of+x+1] << 8 | data[of+x+2] << 16 | data[of+x+3] << 24;
+                    uint32_t val = data[of] | data[of+1] << 8 | data[of+2] << 16 | data[of+3] << 24;
                     float_t fVal = *reinterpret_cast<float_t*>(&val);
-                    _uvs[x/4] = fVal;
+                    uvs.emplace_back(fVal);
+                    // Increase offset 4 bytes to account for read
+                    of += 4;
                 }
 
-                // 2 coords per UV
-                of += 2 * textureLength;
                 for (auto x = 0; x < normalCount * 4; x += 4) {
-                    uint32_t val = data[of+x] | data[of+x+1] << 8 | data[of+x+2] << 16 | data[of+x+3] << 24;
+                    uint32_t val = data[of] | data[of+1] << 8 | data[of+2] << 16 | data[of+3] << 24;
                     float_t fVal = *reinterpret_cast<float_t*>(&val);
-                    _normals[x/4] = fVal;
+                    normals.emplace_back(fVal);
+                    // Increase offset 4 bytes to account for read
+                    of += 4;
                 }
 
-                // 3 coords per normal
-                of += 3 * normalCount;
                 for (auto x = 0; x < iV * 2; x += 2) {
-                    uint16_t val = data[of+x] | data[of+x+1] << 8;
-                    _indicesV[x/2] = val;
+                    uint16_t val = data[of] | data[of+1] << 8;
+                    ivV.emplace_back(val);
+                    // Increase offset 2 bytes to account for read
+                    of += 2;
                 }
 
-                // 3 indices per face
-                of += 3 * iV;
                 for (auto x = 0; x < iT * 2; x += 2) {
-                    uint16_t val = data[of+x] | data[of+x+1] << 8;
-                    _indicesV[x/2] = val;
+                    uint16_t val = data[of] | data[of+1] << 8;
+                    ivT.emplace_back(val);
+                    // Increase offset 2 bytes to account for read
+                    of += 2;
                 }
                 
-                // 3 indices per face
-                of += 3 * iV;
                 for (auto x = 0; x < iN * 2; x += 2) {
-                    uint16_t val = data[of+x] | data[of+x+1] << 8;
-                    _indicesV[x/2] = val;
+                    uint16_t val = data[of] | data[of+1] << 8;
+                    ivN.emplace_back(val);
+                    // Increase offset 2 bytes to account for read
+                    of += 2;
+                }
+
+                // Reconstruct model
+                for (auto x = 0; x < iV; ++x) {
+                    auto start = (ivV[x] - 1) * 3;
+                    _vertices.emplace_back(vertices[start]);
+                    _vertices.emplace_back(vertices[start+1]);
+                    _vertices.emplace_back(vertices[start+2]);
+                
+                }
+
+                for (auto x = 0; x < iT; ++x) {
+                    auto start = (ivT[x] - 1) * 2;
+                    _uvs.emplace_back(uvs[start]);
+                    _uvs.emplace_back(uvs[start+1]);
+                }
+
+                for (auto x = 0; x < iN; ++x) {
+                    auto start = (ivN[x] - 1) * 3;
+                    _normals.emplace_back(vertices[start]);
+                    _normals.emplace_back(normals[start+1]);
+                    _normals.emplace_back(normals[start+2]);
                 }
             }
 
-            inline std::vector<float_t> Vertices() const { return _vertices; }
-            inline std::vector<float_t> Normals() const { return _normals; }
-            inline std::vector<float_t> UVs() const { return _uvs; }
-
-            inline std::vector<uint16_t> VertexIndices() const { return _indicesV; }
-            inline std::vector<uint16_t> NormalIndices() const { return _indicesN; }
-            inline std::vector<uint16_t> UVIndices() const { return _indicesT; }
-
-            using fVec = std::vector<float_t>;
-            using u16Vec = std::vector<uint16_t>;
-            void FillVectors(fVec &v, fVec &t, fVec &n, u16Vec &iV, u16Vec &iT, u16Vec &iN) {
-                v = _vertices;
-                t = _uvs;
-                n = _normals;
-
-                iV = _indicesV;
-                iT = _indicesT;
-                iN = _indicesN;
-            }
+            inline std::vector<float_t> &Vertices() { return _vertices; }
+            inline std::vector<float_t> &Normals() { return _normals; }
+            inline std::vector<float_t> &UVs() { return _uvs; }
 
             size_t Size() const { return 
                 (
                     _vertices.size() * sizeof(float_t) + 
                     _normals.size() * sizeof(float_t) +
                     _uvs.size() * sizeof(float_t) +
-
-                    _indicesV.size() * sizeof(uint16_t) +
-                    _indicesT.size() * sizeof(uint16_t) +
-                    _indicesN.size() * sizeof(uint16_t) +
                     sizeof(OBJ)
                 );
             }
