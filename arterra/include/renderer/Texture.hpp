@@ -37,7 +37,7 @@ namespace arterra{
 				{
 					auto dataHandle = Resource::Get().Get(filepath);
 					data = stbi_load_from_memory(
-						dataHandle._resource->_data.data(), dataHandle._resource->_data.size(), &_width, &_height, &_channels, 3
+						dataHandle._resource->_data.data(), static_cast<int>(dataHandle._resource->_data.size()), &_width, &_height, &_channels, 3
 					);
 				}
 				// Bind the texture and buffer data

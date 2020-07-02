@@ -9,29 +9,28 @@
 namespace arterra {
     class OBJ {
         protected:
-            std::vector<float_t> _vertices;
-            std::vector<float_t> _normalCoordinates;
-            std::vector<float_t> _uvCoordinates;
-            std::vector<uint16_t> _indices;
+            std::vector<float_t> _vertices {};
+            std::vector<float_t> _normals {};
+            std::vector<float_t> _uvs {};
+
+            std::vector<uint16_t> _indicesV {};
+            std::vector<uint16_t> _indicesT {};
+            std::vector<uint16_t> _indicesN {};
 
 
         public:
-            OBJ(std::vector<uint8_t> *data) 
-            : _vertices {0}, _normalCoordinates {0}, _uvCoordinates {0}, _indices {0} 
+            OBJ() = default;
+
+            OBJ(std::vector<uint8_t> data)
             {
-
-                if (!data) {
-                    return;
-                }
-
                 // Check that there's at least enough data for the header
-                if (data->size() < 16) {
+                if (data.size() < 16) {
                     // Data is too small
                     return;
                 }
 
                 // Check we have the right data
-                auto magicNum = std::string (data->begin(), data->begin() + 4);
+                auto magicNum = std::string (data.begin(), data.begin() + 4);
                 if (magicNum != "MOBJ") {
                     // Wrong data, I guess
                     return;
@@ -40,58 +39,106 @@ namespace arterra {
                 uint16_t vertexLength = 0;
                 uint16_t textureLength = 0;
                 uint16_t normalCount = 0;
-                uint16_t faceCount = 0;
+
+                uint16_t iV = 0;
+                uint16_t iT = 0;
+                uint16_t iN = 0;
 
                 // Extract relevant data from the header
-                vertexLength = data->at(4) | data->at(5) << 8;
-                textureLength = data->at(6) | data->at(7) << 8;
-                normalCount = data->at(8) | data->at(9) << 8;
-                faceCount = data->at(10) | data->at(11) << 8;
+                vertexLength = data[4] | data[5] << 8;
+                textureLength = data[6] | data[7] << 8;
+                normalCount = data[8] | data[9] << 8;
+                
+                iV = data[10] | data[11] << 8;
+                iT = data[12] | data[13] << 8;
+                iN = data[14] | data[15] << 8;
 
                 _vertices.resize(vertexLength);
-                _uvCoordinates.resize(textureLength);
-                _normalCoordinates.resize(normalCount);
-                _indices.resize(faceCount);
+                _uvs.resize(textureLength);
+                _normals.resize(normalCount);
+
+                _indicesV.resize(iV);
+                _indicesT.resize(iT);
+                _indicesN.resize(iN);
 
                 // Set the offset to the current read position
-                auto of = 12;
+                // = Where the header ends (after iN)
+                auto of = 16;
                 for (auto x = 0; x < vertexLength * 4; x += 4) {
-                    uint32_t val = data->at(of+x) | data->at(of+x+1) << 8 | data->at(of+x+2) << 16 | data->at(of+x+3) << 24;
+                    uint32_t val = data[of+x] | data[of+x+1] << 8 | data[of+x+2] << 16 | data[of+x+3] << 24;
                     float_t fVal = *reinterpret_cast<float_t*>(&val);
-                    _vertices[x] = fVal;
+                    _vertices[x/4] = fVal;
                 }
 
+                // 3 coords per vertex
                 of += 3 * vertexLength;
                 for (auto x = 0; x < textureLength * 4; x += 4) {
-                    uint32_t val = data->at(of+x) | data->at(of+x+1) << 8 | data->at(of+x+2) << 16 | data->at(of+x+3) << 24;
+                    uint32_t val = data[of+x] | data[of+x+1] << 8 | data[of+x+2] << 16 | data[of+x+3] << 24;
                     float_t fVal = *reinterpret_cast<float_t*>(&val);
-                    _uvCoordinates[x] = fVal;
+                    _uvs[x/4] = fVal;
                 }
 
+                // 2 coords per UV
                 of += 2 * textureLength;
                 for (auto x = 0; x < normalCount * 4; x += 4) {
-                    uint32_t val = data->at(of+x) | data->at(of+x+1) << 8 | data->at(of+x+2) << 16 | data->at(of+x+3) << 24;
+                    uint32_t val = data[of+x] | data[of+x+1] << 8 | data[of+x+2] << 16 | data[of+x+3] << 24;
                     float_t fVal = *reinterpret_cast<float_t*>(&val);
-                    _normalCoordinates[x] = fVal;
+                    _normals[x/4] = fVal;
                 }
 
+                // 3 coords per normal
                 of += 3 * normalCount;
-                for (auto x = 0; x < faceCount * 2; x += 2) {
-                    uint16_t val = data->at(of+x) | data->at(of+x+1) << 8;
-                    _indices[x] = val;
+                for (auto x = 0; x < iV * 2; x += 2) {
+                    uint16_t val = data[of+x] | data[of+x+1] << 8;
+                    _indicesV[x/2] = val;
+                }
+
+                // 3 indices per face
+                of += 3 * iV;
+                for (auto x = 0; x < iT * 2; x += 2) {
+                    uint16_t val = data[of+x] | data[of+x+1] << 8;
+                    _indicesV[x/2] = val;
+                }
+                
+                // 3 indices per face
+                of += 3 * iV;
+                for (auto x = 0; x < iN * 2; x += 2) {
+                    uint16_t val = data[of+x] | data[of+x+1] << 8;
+                    _indicesV[x/2] = val;
                 }
             }
 
             inline std::vector<float_t> Vertices() const { return _vertices; }
-            inline std::vector<float_t> Normals() const { return _normalCoordinates; }
-            inline std::vector<float_t> UVs() const { return _uvCoordinates; }
-            inline std::vector<uint16_t> Indices() const { return _indices; }
+            inline std::vector<float_t> Normals() const { return _normals; }
+            inline std::vector<float_t> UVs() const { return _uvs; }
 
-            inline size_t Size() const { return 
-                (_vertices.size() * sizeof(float_t) + 
-                _normalCoordinates.size() * sizeof(float_t) +
-                _uvCoordinates.size() * sizeof(float_t) +
-                _indices.size() * sizeof(uint16_t));
+            inline std::vector<uint16_t> VertexIndices() const { return _indicesV; }
+            inline std::vector<uint16_t> NormalIndices() const { return _indicesN; }
+            inline std::vector<uint16_t> UVIndices() const { return _indicesT; }
+
+            using fVec = std::vector<float_t>;
+            using u16Vec = std::vector<uint16_t>;
+            void FillVectors(fVec &v, fVec &t, fVec &n, u16Vec &iV, u16Vec &iT, u16Vec &iN) {
+                v = _vertices;
+                t = _uvs;
+                n = _normals;
+
+                iV = _indicesV;
+                iT = _indicesT;
+                iN = _indicesN;
+            }
+
+            size_t Size() const { return 
+                (
+                    _vertices.size() * sizeof(float_t) + 
+                    _normals.size() * sizeof(float_t) +
+                    _uvs.size() * sizeof(float_t) +
+
+                    _indicesV.size() * sizeof(uint16_t) +
+                    _indicesT.size() * sizeof(uint16_t) +
+                    _indicesN.size() * sizeof(uint16_t) +
+                    sizeof(OBJ)
+                );
             }
     };
 
