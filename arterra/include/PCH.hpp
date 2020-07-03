@@ -42,6 +42,9 @@
 #include <unordered_set>
 // Iterators
 #include <iterator>
+// FIFO and LIFO
+#include <queue>
+#include <stack>
 
 // Utility classes
 #include "util/Logger.hpp"
