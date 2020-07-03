@@ -19,7 +19,7 @@ namespace arterra {
 
 		// Get all individual defined elements (vector properties) for this buffer layout.
 		const auto& elements = layout.GetElements();
-		unsigned int offset = 0;
+		uint64_t offset = 0;
 		// temp is used to increase _lastBoundAttribute by however many iteration (i)
 		// cycles happen.
 		GLuint temp;
@@ -33,12 +33,12 @@ namespace arterra {
 			//		_count = 3 ( vector has 3 coords x,y,z )
 			//		_type = GL_FLOAT ( since its a vector )
 			// 		_normalised = GL_FALSE ( not needed )
-			// 		GetStride() = 6 * sizeof(float) ( there are 3 position floats and 3 colour float )
+			// 		GetStride() = 6 * sizeof(float_t) ( there are 3 position floats and 3 colour float_t)
 			//		offset = 0 ( since position is first )
 			glVertexAttribPointer(
-				i, element._count, element._type, element._normalised, layout.GetStride(), (const void*)offset);
+				i, element._count, element._type, element._normalised, layout.GetStride(), reinterpret_cast<const void*>(offset));
 			// Increase the offset by the element total size, e.g.
-			//		position is a vec3, so 3 (floats) * sizeof(float)
+			//		position is a vec3, so 3 (floats) * sizeof(float_t)
 			offset += element._count * VertexBufferLayout::Element::GetSizeOfType(element._type);
 			temp = i;
 		}

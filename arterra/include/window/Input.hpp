@@ -12,9 +12,9 @@ namespace arterra {
 		// Whether the key is currently pressed down or not.
 		bool _active = false;
 		// Time the key has been held in seconds.
-		float _timeHeld = 0.0f;
+		float_t _timeHeld = 0.0f;
 		// Callback functions to fire when the key becomes active.
-		std::vector<std::function<void(float)>> _subscribers {};
+		std::vector<std::function<void(float_t)>> _subscribers {};
 
 		// Call all subscribers to this keybind.
 		void CallSubscribers()
@@ -50,14 +50,14 @@ namespace arterra {
 		// Update tracked information for active keys.
 		static void Update(float_t deltaTime);
 		// Register keybind subscriber.
-		static void RegisterKeySubscriber(const int key, const std::function<void(float)> callback);
+		static void RegisterKeySubscriber(const int key, const std::function<void(float_t)> callback);
 
 		// Debug method
 		static void PrintInformation();
 
 	private:
 		// List of currently pressed down keys,
-		// int = keycode, KeyBind = properties for this key.
+		// int64_t = keycode, KeyBind = properties for this key.
 		static std::unordered_map<int, KeyBind> _pressedKeys;
 	};
 

@@ -30,6 +30,7 @@ namespace arterra {
 			file.open(path, std::ios::binary);
 		} catch (const std::exception& e) {
 			Logger::Get().Log(Logger::Error, "Could not load resource '", name, "'");
+			Logger::Get().Log("<TRACE>", e.what());
 			return false;
 		}
 

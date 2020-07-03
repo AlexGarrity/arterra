@@ -17,7 +17,7 @@ namespace arterra {
             virtual void Render(float_t deltaTime) override;
 
             private:
-                float _timeToResourceUnload = 5.0f;
+                float_t _timeToResourceUnload = 5.0f;
 
         };
 

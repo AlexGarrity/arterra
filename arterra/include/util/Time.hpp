@@ -14,11 +14,11 @@ namespace arterra {
 		void CalculateDeltaTime();
 
 		// Get the last time difference between frames.
-		inline const float GetDeltaTime() { return _deltaTime; }
+		inline const float_t GetDeltaTime() { return _deltaTime; }
 
 	private:
 		// Cache of deltaTime to stop calculating it every time its needed.
-		float _deltaTime;
+		float_t _deltaTime;
 		// The clock time at the last time of calculating deltaTime.
 		std::chrono::high_resolution_clock::time_point _previousTime;
 	};

@@ -6,7 +6,7 @@ namespace arterra {
 
 	VertexBuffer::~VertexBuffer() { glDeleteBuffers(1, &_glID); }
 
-	void VertexBuffer::Create(const void* data, unsigned int size)
+	void VertexBuffer::Create(const void* data, size_t size)
 	{
 		// Generate a new buffer for this vertex buffer.
 		glGenBuffers(1, &_glID);

@@ -31,7 +31,7 @@ namespace arterra {
 			VertexBuffer vbC;
 
             // Test cube vertices
-            std::vector<float> _positions = {
+            std::vector<float_t> _positions = {
 				// FRONT
                 0.5f, 0.5f, 0.5f, 		// 1
 				0.5f, -0.5f, 0.5f, 	// 2
@@ -88,7 +88,7 @@ namespace arterra {
 				
             };
 			
-			std::vector<float> _colours = {
+			std::vector<float_t> _colours = {
 					1.0f, 0.0f, 0.0f,
 					0.0f, 1.0f, 0.0f,
 					0.0f, 0.0f, 1.0f,

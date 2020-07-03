@@ -8,17 +8,17 @@ namespace arterra {
 		_engine.seed(seed);
 	}
 
-	int Random::IntInRange(const int min, const int max)
+	int64_t Random::IntInRange(const int64_t min, const int64_t max)
 	{
-		// Generate an int in the range.
-		std::uniform_int_distribution<> distribution(min, max);
+		// Generate an integer in the range.
+		std::uniform_int_distribution<int64_t> distribution(min, max);
 		return distribution(_engine);
 	}
 
-	float Random::FloatInRange(const float min, const float max)
+	float_t Random::FloatInRange(const float_t min, const float_t max)
 	{
-		// Generate a float in the range.
-		std::uniform_real_distribution<float> distribution(min, max);
+		// Generate a float_tin the range.
+		std::uniform_real_distribution<float_t> distribution(min, max);
 		return distribution(_engine);
 	}
 

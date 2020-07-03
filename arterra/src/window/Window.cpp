@@ -58,7 +58,7 @@ namespace arterra {
 		glClearColor(red, green, blue, alpha);
 	}
 
-	// Cast 0-255 values to 0-1 float, then set clear colour
+	// Cast 0-255 values to 0-1 float_t, then set clear colour
 	void Window::SetClearColour(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
 	{
 		// Multiply all values by inverse of 255

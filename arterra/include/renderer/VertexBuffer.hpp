@@ -21,7 +21,7 @@ namespace arterra {
 		//
 		// data = array making up the data.
 		// size = total size of the array in bytes.
-		void Create(const void* data, unsigned int size);
+		void Create(const void* data, uint64_t size);
 
 		// Set this buffer to be the current buffer to work on.
 		void Bind() const;
@@ -40,12 +40,12 @@ namespace arterra {
 
 			// Number of values this element has e.g. 3 floats.
 			GLint _count;
-			// Type of element e.g. float.
+			// Type of element e.g. float_t.
 			GLenum _type;
 			unsigned char _normalised;
 
 			// Return the correct size of the type.
-			static unsigned int GetSizeOfType(GLenum type)
+			static size_t GetSizeOfType(GLenum type)
 			{
 				switch (type) {
 					case GL_FLOAT:
@@ -66,7 +66,7 @@ namespace arterra {
 		template <typename T> void Push(GLint count) { static_assert(false); }
 
 		// Add an element declaration to this buffer layout.
-		template <> void Push<float>(GLint count)
+		template <> void Push<float_t>(GLint count)
 		{
 			_elements.push_back({ count, GL_FLOAT, GL_FALSE });
 			_stride += VertexBufferLayout::Element::GetSizeOfType(GL_FLOAT) * count;
@@ -82,7 +82,7 @@ namespace arterra {
 		// Get the "stride" - the length in bytes between the definitions
 		// of consecutive vectors, i.e. the length of (position, uv, normals...)
 		// for a vector.
-		inline GLsizei GetStride() const { return _stride; }
+		inline GLsizei GetStride() const { return static_cast<GLsizei>(_stride); }
 
 		// Return all the elements (such as position, uv, normals)
 		// that this buffer layout contains.
@@ -91,7 +91,7 @@ namespace arterra {
 	private:
 		// All the elements (such as position, uv, normals) in this buffer layout.
 		std::vector<VertexBufferLayout::Element> _elements;
-		unsigned int _stride;
+		size_t _stride;
 	};
 
 }

@@ -48,7 +48,7 @@ namespace arterra {
 		// PrintInformation();
 	}
 
-	void Input::RegisterKeySubscriber(const int key, const std::function<void(float)> callback)
+	void Input::RegisterKeySubscriber(const int key, const std::function<void(float_t)> callback)
 	{
 		// Add the callback function to the key subscription.
 		_pressedKeys[key]._subscribers.emplace_back(callback);

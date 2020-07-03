@@ -10,7 +10,6 @@ namespace arterra {
 		_shaders[identifier] = ShaderProgram();
 		// Create the actual shaders.
 		bool result = _shaders[identifier].Create(vertPath, fragPath);
-		char buffer[256];
 		// Check if the shader was successfully compiled.
 		if (result) {
 			Logger::Get().Log(Logger::Debug, "Shader [", identifier, "] loaded successfully");
