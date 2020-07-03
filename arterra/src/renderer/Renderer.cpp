@@ -30,6 +30,7 @@ namespace arterra {
 	{
 		// Set the camera view projection so the world renders in perspective
 		_shaderManager.ActiveProgram().SetUniform("viewProjection", _camera->ViewProjection());
+		_shaderManager.ActiveProgram().SetUniform("fragmentColour", {0.2f, 1.0f, 1.0f, 1.0f});
 	}
 
 	void Renderer::DrawTestCube()

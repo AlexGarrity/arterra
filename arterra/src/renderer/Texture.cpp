@@ -25,7 +25,7 @@ namespace arterra {
 			// Get a handle to the resource, use stb to parse it properly
 			auto dataHandle = ResourceManager::Get().GetHandle(filepath);
 			data = stbi_load_from_memory(dataHandle._resource->_data.data(),
-				static_cast<int>(dataHandle._resource->_data.size()), &_width, &_height, &_channels, 3);
+				static_cast<int>(dataHandle._resource->_data.size()), &_width, &_height, &_channels, 4);
 		}
 		// Bind the texture and buffer data
 		glBindTexture(GL_TEXTURE_2D, _handle);
