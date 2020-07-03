@@ -8,19 +8,10 @@ Renderer::Renderer(Camera* camera)
     // Give GLAD the GLFW extension loader function
     gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
 
-    vao.Bind();
-
-
-    // Assign position buffer.
-    vbP.Create(_positions, 3, GL_FLOAT);
-    vao.AddBuffer(vbP);
-
-    // Assign colour buffer.
-    vbC.Create(_colours, 3, GL_FLOAT);
-    vao.AddBuffer(vbC);
+	_testModel.Create("models/cube.mobj");
 
     // Load the basic shader and use it
-    _shaderManager.LoadShader("shaders/basicColour.frag", "shaders/basicColour.vert", "basic");
+    _shaderManager.LoadShader("shaders/basic.frag", "shaders/basic.vert", "basic");
     _shaderManager.UseShader("basic");
 
     // Enable depth testing
@@ -28,7 +19,7 @@ Renderer::Renderer(Camera* camera)
     glEnable(GL_BLEND);
 
     // Enable face culling
-    glFrontFace(GL_CW);
+    glFrontFace(GL_CCW);
     glCullFace(GL_BACK);
     glEnable(GL_CULL_FACE);
 }
@@ -42,7 +33,7 @@ void Renderer::Update()
 void Renderer::DrawTestCube()
 {
     _shaderManager.UseShader("basic");
-    vao.Bind();
+    _testModel.Bind();
     glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
