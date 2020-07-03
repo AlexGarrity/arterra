@@ -31,11 +31,11 @@ public:
         _transform._right = glm::vec3(1.0f, 0.0f, 0.0f);
     }
 
-    void Update(Window& window)
+    void Update(Window& window, float_t deltaTime)
     {
 
         // Set speed to account for deltaTime
-        _speed = Time::GetDeltaTime() * 2.0f;
+        _speed = deltaTime * 2.0f;
         _transform.Update();
 
         // Whole bunch of input handling

@@ -75,6 +75,8 @@
         "set": "cpp",
         "unordered_set": "cpp",
         "xtree": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "queue": "cpp",
+        "stack": "cpp"
     }
 }

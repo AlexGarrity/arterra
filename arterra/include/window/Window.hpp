@@ -1,6 +1,9 @@
 #pragma once
 
 #include "PCH.hpp"
+
+#include <glad/glad.h>
+
 #include <GLFW/glfw3.h>
 
 namespace arterra {
@@ -31,7 +34,7 @@ namespace arterra {
 		// Set the window to close
 		void SetShouldClose(bool shouldClose);
 		// Helper for updating
-		void Update();
+		void Update(float_t deltaTime);
 
 		// Inline const getters
 		inline uint32_t GetWidth() const { return _width; }

@@ -30,6 +30,14 @@ namespace arterra {
 
 		// Make this window the active GL context
 		glfwMakeContextCurrent(_window.get());
+
+		// Loading GL straight after the context avoids access violation errors
+		// Load GL core using GLAD, if it fails then error and return
+		if (!gladLoadGL()) {
+			Logger::Get().Log(Logger::Fatal, "GLAD failed to initialise");
+		}
+		else
+			Logger::Get().Log(Logger::Debug, "Successfully initialised GLAD");
 	}
 
 	Window::~Window()
@@ -80,10 +88,9 @@ namespace arterra {
 		glfwSetWindowShouldClose(_window.get(), shouldClose);
 	}
 
-	void Window::Update()
+	void Window::Update(float_t deltaTime)
 	{
 		PollEvents();
-		Input::Update();
 		SwapBuffers();
 	}
 }

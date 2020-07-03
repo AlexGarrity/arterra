@@ -29,7 +29,7 @@ namespace arterra {
 		}
 	}
 
-	void Input::Update()
+	void Input::Update(float_t deltaTime)
 	{
 		// If no keys are being tracked, return quickly.
 		if (_pressedKeys.empty()) {
@@ -39,7 +39,7 @@ namespace arterra {
 		// Increase the hold time for all actively held keys.
 		for (auto& i : _pressedKeys) {
 			if (i.second._active) {
-				i.second._timeHeld += Time::GetDeltaTime();
+				i.second._timeHeld += deltaTime;
 				i.second.CallSubscribers();
 			}
 		}
