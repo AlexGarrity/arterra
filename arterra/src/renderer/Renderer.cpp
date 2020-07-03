@@ -10,17 +10,14 @@ Renderer::Renderer(Camera* camera)
 
     vao.Bind();
 
-    // Create buffer layout, this is the same for all buffers.
-    VertexBufferLayout layout;
-    layout.Push<float_t>(3);
 
     // Assign position buffer.
-    vbP.Create(_positions.data(), 3 * 36 * sizeof(float_t));
-    vao.AddBuffer(vbP, layout);
+    vbP.Create(_positions, 3, GL_FLOAT);
+    vao.AddBuffer(vbP);
 
     // Assign colour buffer.
-    vbC.Create(_colours.data(), 3 * 36 * sizeof(float_t));
-    vao.AddBuffer(vbC, layout);
+    vbC.Create(_colours, 3, GL_FLOAT);
+    vao.AddBuffer(vbC);
 
     // Load the basic shader and use it
     _shaderManager.LoadShader("shaders/basicColour.frag", "shaders/basicColour.vert", "basic");

@@ -15,7 +15,7 @@ namespace arterra {
 		// dtor calls the glDeleteVertexArray function.
 		~VertexArray();
 
-		void AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout);
+		void AddBuffer(const VertexBuffer& vb);
 
 		// Sets this vertex array as the current vertex array to work on.
 		void Bind() const;
