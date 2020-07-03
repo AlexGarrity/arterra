@@ -33,10 +33,13 @@ namespace arterra {
             auto currentState = GetState();
             if (!currentState) {
                 Logger::Get().Log(Logger::Error, "Engine has no state, exiting");
+                SetShouldExit(true);
             }
-            currentState->Input(_time.GetDeltaTime());
-            currentState->Update(_time.GetDeltaTime());
-            currentState->Render(_time.GetDeltaTime());
+            else {
+                currentState->Input(_time.GetDeltaTime());
+                currentState->Update(_time.GetDeltaTime());
+                currentState->Render(_time.GetDeltaTime());
+            }
             _time.CalculateDeltaTime();
         }
     }
