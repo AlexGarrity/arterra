@@ -10,7 +10,7 @@ namespace arterra {
 
         class Base {
             public:
-                Base(std::shared_ptr<Engine> engine) : _engine {engine} {
+                Base(Engine* engine) : _engine {engine} {
                     Logger::Get().Log(Logger::Debug, "Created a new init state");
                 };
 
@@ -21,7 +21,7 @@ namespace arterra {
                 virtual void Render(float_t deltaTime) = 0;
 
             protected:
-                std::shared_ptr<Engine> _engine;
+                Engine *_engine;
         };
 
     }

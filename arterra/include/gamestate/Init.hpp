@@ -10,7 +10,7 @@ namespace arterra {
 
         class Init : public Base {
         public:
-            Init(std::shared_ptr<Engine> engine) : Base(engine) {};
+            Init(Engine* engine);
 
             virtual void Input(float_t deltaTime);
             virtual void Update(float_t deltaTime);

@@ -7,17 +7,20 @@ namespace arterra {
 	class Time {
 
 	public:
+		// ctor
+		Time() : _deltaTime {0.0f}, _previousTime{std::chrono::high_resolution_clock::now()} {}
+
 		// Calculate time delta between last frame.
-		static void CalculateDeltaTime();
+		void CalculateDeltaTime();
 
 		// Get the last time difference between frames.
-		static inline const float GetDeltaTime() { return _deltaTime; }
+		inline const float GetDeltaTime() { return _deltaTime; }
 
 	private:
 		// Cache of deltaTime to stop calculating it every time its needed.
-		static float _deltaTime;
+		float _deltaTime;
 		// The clock time at the last time of calculating deltaTime.
-		static std::chrono::high_resolution_clock::time_point _previousTime;
+		std::chrono::high_resolution_clock::time_point _previousTime;
 	};
 
 }

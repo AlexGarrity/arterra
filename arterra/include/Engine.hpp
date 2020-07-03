@@ -1,12 +1,18 @@
 #pragma once
 
 #include "PCH.hpp"
+
 #include "renderer/Renderer.hpp"
+#include "window/Window.hpp"
+#include "window/Input.hpp"
 #include "util/Time.hpp"
 
 namespace arterra {
 
-    class gamestate::Base;
+    // Forward decl of Base gamestate to prevent circular inclusion
+    namespace gamestate {
+        class Base;
+    }
 
     class Engine {
 
@@ -16,20 +22,28 @@ namespace arterra {
 
             void Run();
 
-            const std::shared_ptr<gamestate::Base> GetState() const;
-            void PushState(std::shared_ptr<gamestate::Base> state);
+            gamestate::Base *GetState() const;
+            void PushState(gamestate::Base *state);
             void PopState();
 
             const inline bool StateQueueEmpty() const { return _stateQueue.empty(); }
             inline void SetShouldExit(bool b) { _shouldExit = b; }
 
 
+            inline Window *GetWindow() const { return _window; }
+            inline Renderer *GetRenderer() const { return _renderer; }
+            inline Camera *GetCamera() const { return _camera; }
+
         private:
             bool _shouldExit = false;
-            std::queue<std::shared_ptr<gamestate::Base>> _stateQueue;
+            std::queue<gamestate::Base*> _stateQueue;
 
+            // TODO - Convert to using C++11 ptrs
+            Window *_window;
             Renderer *_renderer;
-            Time *time;
+            Camera *_camera;
+
+            Time _time;
 
     };
 

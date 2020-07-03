@@ -16,7 +16,7 @@
 namespace arterra {
     class Renderer {
         public:
-            Renderer(Camera &camera);
+            Renderer(Camera *camera);
 			
             // Update the renderer to account for input
             void Update();

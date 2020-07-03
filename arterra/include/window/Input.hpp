@@ -48,7 +48,7 @@ namespace arterra {
 		// Callback when a key is pressed.
 		static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 		// Update tracked information for active keys.
-		static void Update();
+		static void Update(float_t deltaTime);
 		// Register keybind subscriber.
 		static void RegisterKeySubscriber(const int key, const std::function<void(float)> callback);
 

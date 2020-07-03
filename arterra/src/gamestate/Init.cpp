@@ -4,7 +4,7 @@ namespace arterra {
 
     namespace gamestate {
 
-        Init::Init(std::shared_ptr<Engine> engine) {
+        Init::Init(Engine *engine) : Base(engine) {
             
         }
 
