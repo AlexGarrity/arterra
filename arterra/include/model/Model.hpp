@@ -4,7 +4,6 @@
 
 #include "glad/glad.h"
 
-#include "model/OBJ.hpp"
 #include "util/Resource.hpp"
 
 namespace arterra {

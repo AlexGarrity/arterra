@@ -1,5 +1,7 @@
 #include "model/Model.hpp"
 
+#include "model/OBJ.hpp"
+
 namespace arterra {
 
 	Model::Model()
@@ -30,21 +32,17 @@ namespace arterra {
 			Logger::Get().Log(Logger::Warning, "Failed to load model '", filepath, "'");
 			return false;
 		}
-		auto resourceHandle = ResourceManager::Get().GetHandle(filepath);
 
 		// Create vectors for storing useful things
 		std::vector<float_t> vertices;
 		std::vector<float_t> normals;
 		std::vector<float_t> uvs;
 
-		// Load the model. Scoped to ensure deletion
 		{
-			auto objModel = OBJ { resourceHandle._resource->_data };
-
-			// Set model to match loaded model
-			vertices = objModel.Vertices();
-			uvs = objModel.UVs();
-			normals = objModel.Normals();
+			// Get a handle to the resource data
+			auto resourceHandle = ResourceManager::Get().GetHandle(filepath);
+			// Parse the OBJ file
+			OBJ::Load(resourceHandle._resource->_data, vertices, normals, uvs);
 		}
 
 		// Bind vertex data
@@ -57,12 +55,8 @@ namespace arterra {
 		glBindBuffer(GL_ARRAY_BUFFER, _buffers._normalBuffer);
 		glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(GLfloat), normals.data(), GL_STATIC_DRAW);
 
-		// Get vertex count and clear from memory
+		// Get vertex count
 		_vertexCount = vertices.size();
-		vertices.clear();
-		normals.clear();
-		uvs.clear();
-
 		return true;
 	}
 
