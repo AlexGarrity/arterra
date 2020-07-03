@@ -28,7 +28,7 @@ namespace arterra {
 			// Get a handle to the resource data
 			auto resourceHandle = ResourceManager::Get().GetHandle(filepath);
 			// Parse the OBJ file
-			OBJ::Load(resourceHandle._resource->_data, vertices, normals, uvs);
+			OBJ::Load(resourceHandle._resource->_data, vertices, uvs, normals);
 		}
 
 		_buffers._vao.Bind();

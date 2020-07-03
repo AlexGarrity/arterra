@@ -36,6 +36,7 @@ namespace arterra {
 	{
 		_shaderManager.UseShader("basic");
 		_testModel.Bind();
+		_textureHandle.Bind();
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 	}
 
