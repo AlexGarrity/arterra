@@ -65,11 +65,17 @@ namespace arterra {
 			auto uniform = GetUniform(uniformName.c_str());
 			glUniform3fv(uniform, 1, glm::value_ptr(vector));
 		}
-
+		
 		inline void SetUniform(std::string uniformName, glm::vec4 vector)
 		{
 			auto uniform = GetUniform(uniformName.c_str());
 			glUniform4fv(uniform, 1, glm::value_ptr(vector));
+		}
+		
+		inline void SetUniform(std::string uniformName, GLint value)
+		{
+			auto uniform = GetUniform(uniformName.c_str());
+			glUniform1i(uniform, value);
 		}
 
 		void DumpToLog(std::string title = "ShaderProgram")
