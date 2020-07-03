@@ -34,7 +34,7 @@ namespace arterra {
 		_buffers._vao.Bind();
 
 		_buffers._positions.Create(vertices, 3, GL_FLOAT);
-		_buffers._uvs.Create(uvs, 3, GL_FLOAT);
+		_buffers._uvs.Create(uvs, 2, GL_FLOAT);
 		_buffers._normals.Create(normals, 3, GL_FLOAT);
 
 		_buffers._vao.AddBuffer(_buffers._positions);
