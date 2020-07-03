@@ -14,25 +14,22 @@
 #include "renderer/VertexArray.hpp"
 
 namespace arterra {
-    class Renderer {
-        public:
-            Renderer(Camera *camera);
-			
-            // Update the renderer to account for input
-            void Update();
+	class Renderer {
+	public:
+		Renderer(Camera* camera);
 
-            // Draw a rainbow cube
-            void DrawTestCube();
+		// Update the renderer to account for input
+		void Update();
 
-        private:
-            
+		// Draw a rainbow cube
+		void DrawTestCube();
+
+	private:
 		GLint _viewProjectionUniform;
 		Camera* _camera;
 		ShaderManager _shaderManager;
-		
+
 		Model _testModel;
+	};
 
-    };
-
-    
 }

@@ -10,7 +10,6 @@ namespace arterra {
 		Create(filepath);
 	}
 
-
 	bool Model::Create(std::string filepath)
 	{
 		// Load and get handle to the resource
@@ -31,13 +30,13 @@ namespace arterra {
 			// Parse the OBJ file
 			OBJ::Load(resourceHandle._resource->_data, vertices, normals, uvs);
 		}
-		
+
 		_buffers._vao.Bind();
-		
+
 		_buffers._positions.Create(vertices, 3, GL_FLOAT);
 		_buffers._uvs.Create(uvs, 3, GL_FLOAT);
 		_buffers._normals.Create(normals, 3, GL_FLOAT);
-		
+
 		_buffers._vao.AddBuffer(_buffers._positions);
 		_buffers._vao.AddBuffer(_buffers._uvs);
 		_buffers._vao.AddBuffer(_buffers._normals);
@@ -46,6 +45,5 @@ namespace arterra {
 		_vertexCount = vertices.size();
 		return true;
 	}
-
 
 }

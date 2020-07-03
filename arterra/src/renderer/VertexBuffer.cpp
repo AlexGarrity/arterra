@@ -1,14 +1,14 @@
 #include "renderer/VertexBuffer.hpp"
 
 namespace arterra {
-	
-	size_t GetTypeSize(GLenum type) {
-		switch (type)
-		{
-		case GL_FLOAT:
-			return 4;
-		case GL_UNSIGNED_SHORT:
-			return 2;
+
+	size_t GetTypeSize(GLenum type)
+	{
+		switch (type) {
+			case GL_FLOAT:
+				return 4;
+			case GL_UNSIGNED_SHORT:
+				return 2;
 		}
 	}
 
@@ -34,9 +34,7 @@ namespace arterra {
 	void VertexBuffer::Bind() const { glBindBuffer(GL_ARRAY_BUFFER, _glID); }
 
 	void VertexBuffer::Unbind() const { glBindBuffer(GL_ARRAY_BUFFER, 0); }
-	
-	GLsizei VertexBuffer::GetSize() const {
-		return GetTypeSize(_type);
-	}
-	
+
+	GLsizei VertexBuffer::GetSize() const { return GetTypeSize(_type); }
+
 }

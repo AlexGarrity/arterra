@@ -16,7 +16,7 @@ namespace arterra {
 		Bind();
 		// Bind the vertex buffer it it's not already bound.
 		vb.Bind();
-		
+
 		glEnableVertexAttribArray(_lastBoundAttribute);
 		// Set the attribute pointer to the correct value, e.g.
 		//		For a position vector
@@ -28,7 +28,7 @@ namespace arterra {
 		//		offset = 0 ( since position is first )
 		glVertexAttribPointer(
 			_lastBoundAttribute, vb.GetCount(), vb.GetType(), GL_FALSE, vb.GetCount() * vb.GetSize(), 0);
-		
+
 		_lastBoundAttribute++;
 	}
 

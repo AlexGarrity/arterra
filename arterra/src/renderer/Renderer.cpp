@@ -2,39 +2,39 @@
 
 namespace arterra {
 
-Renderer::Renderer(Camera* camera)
-    : _camera { camera }
-{
-    // Give GLAD the GLFW extension loader function
-    gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
+	Renderer::Renderer(Camera* camera)
+		: _camera { camera }
+	{
+		// Give GLAD the GLFW extension loader function
+		gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
 
-	_testModel.Create("models/cube.mobj");
+		_testModel.Create("models/cube.mobj");
 
-    // Load the basic shader and use it
-    _shaderManager.LoadShader("shaders/basic.frag", "shaders/basic.vert", "basic");
-    _shaderManager.UseShader("basic");
+		// Load the basic shader and use it
+		_shaderManager.LoadShader("shaders/basic.frag", "shaders/basic.vert", "basic");
+		_shaderManager.UseShader("basic");
 
-    // Enable depth testing
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
+		// Enable depth testing
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_BLEND);
 
-    // Enable face culling
-    glFrontFace(GL_CCW);
-    glCullFace(GL_BACK);
-    glEnable(GL_CULL_FACE);
-}
+		// Enable face culling
+		glFrontFace(GL_CCW);
+		glCullFace(GL_BACK);
+		glEnable(GL_CULL_FACE);
+	}
 
-void Renderer::Update()
-{
-    // Set the camera view projection so the world renders in perspective
-    _shaderManager.ActiveProgram().SetUniform("viewProjection", _camera->ViewProjection());
-}
+	void Renderer::Update()
+	{
+		// Set the camera view projection so the world renders in perspective
+		_shaderManager.ActiveProgram().SetUniform("viewProjection", _camera->ViewProjection());
+	}
 
-void Renderer::DrawTestCube()
-{
-    _shaderManager.UseShader("basic");
-    _testModel.Bind();
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-}
+	void Renderer::DrawTestCube()
+	{
+		_shaderManager.UseShader("basic");
+		_testModel.Bind();
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+	}
 
 }
