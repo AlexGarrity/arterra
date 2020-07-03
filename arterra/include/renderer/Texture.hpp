@@ -10,9 +10,9 @@ namespace arterra {
 
 	class TextureHandle {
 	public:
-        // Default ctor
+		// Default ctor
 		TextureHandle() = default;
-        // RAII ctor
+		// RAII ctor
 		TextureHandle(std::string filepath);
 		~TextureHandle();
 

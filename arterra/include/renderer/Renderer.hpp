@@ -12,6 +12,7 @@
 #include "renderer/Camera.hpp"
 #include "renderer/ShaderManager.hpp"
 #include "renderer/VertexArray.hpp"
+#include "renderer/Texture.hpp"
 
 namespace arterra {
 	class Renderer {
@@ -30,6 +31,7 @@ namespace arterra {
 		ShaderManager _shaderManager;
 
 		Model _testModel;
+		TextureHandle _textureHandle;
 	};
 
 }

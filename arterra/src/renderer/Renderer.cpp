@@ -8,6 +8,8 @@ namespace arterra {
 		// Give GLAD the GLFW extension loader function
 		gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
 
+		_textureHandle.Load("textures/stone.png");
+
 		_testModel.Create("models/cube.mobj");
 
 		// Load the basic shader and use it
