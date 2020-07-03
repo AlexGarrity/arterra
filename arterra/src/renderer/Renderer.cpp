@@ -35,6 +35,7 @@ namespace arterra {
 	void Renderer::DrawTestCube()
 	{
 		_shaderManager.UseShader("basic");
+		_shaderManager.ActiveProgram().SetUniform("fragmentTexture", 0);
 		_testModel.Bind();
 		_textureHandle.Bind();
 		glDrawArrays(GL_TRIANGLES, 0, 36);
