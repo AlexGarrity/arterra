@@ -4,33 +4,30 @@
 
 #include "glad/glad.h"
 
+#include "renderer/VertexArray.hpp"
 #include "util/Resource.hpp"
 
 namespace arterra {
 
 	class Model {
 		struct ModelBuffers {
-			GLuint _vertexBuffer = 0;
-			GLuint _uvBuffer = 0;
-			GLuint _normalBuffer = 0;
 
-			~ModelBuffers()
-			{
-				glDeleteBuffers(1, &_vertexBuffer);
-				glDeleteBuffers(1, &_uvBuffer);
-				glDeleteBuffers(1, &_normalBuffer);
-			}
+			VertexBuffer _positions;
+			VertexBuffer _uvs;
+			VertexBuffer _normals;
+
+			VertexArray _vao;
 		};
 
 	public:
 		// Default ctor
-		Model();
+		Model() = default;
 		// RAII ctor
 		Model(std::string filepath);
-		Model::~Model();
 
 		bool Create(std::string filepath);
-		void Render();
+
+		inline void Bind() const { _buffers._vao.Bind(); }
 
 	private:
 		ModelBuffers _buffers;

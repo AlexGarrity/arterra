@@ -12,126 +12,26 @@
 #include "renderer/Camera.hpp"
 #include "renderer/ShaderManager.hpp"
 #include "renderer/VertexArray.hpp"
+#include "renderer/Texture.hpp"
 
 namespace arterra {
-    class Renderer {
-        public:
-            Renderer(Camera *camera);
-			
-            // Update the renderer to account for input
-            void Update();
+	class Renderer {
+	public:
+		Renderer(Camera* camera);
 
-            // Draw a rainbow cube
-            void DrawTestCube();
+		// Update the renderer to account for input
+		void Update();
 
-        private:
-            
-			VertexArray vao;
-			VertexBuffer vbP;
-			VertexBuffer vbC;
+		// Draw a rainbow cube
+		void DrawTestCube();
 
-            // Test cube vertices
-            std::vector<float_t> _positions = {
-				// FRONT
-                0.5f, 0.5f, 0.5f, 		// 1
-				0.5f, -0.5f, 0.5f, 	// 2
-				-0.5f, -0.5f, 0.5f, 	// 3
-				
-				0.5f, 0.5f, 0.5f, 		// 1
-				-0.5f, -0.5f, 0.5f, 	// 3
-				-0.5f, 0.5f, 0.5f, 	// 4
-				
-				// BACK
-				-0.5f, 0.5f, -0.5f, 	// 8
-				-0.5f, -0.5f, -0.5f, 	// 7
-				0.5f, -0.5f, -0.5f, 	// 6
-				
-				-0.5f, 0.5f, -0.5f, 	// 8
-				0.5f, -0.5f, -0.5f, 	// 6
-				0.5f, 0.5f, -0.5f, 	// 5
-				
-				// TOP
-				0.5f, 0.5f, -0.5f, 	// 5
-				0.5f, 0.5f, 0.5f, 		// 1
-				-0.5f, 0.5f, 0.5f, 	// 4
-				
-				0.5f, 0.5f, -0.5f, 	// 5
-				-0.5f, 0.5f, 0.5f, 	// 4
-				-0.5f, 0.5f, -0.5f, 	// 8
-				
-				// BOTTOM
-				0.5f, -0.5f, 0.5f, 	// 2
-				0.5f, -0.5f, -0.5f, 	// 6
-				-0.5f, -0.5f, -0.5f, 	// 7
-				
-				0.5f, -0.5f, 0.5f, 	// 2
-				-0.5f, -0.5f, -0.5f, 	// 7
-				-0.5f, -0.5f, 0.5f, 	// 3
-				
-				// RIGHT
-				0.5f, 0.5f, -0.5f, 	// 5
-				0.5f, -0.5f, -0.5f, 	// 6
-				0.5f, -0.5f, 0.5f, 	// 2
-				
-				0.5f, 0.5f, -0.5f, 	// 5
-				0.5f, -0.5f, 0.5f, 	// 2
-				0.5f, 0.5f, 0.5f, 		// 1
-				
-				// LEFT
-				-0.5f, 0.5f, 0.5f, 	// 4
-				-0.5f, -0.5f, 0.5f, 	// 3
-				-0.5f, -0.5f, -0.5f, 	// 7
-				
-				-0.5f, 0.5f, 0.5f, 	// 4
-				-0.5f, -0.5f, -0.5f, 	// 7
-				-0.5f, 0.5f, -0.5f, // 8
-				
-            };
-			
-			std::vector<float_t> _colours = {
-					1.0f, 0.0f, 0.0f,
-					0.0f, 1.0f, 0.0f,
-					0.0f, 0.0f, 1.0f,
-					1.0f, 0.0f, 0.0f,
-					0.0f, 0.0f, 1.0f,
-					1.0f, 1.0f, 1.0f,
-					1.0f, 0.0f, 1.0f,
-					0.0f, 1.0f, 1.0f,
-					1.0f, 1.0f, 0.0f,
-					1.0f, 0.0f, 1.0f,
-					1.0f, 1.0f, 0.0f,
-					0.0f, 0.0f, 0.0f,
-					0.0f, 0.0f, 0.0f,
-					1.0f, 0.0f, 0.0f,
-					1.0f, 1.0f, 1.0f,
-					0.0f, 0.0f, 0.0f,
-					1.0f, 1.0f, 1.0f,
-					1.0f, 0.0f, 1.0f,
-					0.0f, 1.0f, 0.0f,
-					1.0f, 1.0f, 0.0f,
-					0.0f, 1.0f, 1.0f,
-					0.0f, 1.0f, 0.0f,
-					0.0f, 1.0f, 1.0f,
-					0.0f, 0.0f, 1.0f,
-					0.0f, 0.0f, 0.0f,
-					1.0f, 1.0f, 0.0f,
-					0.0f, 1.0f, 0.0f,
-					0.0f, 0.0f, 0.0f,
-					0.0f, 1.0f, 0.0f,
-					1.0f, 0.0f, 0.0f,
-					1.0f, 1.0f, 1.0f,
-					0.0f, 0.0f, 1.0f,
-					0.0f, 1.0f, 1.0f,
-					1.0f, 1.0f, 1.0f,
-					0.0f, 1.0f, 1.0f,
-					1.0f, 0.0f, 1.0f	
-			};
-		
+	private:
 		GLint _viewProjectionUniform;
 		Camera* _camera;
 		ShaderManager _shaderManager;
 
-    };
+		Model _testModel;
+		TextureHandle _textureHandle;
+	};
 
-    
 }

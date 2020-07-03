@@ -4,24 +4,10 @@
 
 namespace arterra {
 
-	Model::Model()
-	{
-		glGenBuffers(1, &_buffers._vertexBuffer);
-		glGenBuffers(1, &_buffers._uvBuffer);
-		glGenBuffers(1, &_buffers._normalBuffer);
-	}
-
 	Model::Model(std::string filepath)
 		: Model()
 	{
 		Create(filepath);
-	}
-
-	Model::~Model()
-	{
-		glDeleteBuffers(1, &_buffers._vertexBuffer);
-		glDeleteBuffers(1, &_buffers._uvBuffer);
-		glDeleteBuffers(1, &_buffers._normalBuffer);
 	}
 
 	bool Model::Create(std::string filepath)
@@ -45,45 +31,19 @@ namespace arterra {
 			OBJ::Load(resourceHandle._resource->_data, vertices, normals, uvs);
 		}
 
-		// Bind vertex data
-		glBindBuffer(GL_ARRAY_BUFFER, _buffers._vertexBuffer);
-		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), vertices.data(), GL_STATIC_DRAW);
+		_buffers._vao.Bind();
 
-		glBindBuffer(GL_ARRAY_BUFFER, _buffers._uvBuffer);
-		glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(GLfloat), uvs.data(), GL_STATIC_DRAW);
+		_buffers._positions.Create(vertices, 3, GL_FLOAT);
+		_buffers._uvs.Create(uvs, 3, GL_FLOAT);
+		_buffers._normals.Create(normals, 3, GL_FLOAT);
 
-		glBindBuffer(GL_ARRAY_BUFFER, _buffers._normalBuffer);
-		glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(GLfloat), normals.data(), GL_STATIC_DRAW);
+		_buffers._vao.AddBuffer(_buffers._positions);
+		_buffers._vao.AddBuffer(_buffers._uvs);
+		_buffers._vao.AddBuffer(_buffers._normals);
 
 		// Get vertex count
 		_vertexCount = vertices.size();
 		return true;
-	}
-
-	void Model::Render()
-	{
-		// Bind vertex coords to layout 0
-		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, _buffers._vertexBuffer);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-		// Bind UV coords to layout 1
-		glEnableVertexAttribArray(1);
-		glBindBuffer(GL_ARRAY_BUFFER, _buffers._uvBuffer);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
-
-		// Bind Normal cords to layout 2
-		glEnableVertexAttribArray(2);
-		glBindBuffer(GL_ARRAY_BUFFER, _buffers._normalBuffer);
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-		// Draw
-		glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(_vertexCount));
-
-		// Disable (probably good practice)
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
-		glDisableVertexAttribArray(2);
 	}
 
 }

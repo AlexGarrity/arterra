@@ -2,51 +2,41 @@
 
 namespace arterra {
 
-Renderer::Renderer(Camera* camera)
-    : _camera { camera }
-{
-    // Give GLAD the GLFW extension loader function
-    gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
+	Renderer::Renderer(Camera* camera)
+		: _camera { camera }
+	{
+		// Give GLAD the GLFW extension loader function
+		gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
 
-    vao.Bind();
+		_textureHandle.Load("textures/stone.png");
 
-    // Create buffer layout, this is the same for all buffers.
-    VertexBufferLayout layout;
-    layout.Push<float_t>(3);
+		_testModel.Create("models/cube.mobj");
 
-    // Assign position buffer.
-    vbP.Create(_positions.data(), 3 * 36 * sizeof(float_t));
-    vao.AddBuffer(vbP, layout);
+		// Load the basic shader and use it
+		_shaderManager.LoadShader("shaders/basic.frag", "shaders/basic.vert", "basic");
+		_shaderManager.UseShader("basic");
 
-    // Assign colour buffer.
-    vbC.Create(_colours.data(), 3 * 36 * sizeof(float_t));
-    vao.AddBuffer(vbC, layout);
+		// Enable depth testing
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_BLEND);
 
-    // Load the basic shader and use it
-    _shaderManager.LoadShader("shaders/basicColour.frag", "shaders/basicColour.vert", "basic");
-    _shaderManager.UseShader("basic");
+		// Enable face culling
+		glFrontFace(GL_CCW);
+		glCullFace(GL_BACK);
+		glEnable(GL_CULL_FACE);
+	}
 
-    // Enable depth testing
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
+	void Renderer::Update()
+	{
+		// Set the camera view projection so the world renders in perspective
+		_shaderManager.ActiveProgram().SetUniform("viewProjection", _camera->ViewProjection());
+	}
 
-    // Enable face culling
-    glFrontFace(GL_CW);
-    glCullFace(GL_BACK);
-    glEnable(GL_CULL_FACE);
-}
-
-void Renderer::Update()
-{
-    // Set the camera view projection so the world renders in perspective
-    _shaderManager.ActiveProgram().SetUniform("viewProjection", _camera->ViewProjection());
-}
-
-void Renderer::DrawTestCube()
-{
-    _shaderManager.UseShader("basic");
-    vao.Bind();
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-}
+	void Renderer::DrawTestCube()
+	{
+		_shaderManager.UseShader("basic");
+		_testModel.Bind();
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+	}
 
 }
