@@ -18,7 +18,9 @@ namespace arterra {
 
 		bool Load(std::string filepath);
 
+
 		inline GLuint Handle() const { return _handle; }
+		inline void Bind() { glBindTexture(GL_TEXTURE_2D, _handle); }
 
 	private:
 		GLuint _handle;
