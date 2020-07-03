@@ -29,8 +29,8 @@ namespace arterra {
 		}
 		// Bind the texture and buffer data
 		glBindTexture(GL_TEXTURE_2D, _handle);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, static_cast<GLsizei>(_width), static_cast<GLsizei>(_height), 0,
-			GL_RGB, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, static_cast<GLsizei>(_width), static_cast<GLsizei>(_height), 0,
+			GL_RGBA, GL_UNSIGNED_BYTE, data);
 		// Auto-generate mipmaps
 		glGenerateMipmap(GL_TEXTURE_2D);
 		// Set scaling to nearest
