@@ -2,8 +2,7 @@
 
 namespace arterra {
 
-	struct ComponentBase {
-
+	class ComponentBase {
 	public:
 		virtual void Update() {};
 	};

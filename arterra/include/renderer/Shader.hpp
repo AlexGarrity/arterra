@@ -9,131 +9,79 @@
 
 namespace arterra {
 
-class ShaderProgram : public DataObject {
+	class Shader : public DataObject {
+	public:
+		enum ShaderType { Fragment, Vertex, Geometry };
 
-    struct Shader : public DataObject {
-        enum ShaderType { Fragment,
-            Vertex,
-            Geometry };
-        ShaderType _shaderType;
-        GLuint _glID;
+		Shader(ShaderType shaderType, std::string path);
+		virtual void DumpToLog(std::string title = "Shader") override;
+        inline GLuint Handle() { return _glID; }
 
-        Shader(ShaderType shaderType, std::string path)
-            : _shaderType { shaderType }
-        {
-            // Load the shader resource
-            auto loadResult = ResourceManager::Get().Load(path);
-            if (!loadResult)
-                return;
+	private:
+		ShaderType _shaderType;
+		GLuint _glID;
+	};
 
-            // Get a handle to the resource
-            auto dataHandle = ResourceManager::Get().GetHandle(path);
-            // Get the data from the resource
-            auto src = std::string(
-                dataHandle._resource->_data.begin(),
-                dataHandle._resource->_data.end());
-            // Convert uint8_t* to char*
-            const char* cSrc = src.c_str();
+	class ShaderProgram : public DataObject {
 
-            switch (shaderType) {
-            case ShaderType::Fragment:
-                _glID = glCreateShader(GL_FRAGMENT_SHADER);
-                break;
-            case ShaderType::Vertex:
-                _glID = glCreateShader(GL_VERTEX_SHADER);
-                break;
-            case ShaderType::Geometry:
-                _glID = glCreateShader(GL_GEOMETRY_SHADER);
-                break;
-            }
+	public:
+		ShaderProgram() = default;
 
-            glShaderSource(_glID, 1, &cSrc, nullptr);
-            glCompileShader(_glID);
-        }
+		// Create a new shader (RAII)
+		ShaderProgram(std::string vertShaderPath, std::string fragShaderPath);
 
-        void DumpToLog(std::string title = "Shader") override
-        {
-            Logger::Get().Log(
-                "\t", title,
-                " - type: ", _shaderType,
-                "; handle:", _glID);
-        }
+		// Delete the program
+		~ShaderProgram();
 
-        std::vector<uint8_t> Serialize() override
-        {
-            return {};
-        }
-    };
+		// Create a new shader - return whether or not it worked
+		bool Create(std::string vertPath, std::string fragPath);
 
-public:
-    ShaderProgram() = default;
+		// Inline returns the program handle
+		inline GLuint GetProgram() const { return _glID; }
 
-    // Create a new shader (RAII)
-    ShaderProgram(std::string vertShaderPath, std::string fragShaderPath)
-    {
-        Create(vertShaderPath, fragShaderPath);
-    };
+		// Inlines for setting uniforms in shaders
+		inline GLint GetUniform(const char* name) { return glGetUniformLocation(_glID, name); }
 
-    // Delete the program
-    ~ShaderProgram()
-    {
-        glDeleteProgram(_glID);
-    }
+		inline void SetUniform(std::string uniformName, glm::mat4 matrix)
+		{
+			auto uniform = GetUniform(uniformName.c_str());
+			glUniformMatrix4fv(uniform, 1, GL_FALSE, glm::value_ptr(matrix));
+		}
 
-    // Create a new shader - return whether or not it worked
-    bool Create(std::string vertPath, std::string fragPath);
+		inline void SetUniform(std::string uniformName, float_t value)
+		{
+			auto uniform = GetUniform(uniformName.c_str());
+			glUniform1f(uniform, value);
+		}
 
-    // Inline returns the program handle
-    inline GLuint GetProgram() const { return _glID; }
+		inline void SetUniform(std::string uniformName, double_t value)
+		{
+			auto uniform = GetUniform(uniformName.c_str());
+			glUniform1d(uniform, value);
+		}
 
-    // Inlines for setting uniforms in shaders
-    inline GLint GetUniform(const char* name)
-    {
-        return glGetUniformLocation(_glID, name);
-    }
+		inline void SetUniform(std::string uniformName, glm::vec3 vector)
+		{
+			auto uniform = GetUniform(uniformName.c_str());
+			glUniform3fv(uniform, 1, glm::value_ptr(vector));
+		}
 
-    inline void SetUniform(std::string uniformName, glm::mat4 matrix)
-    {
-        auto uniform = GetUniform(uniformName.c_str());
-        glUniformMatrix4fv(uniform, 1, GL_FALSE, glm::value_ptr(matrix));
-    }
+		inline void SetUniform(std::string uniformName, glm::vec4 vector)
+		{
+			auto uniform = GetUniform(uniformName.c_str());
+			glUniform4fv(uniform, 1, glm::value_ptr(vector));
+		}
 
-    inline void SetUniform(std::string uniformName, float_t value)
-    {
-        auto uniform = GetUniform(uniformName.c_str());
-        glUniform1f(uniform, value);
-    }
+		void DumpToLog(std::string title = "ShaderProgram")
+		{
+			Logger::Get().Log("\t", title, " - ", "handle: ", _glID);
+		}
 
-    inline void SetUniform(std::string uniformName, double_t value)
-    {
-        auto uniform = GetUniform(uniformName.c_str());
-        glUniform1d(uniform, value);
-    }
+	private:
+		static bool CheckShaderCompilation(GLuint shader);
 
-    inline void SetUniform(std::string uniformName, glm::vec3 vector)
-    {
-        auto uniform = GetUniform(uniformName.c_str());
-        glUniform3fv(uniform, 1, glm::value_ptr(vector));
-    }
-
-    inline void SetUniform(std::string uniformName, glm::vec4 vector)
-    {
-        auto uniform = GetUniform(uniformName.c_str());
-        glUniform4fv(uniform, 1, glm::value_ptr(vector));
-    }
-
-    void DumpToLog(std::string title = "ShaderProgram")
-    {
-        Logger::Get().Log(
-            "\t", title,
-            " - ", "handle: ", _glID);
-    }
-
-private:
-    static bool CheckShaderCompilation(GLuint shader);
-
-    std::vector<Shader> _shaders;
-    GLuint _glID;
-};
+		std::vector<Shader> _shaders;
+		GLuint _glID;
+	};
 
 };
