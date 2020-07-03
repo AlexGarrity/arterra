@@ -19,7 +19,7 @@ namespace arterra {
 			Logger::Get().Log(Logger::Debug, "Failed to load texture '", filepath, "'");
 			return false;
 		}
-
+		stbi_set_flip_vertically_on_load(1);
 		uint8_t* data;
 		{
 			// Get a handle to the resource, use stb to parse it properly
