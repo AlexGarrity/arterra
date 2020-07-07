@@ -15,15 +15,15 @@ namespace arterra {
 		virtual void Update() override;
 
 		// Full ctor.  Parent should be world if nothing else.
-		Transform(glm::vec3 position = glm::vec3(), glm::quat rotation = glm::quat(), Transform *parent = nullptr);
+		Transform(glm::vec3 position = glm::vec3(), glm::quat rotation = glm::quat(), Transform* parent = nullptr);
 
 		// Position getters
 		glm::vec3 Position() const;
 		glm::quat Rotation() const;
 
 		// Raw position getter-setter
-		glm::vec3 &Position();
-		glm::quat &Rotation();
+		glm::vec3& Position();
+		glm::quat& Rotation();
 
 		// Direction getters
 		glm::vec3 Up() const;

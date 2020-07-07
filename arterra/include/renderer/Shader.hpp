@@ -15,7 +15,7 @@ namespace arterra {
 
 		Shader(ShaderType shaderType, std::string path);
 		virtual void DumpToLog(std::string title = "Shader") override;
-        inline GLuint Handle() { return _glID; }
+		inline GLuint Handle() { return _glID; }
 
 	private:
 		ShaderType _shaderType;
@@ -65,13 +65,13 @@ namespace arterra {
 			auto uniform = GetUniform(uniformName.c_str());
 			glUniform3fv(uniform, 1, glm::value_ptr(vector));
 		}
-		
+
 		inline void SetUniform(std::string uniformName, glm::vec4 vector)
 		{
 			auto uniform = GetUniform(uniformName.c_str());
 			glUniform4fv(uniform, 1, glm::value_ptr(vector));
 		}
-		
+
 		inline void SetUniform(std::string uniformName, GLint value)
 		{
 			auto uniform = GetUniform(uniformName.c_str());

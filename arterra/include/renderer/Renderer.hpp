@@ -11,8 +11,8 @@
 #include "model/Model.hpp"
 #include "renderer/Camera.hpp"
 #include "renderer/ShaderManager.hpp"
-#include "renderer/VertexArray.hpp"
 #include "renderer/Texture.hpp"
+#include "renderer/VertexArray.hpp"
 
 namespace arterra {
 	class Renderer {

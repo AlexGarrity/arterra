@@ -32,7 +32,7 @@ namespace arterra {
 
 		inline GLint GetCount() const { return _count; }
 		inline GLenum GetType() const { return _type; }
-		
+
 		inline GLint GetVertexCount() const { return _vertexCount; }
 
 	private:
@@ -42,7 +42,7 @@ namespace arterra {
 		GLint _count;
 		// The type of element this buffer contains.
 		GLenum _type;
-		
+
 		GLint _vertexCount;
 	};
 

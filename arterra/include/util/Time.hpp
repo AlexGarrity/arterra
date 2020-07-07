@@ -8,7 +8,11 @@ namespace arterra {
 
 	public:
 		// ctor
-		Time() : _deltaTime {0.0f}, _previousTime{std::chrono::high_resolution_clock::now()} {}
+		Time()
+			: _deltaTime { 0.0f }
+			, _previousTime { std::chrono::high_resolution_clock::now() }
+		{
+		}
 
 		// Calculate time delta between last frame.
 		void CalculateDeltaTime();

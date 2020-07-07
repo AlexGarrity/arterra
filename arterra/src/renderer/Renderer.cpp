@@ -18,21 +18,13 @@ namespace arterra {
 		glFrontFace(GL_CCW);
 		glCullFace(GL_BACK);
 		glEnable(GL_CULL_FACE);
-		
+
 		// Enable blending
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 	}
 
-	void Renderer::Update()
-	{
-		
-	}
+	void Renderer::Update() {}
 
-	void Renderer::DrawTestCube()
-	{
-		
-		_textureHandle.Bind();
-	}
+	void Renderer::DrawTestCube() { _textureHandle.Bind(); }
 
 }

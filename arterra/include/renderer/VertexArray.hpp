@@ -21,7 +21,7 @@ namespace arterra {
 		void Bind() const;
 		// Sets the current vertex array to 0.
 		void Unbind() const;
-		
+
 		GLuint GetVertexCount();
 
 	private:
@@ -31,7 +31,7 @@ namespace arterra {
 		// This allows to bind multiple vertex buffers to this one vertex array
 		// and storing vertices data separately.
 		GLuint _lastBoundAttribute = 0;
-		
+
 		GLuint _vertexCount;
 	};
 

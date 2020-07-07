@@ -51,7 +51,7 @@ namespace arterra {
 	void Input::RegisterKeySubscriber(const int key, const std::function<void(float_t)> callback)
 	{
 		auto keyIndex = _pressedKeys.find(key);
-		if (keyIndex == _pressedKeys.end()) 
+		if (keyIndex == _pressedKeys.end())
 			return;
 		// Add the callback function to the key subscription.
 		keyIndex->second._subscribers.emplace_back(callback);

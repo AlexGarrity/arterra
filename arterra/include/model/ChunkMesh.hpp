@@ -8,24 +8,23 @@
 namespace arterra {
 
 	class ChunkMesh {
-		public:
-			ChunkMesh();
+	public:
+		ChunkMesh();
 
-			void AddChunk();
-			void AddSubChunk(SubChunk &subChunk);
-			void AddBlock(Block &block);
-			void AddFace(std::vector<float_t> vertices);
+		void AddChunk();
+		void AddSubChunk(SubChunk& subChunk);
+		void AddBlock(Block& block);
+		void AddFace(std::vector<float_t> vertices);
 
-			void GenerateMesh();
+		void GenerateMesh();
 
-			void Bind();
-			GLuint GetVertexCount();
+		void Bind();
+		GLuint GetVertexCount();
 
-		private:
-			std::vector<float_t> _vertices;
-			VertexArray _vertexArray;
-			VertexBuffer _vertexBuffer;
+	private:
+		std::vector<float_t> _vertices;
+		VertexArray _vertexArray;
+		VertexBuffer _vertexBuffer;
 	};
-
 
 }

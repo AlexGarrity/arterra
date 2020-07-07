@@ -30,29 +30,34 @@ namespace arterra {
 
 	std::array<bool, 6> Block::GetVisibleFaces() const { return _visibleFaces; }
 
-	void Block::Update(size_t width) {
+	void Block::Update(size_t width)
+	{
 		UpdateNeighbours();
 		UpdateVisiblity();
 
 		if (width != 0) {
 			for (auto n : _neighbours) {
-				if (!n) continue;
+				if (!n)
+					continue;
 				n->Update(width - 1);
 			}
 		}
 	}
 
-	void Block::UpdateVisiblity() {
+	void Block::UpdateVisiblity()
+	{
 		bool visible = false;
 		for (auto i = 0; i < 6; ++i) {
 			auto blockExists = (_neighbours[i] != nullptr);
 			_visibleFaces[i] = (!blockExists);
-			if (!blockExists) visible = true;
+			if (!blockExists)
+				visible = true;
 		}
 		_visible = visible;
 	}
 
-	void Block::UpdateNeighbours() {
+	void Block::UpdateNeighbours()
+	{
 		_neighbours[0] = _subChunk->GetBlock(_position._x + 1, _position._y, _position._z);
 		_neighbours[1] = _subChunk->GetBlock(_position._x - 1, _position._y, _position._z);
 		_neighbours[2] = _subChunk->GetBlock(_position._x, _position._y + 1, _position._z);

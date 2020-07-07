@@ -12,24 +12,24 @@
 
 namespace arterra {
 
-class Camera {
-public:
-    Camera();
+	class Camera {
+	public:
+		Camera();
 
-    // Update camera position and view projection matrix
-    void Update(Window& window, float_t deltaTime);
+		// Update camera position and view projection matrix
+		void Update(Window& window, float_t deltaTime);
 
-    // Get the view projection
-    inline glm::mat4 ViewProjection() const { return _viewProjection; }
+		// Get the view projection
+		inline glm::mat4 ViewProjection() const { return _viewProjection; }
 
-private:
-    float_t _speed = 2.0f;
+	private:
+		float_t _speed = 2.0f;
 
-    glm::mat4 _projection;
-    glm::mat4 _view;
-    glm::mat4 _viewProjection;
+		glm::mat4 _projection;
+		glm::mat4 _view;
+		glm::mat4 _viewProjection;
 
-    Transform _transform;
-};
+		Transform _transform;
+	};
 
 };

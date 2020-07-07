@@ -28,7 +28,8 @@ namespace arterra {
 			}
 		}
 		for (auto block : _blocks) {
-			if (block) block->Update(0);
+			if (block)
+				block->Update(0);
 		}
 	}
 

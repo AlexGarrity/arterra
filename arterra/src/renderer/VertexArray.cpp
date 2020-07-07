@@ -3,7 +3,8 @@
 namespace arterra {
 
 	VertexArray::VertexArray()
-		: _vertexCount(0) {
+		: _vertexCount(0)
+	{
 		// Generates a new vertex array.
 		glGenVertexArrays(1, &_glID);
 	}
@@ -16,7 +17,7 @@ namespace arterra {
 		Bind();
 		// Bind the vertex buffer it it's not already bound.
 		vb.Bind();
-		
+
 		_vertexCount += vb.GetVertexCount();
 
 		glEnableVertexAttribArray(_lastBoundAttribute);
@@ -38,9 +39,6 @@ namespace arterra {
 
 	void VertexArray::Unbind() const { glBindVertexArray(0); }
 
+	GLuint VertexArray::GetVertexCount() { return _vertexCount; }
 
-	GLuint VertexArray::GetVertexCount() {
-		return _vertexCount;
-	}
-	
 }
