@@ -3,7 +3,7 @@
 
 namespace arterra {
 
-	Window::Window(uint32_t width, uint32_t height, std::string title)
+	Window::Window(int width, int height, std::string title)
 		: _width { width }
 		, _height { height }
 		, _title { title }
@@ -92,5 +92,6 @@ namespace arterra {
 	{
 		PollEvents();
 		SwapBuffers();
+		glfwGetWindowSize(_window.get(), &_width, &_height);
 	}
 }

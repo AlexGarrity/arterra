@@ -42,6 +42,11 @@ namespace arterra {
 			_shaderManager.ActiveProgram().SetUniform("viewProjection", _engine->GetCamera()->ViewProjection());
 			_shaderManager.ActiveProgram().SetUniform("fragmentColour", { 0.2f, 1.0f, 1.0f, 1.0f });
 
+			auto wX = _engine->GetWindow()->GetWidth();
+			auto wY = _engine->GetWindow()->GetHeight();
+
+			glViewport(0, 0, wX, wY);
+
 			// Every 5 seconds, perform garbage collection
 			_timeToResourceUnload -= deltaTime;
 			if (_timeToResourceUnload < 0.0f) {

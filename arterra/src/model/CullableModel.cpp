@@ -66,7 +66,7 @@ namespace arterra {
 		case Direction::NegZ:
 			return _verticesNegZ;
 		}
-		
+		return _verticesNegX;
 	}
 
 }

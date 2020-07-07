@@ -10,12 +10,12 @@
 namespace arterra {
 	
 	enum Direction {
-		PosX,
-		NegX,
-		PosY,
-		NegY,
-		PosZ,
-		NegZ,
+		PosX = 0,
+		NegX = 1,
+		PosY = 2,
+		NegY = 3,
+		PosZ = 5,
+		NegZ = 4,
 	};
 
 	class CullableModel {

@@ -15,7 +15,7 @@ namespace arterra {
 	class Window {
 	public:
 		// ctor
-		Window(uint32_t width, uint32_t height, std::string title);
+		Window(int width, int height, std::string title);
 		// dtor
 		~Window();
 
@@ -55,8 +55,8 @@ namespace arterra {
 		std::unique_ptr<GLFWwindow, GLFWwindowDeleter> _window;
 
 		// Cache width, height, and title
-		uint32_t _width;
-		uint32_t _height;
+		int _width;
+		int _height;
 		std::string _title;
 		bool _vsyncEnabled;
 		bool _shouldClose { false };

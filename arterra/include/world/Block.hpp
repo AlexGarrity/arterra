@@ -36,13 +36,21 @@ namespace arterra {
 		BlockPosition GetPositionRaw() const;
 		CullableModel& GetModel() const;
 
+		inline bool IsVisible() const { return _visible; }
+
 		std::array<bool, 6> GetVisibleFaces() const;
 
+		void Update(size_t width);
+		void UpdateVisiblity();
+		void UpdateNeighbours();
+
 	private:
+		bool _visible;
 		std::array<bool, 6> _visibleFaces;
+		std::array<Block*, 6> _neighbours;
 
 		CullableModel& _model;
-		const SubChunk* _subChunk;
+		SubChunk* _subChunk;
 		const BlockPosition _position;
 	};
 
