@@ -3,6 +3,9 @@
 #include "PCH.hpp"
 
 #include "gamestate/Base.hpp"
+#include "model/Model.hpp"
+#include "world/Block.hpp"
+#include "world/SubChunk.hpp"
 
 namespace arterra {
 
@@ -18,6 +21,14 @@ namespace arterra {
 
             private:
                 float_t _timeToResourceUnload = 5.0f;
+				CullableModel _cubeModel;
+				SubChunk _subChunk;
+				
+				ShaderManager _shaderManager;
+				
+				VertexArray vao;
+				VertexBuffer vbo;
+				std::vector<float_t> _meshVertices;
 
         };
 

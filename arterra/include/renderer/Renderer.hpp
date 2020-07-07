@@ -28,9 +28,8 @@ namespace arterra {
 	private:
 		GLint _viewProjectionUniform;
 		Camera* _camera;
-		ShaderManager _shaderManager;
 
-		Model _testModel;
+		Model _cubeModel;
 		TextureHandle _textureHandle;
 	};
 
