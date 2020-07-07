@@ -58,7 +58,7 @@ namespace arterra {
 		int _width;
 		int _height;
 		std::string _title;
-		bool _vsyncEnabled;
+		bool _vsyncEnabled { true };
 		bool _shouldClose { false };
 	};
 
