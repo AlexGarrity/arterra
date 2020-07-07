@@ -6,6 +6,7 @@
 #include "model/Model.hpp"
 #include "world/Block.hpp"
 #include "world/SubChunk.hpp"
+#include "model/ChunkMesh.hpp"
 
 namespace arterra {
 
@@ -23,12 +24,9 @@ namespace arterra {
                 float_t _timeToResourceUnload = 5.0f;
 				CullableModel _cubeModel;
 				SubChunk _subChunk;
+                ChunkMesh _chunkMesh;
 				
 				ShaderManager _shaderManager;
-				
-				VertexArray vao;
-				VertexBuffer vbo;
-				std::vector<float_t> _meshVertices;
 
         };
 

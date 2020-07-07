@@ -2,21 +2,31 @@
 #include "world/SubChunk.hpp"
 
 namespace arterra {
-	
-	Block::Block(const Block& block) 
-		: _model(block._model), _subChunk(block._subChunk) {
-		_posX = block._posX;
-		_posY = block._posY;
-		_posZ = block._posZ;
+
+	Block::Block(const Block& other)
+		: _model(other._model)
+		, _subChunk(other._subChunk)
+		, _position(other.GetPositionRaw())
+	{
 	}
-	
-	Block::Block(int posX, int posY, int posZ, CullableModel& model, SubChunk* subChunk) 
-		: _posX(posX), _posY(posY), _posZ(posZ), _model(model), _subChunk(subChunk) {
-		
+
+	Block::Block(int posX, int posY, int posZ, CullableModel& model, SubChunk* subChunk)
+		: _position(posX, posY, posZ)
+		, _model(model)
+		, _subChunk(subChunk)
+	{
 	}
-	
-	BlockPosition Block::GetPosition() {
-		return BlockPosition { _posX + _subChunk->_posX, _posY + _subChunk->_posY, _posZ + _subChunk->_posZ };
+
+	BlockPosition Block::GetPosition() const
+	{
+		return BlockPosition { _position._x + _subChunk->_posX, _position._y + _subChunk->_posY,
+			_position._z + _subChunk->_posZ };
 	}
-	
+
+	BlockPosition Block::GetPositionRaw() const { return _position; }
+
+	CullableModel& Block::GetModel() const { return _model; }
+
+	std::array<bool, 6> Block::GetVisibleFaces() const { return _visibleFaces; }
+
 }

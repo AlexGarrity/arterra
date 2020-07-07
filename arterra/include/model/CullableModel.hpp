@@ -11,10 +11,10 @@ namespace arterra {
 	
 	enum Direction {
 		PosX,
-		PosY,
-		PosZ,
 		NegX,
+		PosY,
 		NegY,
+		PosZ,
 		NegZ,
 	};
 
