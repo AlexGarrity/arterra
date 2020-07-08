@@ -32,6 +32,7 @@ namespace arterra {
 
 		void Translate(glm::vec3 translation);
 		void Rotate(glm::quat rotation);
+		void Rotate(float_t x, float_t y, float_t z);
 
 	private:
 		// Position as a Vector (x,y,z).

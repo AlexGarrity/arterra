@@ -10,6 +10,9 @@ namespace arterra {
 	class ChunkMesh {
 	public:
 		ChunkMesh();
+		ChunkMesh(SubChunk& subChunk);
+		ChunkMesh(const ChunkMesh& other);
+		~ChunkMesh();
 
 		void AddChunk();
 		void AddSubChunk(SubChunk& subChunk);

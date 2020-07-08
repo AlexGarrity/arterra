@@ -1,5 +1,7 @@
 #include "world/SubChunk.hpp"
 
+#include "world/Chunk.hpp"
+
 namespace arterra {
 
 	size_t ResolveArrayPosition(int x, int y, int z)
@@ -11,10 +13,8 @@ namespace arterra {
 		return x + (16 * (z + (16 * y)));
 	}
 
-	SubChunk::SubChunk(int posX, int posY, int posZ, CullableModel& model)
-		: _posX(posX)
-		, _posY(posY)
-		, _posZ(posZ)
+	SubChunk::SubChunk(int posX, int posY, int posZ, CullableModel& model, Chunk *parent)
+		: _position { posX, posY, posZ }, _chunk {parent}
 	{
 
 		_blocks.fill(nullptr);
@@ -43,6 +43,11 @@ namespace arterra {
 		return _blocks[pos];
 	}
 
-	BlockPosition SubChunk::GetPosition() { return { _posX, _posY, _posZ }; }
+	BlockPosition SubChunk::GetPosition()
+	{
+		auto cp = _chunk->GetPosition();
+		return { _position._x + cp._x, _position._y + cp._y, _position._z + cp._z };
+	}
 
+	Chunk* SubChunk::GetChunk() { return _chunk; }
 }

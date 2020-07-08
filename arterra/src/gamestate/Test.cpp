@@ -6,7 +6,7 @@ namespace arterra {
 
 		Test::Test(Engine* engine)
 			: Base(engine)
-			, _subChunk(0, 0, 0, _cubeModel)
+			, _chunk(0, 0, 0, _cubeModel)
 		{
 			_engine->GetWindow()->SetVsync(true);
 			_engine->GetWindow()->SetClearColour(1.0f, 0.0f, 1.0f, 1.0f);
@@ -18,10 +18,7 @@ namespace arterra {
 			// Create cube model.
 			_cubeModel.Create("models/cube.mobj");
 
-			Direction direction = Direction::PosX;
-
-			_chunkMesh.AddSubChunk(_subChunk);
-			_chunkMesh.GenerateMesh();
+			_chunkRenderer.AddChunk(_chunk);
 		}
 
 		void Test::Input(float_t deltaTime)
@@ -63,24 +60,8 @@ namespace arterra {
 
 			_shaderManager.UseShader("basic");
 			_shaderManager.ActiveProgram().SetUniform("fragmentTexture", 0);
-			/*
-			for(auto block: _subChunk.GetBlocks()) {
-				if (!block)
-					continue;
-				// Draw each block
-				glm::mat4 modelMat (1.0f);
-				BlockPosition pos = block->GetPosition();
-				modelMat = glm::translate(modelMat, glm::vec3(pos._x, pos._y, pos._z));
-				modelMat = glm::scale(modelMat, glm::vec3(0.5f));
-				_shaderManager.ActiveProgram().SetUniform("modelPos", modelMat);
 
-				block->_model.Bind();
-				glDrawArrays(GL_TRIANGLES, 0, 36);
-			}
-			 */
-
-			_chunkMesh.Bind();
-			glDrawArrays(GL_TRIANGLES, 0, _chunkMesh.GetVertexCount());
+			_chunkRenderer.Render();
 
 			_engine->GetWindow()->Update(deltaTime);
 		}

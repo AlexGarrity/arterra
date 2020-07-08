@@ -18,7 +18,8 @@ namespace arterra {
 		// Bind the vertex buffer it it's not already bound.
 		vb.Bind();
 
-		_vertexCount += vb.GetVertexCount();
+		if (!_lastBoundAttribute)
+			_vertexCount = vb.GetVertexCount();
 
 		glEnableVertexAttribArray(_lastBoundAttribute);
 		// Set the attribute pointer to the correct value, e.g.

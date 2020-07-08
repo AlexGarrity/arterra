@@ -39,4 +39,10 @@ namespace arterra {
 
 	void Transform::Rotate(glm::quat rotation) { _rotation += rotation; }
 
+	void Transform::Rotate(float_t x, float_t y, float_t z) {
+		_rotation = glm::rotate(_rotation, glm::radians(x), glm::vec3(1.0f, 0.0f, 0.0f));
+		_rotation = glm::rotate(_rotation, glm::radians(y), glm::vec3(0.0f, 1.0f, 0.0f));
+		_rotation = glm::rotate(_rotation, glm::radians(z), glm::vec3(0.0f, 0.0f, 1.0f));
+	}
+
 }

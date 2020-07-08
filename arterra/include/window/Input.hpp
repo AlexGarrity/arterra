@@ -3,6 +3,8 @@
 #include "PCH.hpp"
 #include <GLFW/glfw3.h>
 
+#include "util/DataObject.hpp"
+
 namespace arterra {
 
 	struct KeyBind : public DataObject {

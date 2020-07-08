@@ -4,6 +4,21 @@ namespace arterra {
 
 	ChunkMesh::ChunkMesh() {}
 
+	ChunkMesh::ChunkMesh(SubChunk &subChunk) {
+		AddSubChunk(subChunk);
+		GenerateMesh();
+	}
+
+	ChunkMesh::ChunkMesh(const ChunkMesh &other) {
+		_vertices = std::move(other._vertices);
+		_vertexArray = other._vertexArray;
+		_vertexBuffer = other._vertexBuffer;
+	}
+
+	ChunkMesh::~ChunkMesh() {
+		Logger::Get().Log("Chunkmesh dtor");
+	}
+
 	void ChunkMesh::AddChunk() {}
 
 	void ChunkMesh::AddSubChunk(SubChunk& subChunk)

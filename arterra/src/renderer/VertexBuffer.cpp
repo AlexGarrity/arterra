@@ -10,6 +10,7 @@ namespace arterra {
 			case GL_UNSIGNED_SHORT:
 				return 2;
 		}
+		return 0;
 	}
 
 	VertexBuffer::VertexBuffer() {}
