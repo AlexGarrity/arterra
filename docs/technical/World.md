@@ -1,8 +1,8 @@
 # World Data/Design
-The design and data ideas for all things in-game world related.
+The design and data ideas for general in-game world related things.
 
 ## Chunks
-A chunk is `16x16x256` blocks, with subchunks of `16x16x16` size. Frustum culling will work on a subchunk basis.
+A chunk is `16x16x256` blocks, with subchunks of `16x16x16` size. Frustum culling will work on a chunk basis. Tests are needed to determine of mesh generation culling on a subchunk basis is performant enough.
 
 Each subchunk is a `vector<block>` containing `4096` blocks.
 A chunk is made up of a `vector<vector<block>>` which contains 16 subchunks, for a total `65536` blocks.
