@@ -14,6 +14,8 @@ namespace arterra {
 		ChunkMesh(const ChunkMesh& other);
 		~ChunkMesh();
 
+		void Destroy();
+
 		void AddChunk();
 		void AddSubChunk(SubChunk& subChunk);
 		void AddBlock(Block& block);

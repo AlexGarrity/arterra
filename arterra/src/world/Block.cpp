@@ -24,7 +24,7 @@ namespace arterra {
 			_position._z + scPosition._z };
 	}
 
-	BlockPosition Block::GetPositionRaw() const { return _position; }
+	BlockPosition Block::GetPositionRaw() const { return {_position._x, _position._y, _position._z}; }
 
 	CullableModel& Block::GetModel() const { return _model; }
 
@@ -64,6 +64,10 @@ namespace arterra {
 		_neighbours[3] = _subChunk->GetBlock(_position._x, _position._y - 1, _position._z);
 		_neighbours[4] = _subChunk->GetBlock(_position._x, _position._y, _position._z + 1);
 		_neighbours[5] = _subChunk->GetBlock(_position._x, _position._y, _position._z - 1);
+	}
+
+	void Block::SetParent(SubChunk *subChunk) {
+		_subChunk = subChunk;
 	}
 
 }

@@ -6,9 +6,11 @@
 namespace arterra {
 
 	struct BlockPosition {
-		int _x;
-		int _y;
-		int _z;
+		int _x = 0;
+		int _y = 0;
+		int _z = 0;
+
+		BlockPosition() = default;
 
 		BlockPosition(int x, int y, int z)
 			: _x(x)
@@ -16,11 +18,17 @@ namespace arterra {
 			, _z(z)
 		{
 		}
-		BlockPosition(const BlockPosition& other)
+
+		BlockPosition(const BlockPosition& other) 
 		{
 			_x = other._x;
 			_y = other._y;
 			_z = other._z;
+		}
+
+		bool operator==(const BlockPosition& other) const
+		{
+			return _x == other._x && _y == other._y && _z == other._z;
 		}
 	};
 
@@ -43,6 +51,8 @@ namespace arterra {
 		void Update(size_t width);
 		void UpdateVisiblity();
 		void UpdateNeighbours();
+
+		void SetParent(SubChunk *subChunk);
 
 	private:
 		bool _visible;

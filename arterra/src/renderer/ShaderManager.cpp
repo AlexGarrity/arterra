@@ -7,8 +7,6 @@ namespace arterra {
 	bool ShaderManager::LoadShader(std::string fragPath, std::string vertPath, std::string identifier)
 	{
 		// Create a new shader program in the map.
-		_shaders[identifier] = ShaderProgram();
-		// Create the actual shaders.
 		bool result = _shaders[identifier].Create(vertPath, fragPath);
 		// Check if the shader was successfully compiled.
 		if (result) {
@@ -28,13 +26,11 @@ namespace arterra {
 		auto i = _shaders.find(identifier);
 		// Make sure that the shader exists.
 		if (i == _shaders.end()) {
-			std::cerr << "Tried to unload shader '" << identifier << "' but it doesn't exist" << std::endl;
 			return false;
 		}
 
 		// Delete the shader, this will also destroy the program/shaders in the destructors.
 		_shaders.erase(i);
-		std::cout << "Unloaded shader '" << identifier << "' successfully" << std::endl;
 		return true;
 	}
 
@@ -44,7 +40,6 @@ namespace arterra {
 		_activeShader = _shaders.find(identifier);
 		// Make sure the shader exists.
 		if (_activeShader == _shaders.end()) {
-			std::cerr << "Tried to active shader '" << identifier << "' but it doesn't exist" << std::endl;
 			return false;
 		}
 		// Set the active gl program.
@@ -58,7 +53,6 @@ namespace arterra {
 		auto i = _shaders.find(identifier);
 		// Make sure the shader exists.
 		if (i == _shaders.end()) {
-			std::cerr << "Shader '" << identifier << "' does not exist" << std::endl;
 			return 0;
 		}
 		// Return the shader program gl id.

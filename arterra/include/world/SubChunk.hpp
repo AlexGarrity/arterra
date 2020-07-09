@@ -11,6 +11,9 @@ namespace arterra {
 
 	public:
 		SubChunk(int posX, int posY, int posZ, CullableModel& model, Chunk *parent);
+		SubChunk(const SubChunk &other);
+		~SubChunk() {}
+		void SetParent(Chunk *chunk);
 
 		std::array<Block*, 4096>& GetBlocks();
 		Block* GetBlock(int x, int y, int z);

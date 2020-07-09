@@ -5,12 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "lldb-mi",
+            "type": "lldb",
             "request": "launch",
             "name": "Launch LLDB",
-            "target": "${workspaceFolder}/build/arterra/arterra",
-            "cwd": "${workspaceRoot}/build/arterra",
-            "valuesFormatting": "parseText",
+            "program": "${workspaceFolder}/build/arterra/arterra",
+            "args": [],
+            "cwd": "${workspaceFolder}/build/arterra/"
         },
         {
             "name": "Launch Debug",

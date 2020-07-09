@@ -6,7 +6,6 @@ namespace arterra {
 
 		Test::Test(Engine* engine)
 			: Base(engine)
-			, _chunk(0, 0, 0, _cubeModel)
 		{
 			_engine->GetWindow()->SetVsync(true);
 			_engine->GetWindow()->SetClearColour(1.0f, 0.0f, 1.0f, 1.0f);
@@ -18,7 +17,11 @@ namespace arterra {
 			// Create cube model.
 			_cubeModel.Create("models/cube.mobj");
 
-			_chunkRenderer.AddChunk(_chunk);
+			auto cA = _world.CreateChunk(0, 0, _cubeModel);
+			auto cB = _world.CreateChunk(0, 1, _cubeModel);
+
+			_chunkRenderer.AddChunk(cA);
+			_chunkRenderer.AddChunk(cB);
 		}
 
 		void Test::Input(float_t deltaTime)
@@ -58,9 +61,11 @@ namespace arterra {
 			_engine->GetWindow()->Clear();
 			_engine->GetRenderer()->DrawTestCube();
 
+			
 			_shaderManager.UseShader("basic");
 			_shaderManager.ActiveProgram().SetUniform("fragmentTexture", 0);
 
+			
 			_chunkRenderer.Render();
 
 			_engine->GetWindow()->Update(deltaTime);

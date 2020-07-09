@@ -33,6 +33,20 @@ namespace arterra {
 		}
 	}
 
+	SubChunk::SubChunk(const SubChunk &other) {
+		_position = other._position;
+		_chunk = other._chunk;
+		_blocks = other._blocks;
+		for (auto block : _blocks) {
+			if (block)
+				block->SetParent(this);
+		}
+	}
+
+	void SubChunk::SetParent(Chunk *chunk) {
+		_chunk = chunk;
+	}
+
 	std::array<Block*, 4096>& SubChunk::GetBlocks() { return _blocks; }
 
 	Block* SubChunk::GetBlock(int x, int y, int z)

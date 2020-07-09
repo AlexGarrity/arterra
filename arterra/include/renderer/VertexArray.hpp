@@ -12,6 +12,8 @@ namespace arterra {
 	public:
 		// ctor creates a new vertex array.
 		VertexArray();
+		// copy ctor
+		VertexArray(VertexArray& other);
 		// dtor calls the glDeleteVertexArray function.
 		~VertexArray();
 
@@ -21,6 +23,8 @@ namespace arterra {
 		void Bind() const;
 		// Sets the current vertex array to 0.
 		void Unbind() const;
+
+		void Destroy();
 
 		GLuint GetVertexCount();
 

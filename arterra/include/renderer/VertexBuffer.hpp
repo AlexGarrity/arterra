@@ -12,6 +12,8 @@ namespace arterra {
 		// dtor calls the glDeleteBuffers function.
 		~VertexBuffer();
 
+		void Destroy();
+
 		// A vertex buffer contains data used to describe information
 		// about vertices, such as position, colour, uv, normals etc.
 		// When drawing a vao, you can define multiple vertex buffers

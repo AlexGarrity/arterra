@@ -4,19 +4,24 @@ namespace arterra {
 
 	ChunkMesh::ChunkMesh() {}
 
-	ChunkMesh::ChunkMesh(SubChunk &subChunk) {
+	ChunkMesh::ChunkMesh(SubChunk& subChunk)
+	{
 		AddSubChunk(subChunk);
 		GenerateMesh();
 	}
 
-	ChunkMesh::ChunkMesh(const ChunkMesh &other) {
+	ChunkMesh::ChunkMesh(const ChunkMesh& other)
+	{
 		_vertices = std::move(other._vertices);
 		_vertexArray = other._vertexArray;
 		_vertexBuffer = other._vertexBuffer;
 	}
 
-	ChunkMesh::~ChunkMesh() {
-		Logger::Get().Log("Chunkmesh dtor");
+	ChunkMesh::~ChunkMesh() {  }
+
+	void ChunkMesh::Destroy() {
+		_vertexArray.Destroy();
+		_vertexBuffer.Destroy();
 	}
 
 	void ChunkMesh::AddChunk() {}
@@ -59,6 +64,7 @@ namespace arterra {
 	{
 		_vertexBuffer.Create(_vertices, 3, GL_FLOAT);
 		_vertexArray.AddBuffer(_vertexBuffer);
+		_vertices.clear();
 	}
 
 	void ChunkMesh::Bind() { _vertexArray.Bind(); }

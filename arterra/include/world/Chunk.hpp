@@ -7,19 +7,25 @@
 
 namespace arterra {
 
+	class World;
+
 	class Chunk {
-		public:
-			Chunk(int posX, int posY, int posZ, CullableModel &model);
+	public:
+		Chunk() = default;
+		Chunk(int posX, int posY, int posZ, World *world, CullableModel& model);
+		Chunk(const Chunk &other);
 
-			SubChunk *GetSubChunk(int x, int y, int z);
-			std::vector<SubChunk> &GetSubChunks();
+		SubChunk* GetSubChunk(int x, int y, int z);
+		std::vector<SubChunk>& GetSubChunks();
 
-			BlockPosition GetPosition();
+		BlockPosition GetPosition();
 
-		private:
-			std::vector<SubChunk> _subChunks;
+	private:
+		std::vector<SubChunk> _subChunks;
 
-			BlockPosition _position;
+		World *_world;
+
+		BlockPosition _position;
 	};
 
 }

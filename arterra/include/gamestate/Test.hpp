@@ -3,11 +3,9 @@
 #include "PCH.hpp"
 
 #include "gamestate/Base.hpp"
-#include "model/ChunkMesh.hpp"
 #include "model/Model.hpp"
-#include "world/Block.hpp"
-#include "world/SubChunk.hpp"
 #include "renderer/ChunkRenderer.hpp"
+#include "world/World.hpp"
 
 namespace arterra {
 
@@ -24,7 +22,7 @@ namespace arterra {
 		private:
 			float_t _timeToResourceUnload = 5.0f;
 			CullableModel _cubeModel;
-			Chunk _chunk;
+			World _world;
 
 			ChunkRenderer _chunkRenderer;
 
