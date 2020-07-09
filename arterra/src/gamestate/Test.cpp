@@ -49,7 +49,7 @@ namespace arterra {
 			glViewport(0, 0, wX, wY);
 
 			_world.Update(deltaTime);
-			_chunkRenderer.UpdateSubChunks(_world.GetUpdatedChunks());
+			_chunkRenderer.UpdateSubChunks(_world.GetModifiedSubChunks());
 
 			// Every 5 seconds, perform garbage collection
 			_timeToResourceUnload -= deltaTime;

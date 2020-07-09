@@ -3,7 +3,7 @@
 namespace arterra {
 
 	World::World() {
-		_updatedSubChunks.reserve(128);
+		_modifiedSubChunks.reserve(128);
 	}
 
 	Chunk* World::CreateChunk(int x, int y, int z, CullableModel& model)
@@ -55,15 +55,15 @@ namespace arterra {
 	}
 
 	void World::Update(float deltaTime) {
-		_updatedSubChunks.clear();
+		_modifiedSubChunks.clear();
 		for (auto &chunk : _chunks) {
 			auto updatedSubChunks = chunk.second.Update(deltaTime);
-			_updatedSubChunks.insert(_updatedSubChunks.end(), updatedSubChunks.begin(), updatedSubChunks.end());
+			_modifiedSubChunks.insert(_modifiedSubChunks.end(), updatedSubChunks.begin(), updatedSubChunks.end());
 		}
 	}
 
-	std::vector<SubChunk*> &World::GetUpdatedChunks() {
-		return _updatedSubChunks;
+	std::vector<SubChunk*> &World::GetModifiedSubChunks() {
+		return _modifiedSubChunks;
 	}
 
 }

@@ -29,11 +29,11 @@ namespace arterra {
 		Block* GetBlock(int x, int y, int z);
 
 		void Update(float deltaTime);
-		std::vector<SubChunk*> &GetUpdatedChunks();
+		std::vector<SubChunk*> &GetModifiedSubChunks();
 
 	private:
 		ChunkMap::iterator FindChunk(int x, int z);
-		std::vector<SubChunk*> _updatedSubChunks;
+		std::vector<SubChunk*> _modifiedSubChunks;
 
 		ChunkMap _chunks;
 	};
