@@ -12,6 +12,8 @@ namespace arterra {
 		// dtor calls the glDeleteBuffers function.
 		~VertexBuffer();
 
+		void Destroy();
+
 		// A vertex buffer contains data used to describe information
 		// about vertices, such as position, colour, uv, normals etc.
 		// When drawing a vao, you can define multiple vertex buffers
@@ -33,6 +35,8 @@ namespace arterra {
 		inline GLint GetCount() const { return _count; }
 		inline GLenum GetType() const { return _type; }
 
+		inline GLint GetVertexCount() const { return _vertexCount; }
+
 	private:
 		// The unique opengl id for this buffer.
 		GLuint _glID;
@@ -40,6 +44,8 @@ namespace arterra {
 		GLint _count;
 		// The type of element this buffer contains.
 		GLenum _type;
+
+		GLint _vertexCount;
 	};
 
 }

@@ -3,7 +3,8 @@
 
 using namespace arterra;
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv)
+{
 	// Set correct filepath
 	std::filesystem::current_path(std::filesystem::path(argv[0]).parent_path());
 	// Create a new engine instance

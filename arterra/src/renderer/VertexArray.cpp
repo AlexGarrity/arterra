@@ -3,12 +3,24 @@
 namespace arterra {
 
 	VertexArray::VertexArray()
+		: _vertexCount(0)
 	{
 		// Generates a new vertex array.
 		glGenVertexArrays(1, &_glID);
 	}
 
-	VertexArray::~VertexArray() { glDeleteVertexArrays(1, &_glID); }
+	VertexArray::VertexArray(VertexArray& other)
+	{
+		_glID = other._glID;
+		_lastBoundAttribute = other._lastBoundAttribute;
+		_vertexCount = other._vertexCount;
+	}
+
+	VertexArray::~VertexArray() {  }
+
+	void VertexArray::Destroy() {
+		glDeleteVertexArrays(1, &_glID);
+	}
 
 	void VertexArray::AddBuffer(const VertexBuffer& vb)
 	{
@@ -17,7 +29,9 @@ namespace arterra {
 		// Bind the vertex buffer it it's not already bound.
 		vb.Bind();
 
-		glEnableVertexAttribArray(_lastBoundAttribute);
+		if (!_lastBoundAttribute)
+			_vertexCount = vb.GetVertexCount();
+
 		// Set the attribute pointer to the correct value, e.g.
 		//		For a position vector
 		//		i = 0 ( position vector is first )
@@ -29,6 +43,8 @@ namespace arterra {
 		glVertexAttribPointer(
 			_lastBoundAttribute, vb.GetCount(), vb.GetType(), GL_FALSE, vb.GetCount() * vb.GetSize(), 0);
 
+		glEnableVertexAttribArray(_lastBoundAttribute);
+
 		_lastBoundAttribute++;
 	}
 
@@ -36,4 +52,5 @@ namespace arterra {
 
 	void VertexArray::Unbind() const { glBindVertexArray(0); }
 
+	GLuint VertexArray::GetVertexCount() { return _vertexCount; }
 }

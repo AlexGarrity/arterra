@@ -1,6 +1,7 @@
 #pragma once
 
 #include "PCH.hpp"
+#include "util/DataObject.hpp"
 
 namespace arterra {
 

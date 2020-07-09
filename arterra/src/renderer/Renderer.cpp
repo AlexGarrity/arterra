@@ -10,12 +10,6 @@ namespace arterra {
 
 		_textureHandle.Load("textures/stone.png");
 
-		_testModel.Create("models/cube.mobj");
-
-		// Load the basic shader and use it
-		_shaderManager.LoadShader("shaders/basic.frag", "shaders/basic.vert", "basic");
-		_shaderManager.UseShader("basic");
-
 		// Enable depth testing
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_BLEND);
@@ -24,26 +18,13 @@ namespace arterra {
 		glFrontFace(GL_CCW);
 		glCullFace(GL_BACK);
 		glEnable(GL_CULL_FACE);
-		
+
 		// Enable blending
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 	}
 
-	void Renderer::Update()
-	{
-		// Set the camera view projection so the world renders in perspective
-		_shaderManager.ActiveProgram().SetUniform("viewProjection", _camera->ViewProjection());
-		_shaderManager.ActiveProgram().SetUniform("fragmentColour", {0.2f, 1.0f, 1.0f, 1.0f});
-	}
+	void Renderer::Update() {}
 
-	void Renderer::DrawTestCube()
-	{
-		_shaderManager.UseShader("basic");
-		_shaderManager.ActiveProgram().SetUniform("fragmentTexture", 0);
-		_testModel.Bind();
-		_textureHandle.Bind();
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-	}
+	void Renderer::DrawTestCube() { _textureHandle.Bind(); }
 
 }

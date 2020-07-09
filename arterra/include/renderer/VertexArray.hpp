@@ -12,6 +12,8 @@ namespace arterra {
 	public:
 		// ctor creates a new vertex array.
 		VertexArray();
+		// copy ctor
+		VertexArray(VertexArray& other);
 		// dtor calls the glDeleteVertexArray function.
 		~VertexArray();
 
@@ -22,6 +24,10 @@ namespace arterra {
 		// Sets the current vertex array to 0.
 		void Unbind() const;
 
+		void Destroy();
+
+		GLuint GetVertexCount();
+
 	private:
 		// The unique opengl id for this vertex array.
 		GLuint _glID;
@@ -29,6 +35,8 @@ namespace arterra {
 		// This allows to bind multiple vertex buffers to this one vertex array
 		// and storing vertices data separately.
 		GLuint _lastBoundAttribute = 0;
+
+		GLuint _vertexCount;
 	};
 
 }

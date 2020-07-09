@@ -2,9 +2,6 @@
 
 namespace arterra {
 
-    void GameObject::Update() {
-        _transform.Update();
-    }
-
+	void GameObject::Update() { _transform.Update(); }
 
 }

@@ -3,7 +3,7 @@
 
 namespace arterra {
 
-	Window::Window(uint32_t width, uint32_t height, std::string title)
+	Window::Window(int width, int height, std::string title)
 		: _width { width }
 		, _height { height }
 		, _title { title }
@@ -20,7 +20,7 @@ namespace arterra {
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 		// Sets GL profile to core
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-		
+
 		// Create a unique ptr to the window
 		auto x = std::unique_ptr<GLFWwindow, GLFWwindowDeleter>(
 			glfwCreateWindow(width, height, title.data(), nullptr, nullptr));
@@ -35,8 +35,7 @@ namespace arterra {
 		// Load GL core using GLAD, if it fails then error and return
 		if (!gladLoadGL()) {
 			Logger::Get().Log(Logger::Fatal, "GLAD failed to initialise");
-		}
-		else
+		} else
 			Logger::Get().Log(Logger::Debug, "Successfully initialised GLAD");
 	}
 
@@ -92,5 +91,6 @@ namespace arterra {
 	{
 		PollEvents();
 		SwapBuffers();
+		glfwGetWindowSize(_window.get(), &_width, &_height);
 	}
 }

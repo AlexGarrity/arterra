@@ -6,20 +6,19 @@
 
 namespace arterra {
 
-    namespace gamestate {
+	namespace gamestate {
 
-        class Init : public Base {
-        public:
-            Init(Engine* engine);
+		class Init : public Base {
+		public:
+			Init(Engine* engine);
 
-            virtual void Input(float_t deltaTime);
-            virtual void Update(float_t deltaTime);
-            virtual void Render(float_t deltaTime);
+			virtual void Input(float_t deltaTime);
+			virtual void Update(float_t deltaTime);
+			virtual void Render(float_t deltaTime);
 
-            private:
+		private:
+		};
 
-        };
-
-    }
+	}
 
 }

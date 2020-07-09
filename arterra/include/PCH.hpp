@@ -5,8 +5,8 @@
 // Strings
 #include <string>
 // File IO and Filesystem
-#include <fstream>
 #include <filesystem>
+#include <fstream>
 // String Streams
 #include <sstream>
 
@@ -48,5 +48,3 @@
 
 // Utility classes
 #include "util/Logger.hpp"
-#include "util/Time.hpp"
-#include "util/DataObject.hpp"

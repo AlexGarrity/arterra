@@ -1,5 +1,6 @@
 {
     "files.associations": {
+        "*.in": "cmake",
         "iostream": "cpp",
         "algorithm": "cpp",
         "array": "cpp",
@@ -77,6 +78,21 @@
         "xtree": "cpp",
         "filesystem": "cpp",
         "queue": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "csignal": "cpp",
+        "hash_map": "cpp",
+        "strstream": "cpp",
+        "bitset": "cpp",
+        "codecvt": "cpp",
+        "compare": "cpp",
+        "complex": "cpp",
+        "condition_variable": "cpp",
+        "future": "cpp",
+        "ranges": "cpp",
+        "stop_token": "cpp",
+        "cfenv": "cpp",
+        "typeindex": "cpp",
+        "valarray": "cpp",
+        "variant": "cpp"
     }
 }

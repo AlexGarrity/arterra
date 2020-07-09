@@ -15,13 +15,18 @@ namespace arterra {
 
 	VertexBuffer::VertexBuffer() {}
 
-	VertexBuffer::~VertexBuffer() { glDeleteBuffers(1, &_glID); }
+	VertexBuffer::~VertexBuffer() {  }
+
+	void VertexBuffer::Destroy() {
+		glDeleteBuffers(1, &_glID);
+	}
 
 	void VertexBuffer::Create(std::vector<float_t>& data, GLint count, GLenum type)
 	{
 		// Initialise the variables.
 		_count = count;
 		_type = type;
+		_vertexCount = data.size();
 		// Calculate array size for setting buffer data.
 		auto typeSize = GetTypeSize(_type);
 		// Generate a new buffer for this vertex buffer.
