@@ -25,11 +25,14 @@ namespace arterra {
 
 		void Bind();
 		GLuint GetVertexCount();
+		BlockPosition GetPosition();
 
 	private:
 		std::vector<float_t> _vertices;
 		VertexArray _vertexArray;
 		VertexBuffer _vertexBuffer;
+
+		BlockPosition _position;
 	};
 
 }

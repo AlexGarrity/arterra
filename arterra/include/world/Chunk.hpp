@@ -19,6 +19,9 @@ namespace arterra {
 		std::vector<SubChunk>& GetSubChunks();
 
 		BlockPosition GetPosition();
+		std::vector<SubChunk*> Update(float deltaTime);
+
+		inline World *GetWorld() { return _world; }
 
 	private:
 		std::vector<SubChunk> _subChunks;

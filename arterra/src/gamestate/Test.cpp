@@ -16,12 +16,13 @@ namespace arterra {
 
 			// Create cube model.
 			_cubeModel.Create("models/cube.mobj");
-
-			auto cA = _world.CreateChunk(0, 0, _cubeModel);
-			auto cB = _world.CreateChunk(0, 1, _cubeModel);
-
-			_chunkRenderer.AddChunk(cA);
-			_chunkRenderer.AddChunk(cB);
+		
+			std::vector<Chunk*> _chunks;
+			for (auto z = 0; z < 2; ++z) {
+				for (auto x = 0; x < 2; ++x) {
+					_chunks.push_back(_world.CreateChunk(x, z, _cubeModel));
+				}
+			}
 		}
 
 		void Test::Input(float_t deltaTime)
@@ -47,6 +48,9 @@ namespace arterra {
 
 			glViewport(0, 0, wX, wY);
 
+			_world.Update(deltaTime);
+			_chunkRenderer.UpdateSubChunks(_world.GetUpdatedChunks());
+
 			// Every 5 seconds, perform garbage collection
 			_timeToResourceUnload -= deltaTime;
 			if (_timeToResourceUnload < 0.0f) {
@@ -64,7 +68,6 @@ namespace arterra {
 			
 			_shaderManager.UseShader("basic");
 			_shaderManager.ActiveProgram().SetUniform("fragmentTexture", 0);
-
 			
 			_chunkRenderer.Render();
 

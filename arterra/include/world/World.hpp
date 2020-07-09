@@ -28,8 +28,12 @@ namespace arterra {
 
 		Block* GetBlock(int x, int y, int z);
 
+		void Update(float deltaTime);
+		std::vector<SubChunk*> &GetUpdatedChunks();
+
 	private:
 		ChunkMap::iterator FindChunk(int x, int z);
+		std::vector<SubChunk*> _updatedSubChunks;
 
 		ChunkMap _chunks;
 	};

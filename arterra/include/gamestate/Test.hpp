@@ -25,7 +25,6 @@ namespace arterra {
 			World _world;
 
 			ChunkRenderer _chunkRenderer;
-
 			ShaderManager _shaderManager;
 		};
 

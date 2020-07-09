@@ -1,5 +1,7 @@
 #include "world/Block.hpp"
+#include "world/Chunk.hpp"
 #include "world/SubChunk.hpp"
+#include "world/World.hpp"
 
 namespace arterra {
 
@@ -17,6 +19,12 @@ namespace arterra {
 	{
 	}
 
+	void Block::operator=(const Block &other) {
+		_position = other._position;
+		_model = other._model;
+		_subChunk = other._subChunk;
+	}
+
 	BlockPosition Block::GetPosition() const
 	{
 		auto scPosition = _subChunk->GetPosition();
@@ -24,7 +32,7 @@ namespace arterra {
 			_position._z + scPosition._z };
 	}
 
-	BlockPosition Block::GetPositionRaw() const { return {_position._x, _position._y, _position._z}; }
+	BlockPosition Block::GetPositionRaw() const { return { _position._x, _position._y, _position._z }; }
 
 	CullableModel& Block::GetModel() const { return _model; }
 
@@ -66,8 +74,6 @@ namespace arterra {
 		_neighbours[5] = _subChunk->GetBlock(_position._x, _position._y, _position._z - 1);
 	}
 
-	void Block::SetParent(SubChunk *subChunk) {
-		_subChunk = subChunk;
-	}
+	void Block::SetParent(SubChunk* subChunk) { _subChunk = subChunk; }
 
 }

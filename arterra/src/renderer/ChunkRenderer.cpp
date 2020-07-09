@@ -2,25 +2,31 @@
 
 namespace arterra {
 
-	ChunkRenderer::ChunkRenderer() { _renderables.reserve(128); }
+	ChunkRenderer::ChunkRenderer()
+	{
+		_renderables.reserve(128);
+		_renderables.clear();
+	}
 
-	ChunkRenderer::~ChunkRenderer() {
-		for (auto &renderable : _renderables) {
+	ChunkRenderer::~ChunkRenderer()
+	{
+		for (auto& renderable : _renderables) {
 			renderable.Destroy();
 		}
 		_renderables.clear();
 	}
 
-	void ChunkRenderer::AddChunk(Chunk* chunk) {
-		if (!chunk) return;
-		for (auto &sc : chunk->GetSubChunks()) {
+	void ChunkRenderer::AddChunk(Chunk* chunk)
+	{
+		if (!chunk)
+			return;
+		for (auto& sc : chunk->GetSubChunks()) {
 			AddSubChunk(sc);
 		}
 	}
 
 	void ChunkRenderer::AddChunk(Chunk& chunk)
 	{
-
 		for (auto& sc : chunk.GetSubChunks()) {
 			AddSubChunk(sc);
 		}
@@ -28,11 +34,51 @@ namespace arterra {
 
 	void ChunkRenderer::AddSubChunk(SubChunk& subChunk)
 	{
-		auto&& mesh = ChunkMesh(subChunk);
+		if (GetChunkMesh(subChunk.GetPosition()))
+			return;
+		AddSubChunk(&subChunk);
+	}
+
+	void ChunkRenderer::AddSubChunk(SubChunk* subChunk)
+	{
+		auto&& mesh = ChunkMesh(*subChunk);
 		_renderables.push_back(std::move(mesh));
 	}
 
+	void ChunkRenderer::UpdateSubChunks(std::vector<SubChunk*>& subChunks)
+	{
+		for (auto& sc : subChunks) {
+			auto pos = sc->GetPosition();
+			DeleteMesh(pos);
+			AddSubChunk(sc);
+		}
+	}
+
 	void ChunkRenderer::AddMesh(ChunkMesh mesh) { _renderables.push_back(mesh); }
+
+	ChunkMesh* ChunkRenderer::GetChunkMesh(BlockPosition position)
+	{
+		for (auto& r : _renderables) {
+			auto pos = r.GetPosition();
+			if (position == pos)
+				return &r;
+		}
+		return nullptr;
+	}
+
+	void ChunkRenderer::DeleteMesh(BlockPosition position)
+	{
+		auto pos = -1;
+		for (auto i = 0; i < _renderables.size(); ++i) {
+			auto rPos = _renderables[i].GetPosition();
+			if (position == rPos) {
+				pos = i;
+				break;
+			}
+		}
+		if (pos != -1)
+			_renderables.erase(_renderables.begin() + pos);
+	}
 
 	void ChunkRenderer::Render()
 	{

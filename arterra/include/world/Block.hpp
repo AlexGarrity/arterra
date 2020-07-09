@@ -26,6 +26,12 @@ namespace arterra {
 			_z = other._z;
 		}
 
+		void operator=(const BlockPosition &other) {
+			_x = other._x;
+			_y = other._y;
+			_z = other._z;
+		}
+
 		bool operator==(const BlockPosition& other) const
 		{
 			return _x == other._x && _y == other._y && _z == other._z;
@@ -39,6 +45,8 @@ namespace arterra {
 	public:
 		Block(const Block& other);
 		Block(int posX, int posY, int posZ, CullableModel& model, SubChunk* subChunk);
+
+		void operator=(const Block &other);
 
 		BlockPosition GetPosition() const;
 		BlockPosition GetPositionRaw() const;
@@ -61,7 +69,7 @@ namespace arterra {
 
 		CullableModel& _model;
 		SubChunk* _subChunk;
-		const BlockPosition _position;
+		BlockPosition _position;
 	};
 
 }

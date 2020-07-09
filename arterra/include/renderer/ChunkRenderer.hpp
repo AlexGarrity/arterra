@@ -3,27 +3,32 @@
 #include "PCH.hpp"
 
 #include "model/ChunkMesh.hpp"
-#include "world/SubChunk.hpp"
 #include "world/Chunk.hpp"
+#include "world/SubChunk.hpp"
 
 namespace arterra {
 
 	class ChunkRenderer {
-		public:
-			ChunkRenderer();
-			~ChunkRenderer();
+	public:
+		ChunkRenderer();
+		~ChunkRenderer();
 
-			void AddChunk(Chunk *chunk);
-			void AddChunk(Chunk &chunk);
-			void AddSubChunk(SubChunk &subChunk);
-			void AddMesh(ChunkMesh mesh);
+		void AddChunk(Chunk* chunk);
+		void AddChunk(Chunk& chunk);
+		void AddSubChunk(SubChunk* subChunk);
+		void AddSubChunk(SubChunk& subChunk);
+		void AddMesh(ChunkMesh mesh);
 
-			void Render();
+		void UpdateSubChunks(std::vector<SubChunk*>& subChunks);
+		ChunkMesh* GetChunkMesh(BlockPosition position);
+		void DeleteMesh(BlockPosition position);
 
-			std::vector<ChunkMesh> &GetRenderables();
+		void Render();
 
-		private:
-			std::vector<ChunkMesh> _renderables;
+		std::vector<ChunkMesh>& GetRenderables();
+
+	private:
+		std::vector<ChunkMesh> _renderables;
 	};
 
 }

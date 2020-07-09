@@ -5,6 +5,7 @@ namespace arterra {
 	ChunkMesh::ChunkMesh() {}
 
 	ChunkMesh::ChunkMesh(SubChunk& subChunk)
+		: _position { subChunk.GetPosition() }
 	{
 		AddSubChunk(subChunk);
 		GenerateMesh();
@@ -15,11 +16,13 @@ namespace arterra {
 		_vertices = std::move(other._vertices);
 		_vertexArray = other._vertexArray;
 		_vertexBuffer = other._vertexBuffer;
+		_position = other._position;
 	}
 
-	ChunkMesh::~ChunkMesh() {  }
+	ChunkMesh::~ChunkMesh() {}
 
-	void ChunkMesh::Destroy() {
+	void ChunkMesh::Destroy()
+	{
 		_vertexArray.Destroy();
 		_vertexBuffer.Destroy();
 	}
@@ -70,5 +73,7 @@ namespace arterra {
 	void ChunkMesh::Bind() { _vertexArray.Bind(); }
 
 	GLuint ChunkMesh::GetVertexCount() { return _vertexArray.GetVertexCount(); }
+
+	BlockPosition ChunkMesh::GetPosition() { return _position; }
 
 }

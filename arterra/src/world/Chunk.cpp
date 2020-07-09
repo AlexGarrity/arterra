@@ -8,17 +8,17 @@ namespace arterra {
 	{
 		if (x < 0 || y < 0 || z < 0)
 			return -1;
-		if (x > 15 || y > 15 || z > 15)
+		if (x > 16 || y > 16 || z > 16)
 			return -1;
-		return x + (16 * (z + (16 * y)));
+		return x + (1 * (z + (1 * y)));
 	}
 
 	Chunk::Chunk(int posX, int posY, int posZ, World *world, CullableModel& model)
 		: _position { posX, posY, posZ }, _world{world}
 	{
 		_subChunks.reserve(16);
-		for (auto i = 0; i < 16; ++i) {
-			_subChunks.emplace_back(_position._x, _position._y + (16 * i), _position._z, model, this);
+		for (auto y = 0; y < 16; ++y) {
+			_subChunks.emplace_back(0, y, 0, model, this);
 		}
 	}
 
@@ -44,6 +44,17 @@ namespace arterra {
 		return &_subChunks[pos];
 	}
 
-	BlockPosition Chunk::GetPosition() { return {_position._x, _position._y, _position._z}; }
+	BlockPosition Chunk::GetPosition() { return {_position._x * 16, _position._y * 16, _position._z * 16}; }
+
+	std::vector<SubChunk*> Chunk::Update(float deltaTime) {
+		std::vector<SubChunk*> out;
+		out.reserve(4);
+		for (auto &sc : _subChunks) {
+			if (sc.Update(deltaTime)) {
+				out.push_back(&sc);
+			}
+		}
+		return {out.begin(), out.end()};
+	}
 
 }

@@ -49,7 +49,7 @@ namespace arterra {
 
 	std::array<Block*, 4096>& SubChunk::GetBlocks() { return _blocks; }
 
-	Block* SubChunk::GetBlock(int x, int y, int z)
+	Block* SubChunk::GetBlock(int x, int y, int z) const
 	{
 		auto pos = ResolveArrayPosition(x, y, z);
 		if (pos == -1)
@@ -57,11 +57,30 @@ namespace arterra {
 		return _blocks[pos];
 	}
 
+	void SubChunk::SetBlock(int x, int y, int z, Block &b) {
+		auto pos = ResolveArrayPosition(x, y, z);
+		if (!_blocks[pos]) _blocks[pos] = new Block(b);
+		else *_blocks[pos] = std::move(b);
+		_updated = true;
+	} 
+
+	void SubChunk::DeleteBlock(int x, int y, int z) {
+		auto pos = ResolveArrayPosition(x, y, z);
+		delete _blocks[pos];
+		_updated = true;
+	}
+
 	BlockPosition SubChunk::GetPosition()
 	{
 		auto cp = _chunk->GetPosition();
-		return { _position._x + cp._x, _position._y + cp._y, _position._z + cp._z };
+		return { (_position._x * 16) + cp._x, (_position._y * 16) + cp._y, (_position._z * 16) + cp._z };
 	}
 
-	Chunk* SubChunk::GetChunk() { return _chunk; }
+	bool SubChunk::Update(float deltaTime) {
+		if (_updated) {
+			_updated = false;
+			return true;
+		}
+		return false;
+	}
 }
