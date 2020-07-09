@@ -5,7 +5,7 @@ namespace arterra {
 	Camera::Camera()
 	{
 		// Create a new perspective projection
-		_projection = glm::perspective(glm::radians(76.0f), 16.f / 9.f, 0.1f, 100.0f);
+		_projection = glm::perspective(glm::radians(76.0f), 16.f / 9.f, 0.1f, 1000.0f);
 	}
 
 	void Camera::Update(Window& window, float_t deltaTime)

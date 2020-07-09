@@ -18,8 +18,8 @@ namespace arterra {
 			_cubeModel.Create("models/cube.mobj");
 		
 			std::vector<Chunk*> _chunks;
-			for (auto z = 0; z < 2; ++z) {
-				for (auto x = 0; x < 2; ++x) {
+			for (auto z = 0; z < 8; ++z) {
+				for (auto x = 0; x < 8; ++x) {
 					_chunks.push_back(_world.CreateChunk(x, z, _cubeModel));
 				}
 			}

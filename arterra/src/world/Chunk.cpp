@@ -17,7 +17,7 @@ namespace arterra {
 		: _position { posX, posY, posZ }, _world{world}
 	{
 		_subChunks.reserve(16);
-		for (auto y = 0; y < 16; ++y) {
+		for (auto y = 0; y < 4; ++y) {
 			_subChunks.emplace_back(0, y, 0, model, this);
 		}
 	}
