@@ -17,12 +17,12 @@ namespace arterra {
 			// Create cube model.
 			_cubeModel.Create("models/cube.mobj");
 		
-			Block default {0, 0, 0, _cubeModel, nullptr};
+			Block defaultBlock {0, 0, 0, _cubeModel, nullptr};
 
 			for (auto z = 0; z < 8; ++z) {
 				for (auto x = 0; x < 8; ++x) {
 					auto chunk = _world.CreateChunk(x, z);
-					_terrainGenerator.GenerateChunk(*chunk, default);
+					_terrainGenerator.GenerateChunk(*chunk, defaultBlock);
 				}
 			}
 		}

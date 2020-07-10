@@ -14,7 +14,8 @@ namespace arterra {
 			void GenerateChunk(Chunk &out, Block &block);
 
 		private:
-			OpenSimplex _generator;
+			OpenSimplex2D _generator2D;
+			OpenSimplex3D _generator3D;
 	};
 
 }

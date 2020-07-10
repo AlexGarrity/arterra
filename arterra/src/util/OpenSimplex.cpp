@@ -2,7 +2,7 @@
 
 namespace arterra {
 
-	OpenSimplex::OpenSimplex()
+	OpenSimplex3D::OpenSimplex3D()
 	{
 		size_t seed = _randomGenerator.Generate();
 		_permutations.resize(256);
@@ -24,7 +24,7 @@ namespace arterra {
 		}
 	}
 
-	float OpenSimplex::Generate(float x, float y, float z)
+	float OpenSimplex3D::Generate(float x, float y, float z)
 	{
 		// Place coordinates onto honeycomb
 		float stretchOffset = (x + y + z) * _stretchConstant;
@@ -586,10 +586,154 @@ namespace arterra {
 		return value / _normConstant;
 	}
 
-	float OpenSimplex::Extrapolate(int xsb, int ysb, int zsb, float dx, float dy, float dz)
+	float OpenSimplex3D::Extrapolate(int xsb, int ysb, int zsb, float dx, float dy, float dz)
 	{
 		int index = _permGradIndex[(_permutations[(_permutations[xsb & 0xFF] + ysb) & 0xFF] + zsb) & 0xFF];
 		return _gradients[index] * dx + _gradients[index + 1] * dy + _gradients[index + 2] * dz;
+	}
+
+
+	OpenSimplex2D::OpenSimplex2D()
+	{
+		size_t seed = _randomGenerator.Generate();
+		_permutations.resize(256);
+		_permGradIndex.resize(256);
+		std::array<uint16_t, 256> source;
+		for (auto i = 0; i < 256; i++)
+			source[i] = i;
+		seed = seed * 6364136223846793005l + 1442695040888963407l;
+		seed = seed * 6364136223846793005l + 1442695040888963407l;
+		seed = seed * 6364136223846793005l + 1442695040888963407l;
+		for (int i = 255; i >= 0; i--) {
+			seed = seed * 6364136223846793005l + 1442695040888963407l;
+			int r = (int)((seed + 31) % (i + 1));
+			if (r < 0)
+				r += (i + 1);
+			_permutations[i] = source[r];
+			_permGradIndex[i] = static_cast<uint16_t>((_permutations[i] % (_gradients.size() / 3)) * 3);
+			source[r] = source[i];
+		}
+	}
+
+	float OpenSimplex2D::Generate(float x, float y) {
+	
+		//Place input coordinates onto grid.
+		float stretchOffset = (x + y) * _stretchConstant;
+		float xs = x + stretchOffset;
+		float ys = y + stretchOffset;
+		
+		//Floor to get grid coordinates of rhombus (stretched square) super-cell origin.
+		int xsb = static_cast<int>(xs);
+		int ysb = static_cast<int>(ys);
+		
+		//Skew out to get actual coordinates of rhombus origin. We'll need these later.
+		float squishOffset = (xsb + ysb) * _squishConstant;
+		float xb = xsb + squishOffset;
+		float yb = ysb + squishOffset;
+		
+		//Compute grid coordinates relative to rhombus origin.
+		float xins = xs - xsb;
+		float yins = ys - ysb;
+		
+		//Sum those together to get a value that determines which region we're in.
+		float inSum = xins + yins;
+
+		//Positions relative to origin point.
+		float dx0 = x - xb;
+		float dy0 = y - yb;
+		
+		//We'll be defining these inside the next block and using them afterwards.
+		float dx_ext, dy_ext;
+		int xsv_ext, ysv_ext;
+		
+		float value = 0;
+
+		//Contribution (1,0)
+		float dx1 = dx0 - 1 - _squishConstant;
+		float dy1 = dy0 - 0 - _squishConstant;
+		float attn1 = 2 - dx1 * dx1 - dy1 * dy1;
+		if (attn1 > 0) {
+			attn1 *= attn1;
+			value += attn1 * attn1 * Extrapolate(xsb + 1, ysb + 0, dx1, dy1);
+		}
+
+		//Contribution (0,1)
+		float dx2 = dx0 - 0 - _squishConstant;
+		float dy2 = dy0 - 1 - _squishConstant;
+		float attn2 = 2 - dx2 * dx2 - dy2 * dy2;
+		if (attn2 > 0) {
+			attn2 *= attn2;
+			value += attn2 * attn2 * Extrapolate(xsb + 0, ysb + 1, dx2, dy2);
+		}
+		
+		if (inSum <= 1) { //We're inside the triangle (2-Simplex) at (0,0)
+			float zins = 1 - inSum;
+			if (zins > xins || zins > yins) { //(0,0) is one of the closest two triangular vertices
+				if (xins > yins) {
+					xsv_ext = xsb + 1;
+					ysv_ext = ysb - 1;
+					dx_ext = dx0 - 1;
+					dy_ext = dy0 + 1;
+				} else {
+					xsv_ext = xsb - 1;
+					ysv_ext = ysb + 1;
+					dx_ext = dx0 + 1;
+					dy_ext = dy0 - 1;
+				}
+			} else { //(1,0) and (0,1) are the closest two vertices.
+				xsv_ext = xsb + 1;
+				ysv_ext = ysb + 1;
+				dx_ext = dx0 - 1 - 2 * _squishConstant;
+				dy_ext = dy0 - 1 - 2 * _squishConstant;
+			}
+		} else { //We're inside the triangle (2-Simplex) at (1,1)
+			float zins = 2 - inSum;
+			if (zins < xins || zins < yins) { //(0,0) is one of the closest two triangular vertices
+				if (xins > yins) {
+					xsv_ext = xsb + 2;
+					ysv_ext = ysb + 0;
+					dx_ext = dx0 - 2 - 2 * _squishConstant;
+					dy_ext = dy0 + 0 - 2 * _squishConstant;
+				} else {
+					xsv_ext = xsb + 0;
+					ysv_ext = ysb + 2;
+					dx_ext = dx0 + 0 - 2 * _squishConstant;
+					dy_ext = dy0 - 2 - 2 * _squishConstant;
+				}
+			} else { //(1,0) and (0,1) are the closest two vertices.
+				dx_ext = dx0;
+				dy_ext = dy0;
+				xsv_ext = xsb;
+				ysv_ext = ysb;
+			}
+			xsb += 1;
+			ysb += 1;
+			dx0 = dx0 - 1 - 2 * _squishConstant;
+			dy0 = dy0 - 1 - 2 * _squishConstant;
+		}
+		
+		//Contribution (0,0) or (1,1)
+		float attn0 = 2 - dx0 * dx0 - dy0 * dy0;
+		if (attn0 > 0) {
+			attn0 *= attn0;
+			value += attn0 * attn0 * Extrapolate(xsb, ysb, dx0, dy0);
+		}
+		
+		//Extra Vertex
+		float attn_ext = 2 - dx_ext * dx_ext - dy_ext * dy_ext;
+		if (attn_ext > 0) {
+			attn_ext *= attn_ext;
+			value += attn_ext * attn_ext * Extrapolate(xsv_ext, ysv_ext, dx_ext, dy_ext);
+		}
+		
+		return value / _normConstant;
+	}
+
+	float OpenSimplex2D::Extrapolate(int xsb, int ysb, float dx, float dy)
+	{
+		int index = _permutations[(_permutations[xsb & 0xFF] + ysb) & 0xFF] & 0x0E;
+		return _gradients[index] * dx
+			+ _gradients[index + 1] * dy;
 	}
 
 }

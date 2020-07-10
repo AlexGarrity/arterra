@@ -7,25 +7,27 @@ namespace arterra {
 	}
 
 	void TerrainGenerator::GenerateChunk(Chunk &out, Block &block) {
-		for (auto &subChunk : out.GetSubChunks()) {
-			for (auto y = 0; y < 16; ++y) {
-				for (auto z = 0; z < 16; ++z) {
-					for (auto x = 0; x < 16; ++x) {
-						auto cp = subChunk.GetPosition();
+		std::vector<uint16_t> _heightMap;
+		_heightMap.resize(256);
+		auto cp = out.GetPosition();
+		for (auto z = 0; z < 16; ++z) {
+			for (auto x = 0; x < 16; ++x) {
+				auto fX = static_cast<float>(x + cp._x) * 0.02f;
+				auto fZ = static_cast<float>(z + cp._z) * 0.02f;
+				float gx = _generator2D.Generate(fX, fZ);
+				float go = gx + 0.9f;
+				_heightMap[x+16*z] = static_cast<uint16_t>(go * 147.8f);
+			}
+		}
 
-						auto bx = cp._x + x;
-						auto by = cp._y + y;
-						auto bz = cp._z + z;
-
-						auto d = (1.0f / 5.0f);
-						auto fx = static_cast<float>(bx) * d;
-						auto fy = static_cast<float>(by) * d;
-						auto fz = static_cast<float>(bz) * d;
-
-						auto v = _generator.Generate(fx, fy, fz);
-						if (v > 0.1f) {
-							subChunk.SetBlock(x, y, z, block);
-						}
+		for (auto &sc : out.GetSubChunks()) {
+			for (auto z = 0; z < 16; ++z) {
+				for (auto x = 0; x < 16; ++x) {
+					auto height = _heightMap[x+16*z];
+					auto pos = sc.GetPosition();
+					auto dY = std::max<int>(std::min<int>(height - pos._y, 15), 0);
+					for (auto y = 0; y < dY; ++y) {
+						sc.SetBlock(x, y, z, block); 
 					}
 				}
 			}
