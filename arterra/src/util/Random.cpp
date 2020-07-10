@@ -2,10 +2,10 @@
 
 namespace arterra {
 
-	Random::Random(const long seed)
+	Random::Random()
 	{
 		// Initialise the engine with a seed.
-		_engine.seed(seed);
+		_engine.seed(std::chrono::high_resolution_clock::now().time_since_epoch().count());
 	}
 
 	int64_t Random::IntInRange(const int64_t min, const int64_t max)

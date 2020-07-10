@@ -13,23 +13,11 @@ namespace arterra {
 		return x + (16 * (z + (16 * y)));
 	}
 
-	SubChunk::SubChunk(int posX, int posY, int posZ, CullableModel& model, Chunk *parent)
+	SubChunk::SubChunk(int posX, int posY, int posZ, Chunk *parent)
 		: _position { posX, posY, posZ }, _chunk {parent}
 	{
-
-		_blocks.fill(nullptr);
-
-		for (int y = 0; y < 16; y++) {
-			for (int z = 0; z < 16; z++) {
-				for (int x = 0; x < 16; x++) {
-					auto pos = ResolveArrayPosition(x, y, z);
-					_blocks[pos] = new Block(x, y, z, model, this);
-				}
-			}
-		}
-		for (auto block : _blocks) {
-			if (block)
-				block->Update(0);
+		for (auto &block : _blocks) {
+			block = nullptr;
 		}
 	}
 
@@ -37,7 +25,7 @@ namespace arterra {
 		_position = other._position;
 		_chunk = other._chunk;
 		_blocks = other._blocks;
-		for (auto block : _blocks) {
+		for (auto &block : _blocks) {
 			if (block)
 				block->SetParent(this);
 		}
@@ -59,8 +47,9 @@ namespace arterra {
 
 	void SubChunk::SetBlock(int x, int y, int z, Block &b) {
 		auto pos = ResolveArrayPosition(x, y, z);
-		if (!_blocks[pos]) _blocks[pos] = new Block(b);
-		else *_blocks[pos] = std::move(b);
+		if (_blocks[pos]) delete _blocks[pos];
+		_blocks[pos] = new Block(x, y, z, b.GetModel(), this);
+		_blocks[pos]->Update(0);
 		_updated = true;
 	} 
 

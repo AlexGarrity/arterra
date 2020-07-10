@@ -5,6 +5,7 @@
 #include "gamestate/Base.hpp"
 #include "model/Model.hpp"
 #include "renderer/ChunkRenderer.hpp"
+#include "world/TerrainGenerator.hpp"
 #include "world/World.hpp"
 
 namespace arterra {
@@ -26,6 +27,7 @@ namespace arterra {
 
 			ChunkRenderer _chunkRenderer;
 			ShaderManager _shaderManager;
+			TerrainGenerator _terrainGenerator;
 		};
 
 	}

@@ -31,7 +31,7 @@ namespace arterra {
 
 	void ChunkMesh::AddSubChunk(SubChunk& subChunk)
 	{
-		for (auto block : subChunk.GetBlocks()) {
+		for (auto &block : subChunk.GetBlocks()) {
 			if (!block)
 				continue;
 

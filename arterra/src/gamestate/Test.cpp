@@ -8,7 +8,7 @@ namespace arterra {
 			: Base(engine)
 		{
 			_engine->GetWindow()->SetVsync(true);
-			_engine->GetWindow()->SetClearColour(1.0f, 0.0f, 1.0f, 1.0f);
+			_engine->GetWindow()->SetClearColour(0.6f, 0.8f, 1.0f, 1.0f);
 
 			// Load the basic shader and use it
 			_shaderManager.LoadShader("shaders/basic.frag", "shaders/basic.vert", "basic");
@@ -17,10 +17,12 @@ namespace arterra {
 			// Create cube model.
 			_cubeModel.Create("models/cube.mobj");
 		
-			std::vector<Chunk*> _chunks;
+			Block default {0, 0, 0, _cubeModel, nullptr};
+
 			for (auto z = 0; z < 8; ++z) {
 				for (auto x = 0; x < 8; ++x) {
-					_chunks.push_back(_world.CreateChunk(x, z, _cubeModel));
+					auto chunk = _world.CreateChunk(x, z);
+					_terrainGenerator.GenerateChunk(*chunk, default);
 				}
 			}
 		}

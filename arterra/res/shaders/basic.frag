@@ -11,5 +11,11 @@ uniform vec4 fragmentColour;
 void main()
 {
     // outColour = texture(fragmentTexture, fragmentTextureCoords) * fragmentColour;
-    outColour = vec4(mod(fragmentPosition, 16.0f) / 16.0f, 1.0f);
+    float darkness = pow(fragmentPosition.y, 4) / 16777216.0f;
+    outColour = vec4(
+        0.013f, 
+        mod(fragmentPosition.y, 1.0f) * darkness, 
+        0.13f,
+        1.0f
+    );
 }

@@ -19,8 +19,8 @@ namespace arterra {
 	public:
 		World();
 
-		Chunk* CreateChunk(int x, int y, int z, CullableModel &model);
-		Chunk* CreateChunk(int x, int z, CullableModel &model);
+		Chunk* CreateChunk(int x, int y, int z);
+		Chunk* CreateChunk(int x, int z);
 		Chunk* GetChunk(int x, int y, int z);
 		Chunk* GetChunk(int x, int z);
 
