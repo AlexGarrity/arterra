@@ -13,12 +13,12 @@ namespace arterra {
 		return x + (1 * (z + (1 * y)));
 	}
 
-	Chunk::Chunk(int posX, int posY, int posZ, World *world, CullableModel& model)
+	Chunk::Chunk(int posX, int posY, int posZ, World *world)
 		: _position { posX, posY, posZ }, _world{world}
 	{
 		_subChunks.reserve(16);
 		for (auto y = 0; y < 4; ++y) {
-			_subChunks.emplace_back(0, y, 0, model, this);
+			_subChunks.emplace_back(0, y, 0, this);
 		}
 	}
 

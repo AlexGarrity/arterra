@@ -6,18 +6,18 @@ namespace arterra {
 		_modifiedSubChunks.reserve(128);
 	}
 
-	Chunk* World::CreateChunk(int x, int y, int z, CullableModel& model)
+	Chunk* World::CreateChunk(int x, int y, int z)
 	{
-		return CreateChunk(x / 16, z / 16, model);
+		return CreateChunk(x / 16, z / 16);
 	}
 
-	Chunk* World::CreateChunk(int x, int z, CullableModel& model)
+	Chunk* World::CreateChunk(int x, int z)
 	{
 		auto chunk = FindChunk(x, z);
 		if (chunk != _chunks.end())
 			return &chunk->second;
 		auto pos = BlockPosition(x, 0, z);
-		_chunks.emplace(std::make_pair(pos, Chunk{pos._x, pos._y, pos._z, this, model}));
+		_chunks.emplace(std::make_pair(pos, Chunk{pos._x, pos._y, pos._z, this}));
 		return GetChunk(x, z);
 	}
 

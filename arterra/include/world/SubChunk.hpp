@@ -10,7 +10,7 @@ namespace arterra {
 	class SubChunk {
 
 	public:
-		SubChunk(int posX, int posY, int posZ, CullableModel& model, Chunk* parent);
+		SubChunk(int posX, int posY, int posZ, Chunk* parent);
 		SubChunk(const SubChunk& other);
 		~SubChunk() {}
 		void SetParent(Chunk* chunk);

@@ -12,7 +12,7 @@ namespace arterra {
 	class Chunk {
 	public:
 		Chunk() = default;
-		Chunk(int posX, int posY, int posZ, World *world, CullableModel& model);
+		Chunk(int posX, int posY, int posZ, World *world);
 		Chunk(const Chunk &other);
 
 		SubChunk* GetSubChunk(int x, int y, int z);

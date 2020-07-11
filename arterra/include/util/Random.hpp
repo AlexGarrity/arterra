@@ -1,4 +1,5 @@
-#include <random>
+#pragma once
+#include "PCH.hpp"
 
 namespace arterra {
 
@@ -6,7 +7,7 @@ namespace arterra {
 
 	public:
 		// ctor
-		Random(const long seed);
+		Random();
 
 		// Get a random integer in a specific range.
 		int64_t IntInRange(const int64_t min, const int64_t max);

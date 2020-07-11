@@ -1,7 +1,7 @@
 #pragma once
 
 #include "PCH.hpp"
-#include "model/CullableModel.hpp"
+#include "block/BlockData.hpp"
 
 namespace arterra {
 
@@ -19,14 +19,15 @@ namespace arterra {
 		{
 		}
 
-		BlockPosition(const BlockPosition& other) 
+		BlockPosition(const BlockPosition& other)
 		{
 			_x = other._x;
 			_y = other._y;
 			_z = other._z;
 		}
 
-		void operator=(const BlockPosition &other) {
+		void operator=(const BlockPosition& other)
+		{
 			_x = other._x;
 			_y = other._y;
 			_z = other._z;
@@ -44,13 +45,13 @@ namespace arterra {
 
 	public:
 		Block(const Block& other);
-		Block(int posX, int posY, int posZ, CullableModel& model, SubChunk* subChunk);
+		Block(int posX, int posY, int posZ, SubChunk* subChunk, BlockData& blockData);
 
-		void operator=(const Block &other);
+		void operator=(const Block& other);
 
 		BlockPosition GetPosition() const;
 		BlockPosition GetPositionRaw() const;
-		CullableModel& GetModel() const;
+		BlockData& GetData() const;
 
 		inline bool IsVisible() const { return _visible; }
 
@@ -60,14 +61,14 @@ namespace arterra {
 		void UpdateVisiblity();
 		void UpdateNeighbours();
 
-		void SetParent(SubChunk *subChunk);
+		void SetParent(SubChunk* subChunk);
 
 	private:
 		bool _visible;
 		std::array<bool, 6> _visibleFaces;
 		std::array<Block*, 6> _neighbours;
 
-		CullableModel& _model;
+		BlockData& _blockData;
 		SubChunk* _subChunk;
 		BlockPosition _position;
 	};
