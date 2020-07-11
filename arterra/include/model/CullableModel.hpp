@@ -14,8 +14,8 @@ namespace arterra {
 		NegX = 1,
 		PosY = 2,
 		NegY = 3,
-		PosZ = 5,
-		NegZ = 4,
+		PosZ = 4,
+		NegZ = 5,
 	};
 
 	class CullableModel {
@@ -28,15 +28,13 @@ namespace arterra {
 
 		bool Create(std::string filepath);
 
-		std::vector<float_t> GetFace(Direction direction);
+		std::vector<float_t> GetPosVertices(Direction direction);
+		std::vector<float_t> GetTexVertices(Direction direction);
 
 	private:
-		std::vector<float_t> _verticesPosX;
-		std::vector<float_t> _verticesNegX;
-		std::vector<float_t> _verticesPosY;
-		std::vector<float_t> _verticesNegY;
-		std::vector<float_t> _verticesPosZ;
-		std::vector<float_t> _verticesNegZ;
+		// PosX, NegX, PosY, NegY, PosZ, NegZ
+		std::array<std::vector<float_t>, 6> _posVertices;
+		std::array<std::vector<float_t>, 6> _texVertices;
 
 		size_t _vertexCount;
 	};

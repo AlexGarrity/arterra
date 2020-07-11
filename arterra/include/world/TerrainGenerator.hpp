@@ -12,6 +12,7 @@ namespace arterra {
 			TerrainGenerator();
 
 			void GenerateChunk(Chunk &out, Block &block);
+			void GenerateBlock(int x, int y, int z, Block &block);
 
 		private:
 			OpenSimplex2D _generator2D;

@@ -19,7 +19,7 @@ namespace arterra {
 		void AddChunk();
 		void AddSubChunk(SubChunk& subChunk);
 		void AddBlock(Block& block);
-		void AddFace(std::vector<float_t> vertices);
+		void AddFace(std::vector<float_t> posVertices, std::vector<float_t> texVertices);
 
 		void GenerateMesh();
 
@@ -28,9 +28,12 @@ namespace arterra {
 		BlockPosition GetPosition();
 
 	private:
-		std::vector<float_t> _vertices;
+		std::vector<float_t> _posVertices;
+		std::vector<float_t> _uvVertices;
 		VertexArray _vertexArray;
-		VertexBuffer _vertexBuffer;
+
+		VertexBuffer _posBuffer;
+		VertexBuffer _texBuffer;
 
 		BlockPosition _position;
 	};

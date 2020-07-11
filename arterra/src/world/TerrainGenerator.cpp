@@ -28,10 +28,18 @@ namespace arterra {
 					auto dY = std::max<int>(std::min<int>(height - pos._y, 16), 0);
 					for (auto y = 0; y < dY; ++y) {
 						sc.SetBlock(x, y, z, block);
+						
 					}
 				}
 			}
+			for (auto &b : sc.GetBlocks()) {
+				if(b)b->Update(0);
+			}
 		}
+	}
+
+	void TerrainGenerator::GenerateBlock(int x, int y, int z, Block &block) {
+
 	}
 
 }

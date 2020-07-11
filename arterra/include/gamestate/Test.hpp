@@ -2,9 +2,10 @@
 
 #include "PCH.hpp"
 
+#include "block/BlockManager.hpp"
 #include "gamestate/Base.hpp"
-#include "model/Model.hpp"
 #include "renderer/ChunkRenderer.hpp"
+#include "texture/TextureAtlas.hpp"
 #include "world/TerrainGenerator.hpp"
 #include "world/World.hpp"
 
@@ -28,6 +29,8 @@ namespace arterra {
 			ChunkRenderer _chunkRenderer;
 			ShaderManager _shaderManager;
 			TerrainGenerator _terrainGenerator;
+			BlockManager _blockManager;
+			TextureAtlas _atlas;
 		};
 
 	}

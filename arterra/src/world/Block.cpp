@@ -6,23 +6,24 @@
 namespace arterra {
 
 	Block::Block(const Block& other)
-		: _model(other._model)
-		, _subChunk(other._subChunk)
+		: _subChunk(other._subChunk)
 		, _position(other.GetPositionRaw())
+		, _blockData(other._blockData)
 	{
 	}
 
-	Block::Block(int posX, int posY, int posZ, CullableModel& model, SubChunk* subChunk)
+	Block::Block(int posX, int posY, int posZ, SubChunk* subChunk, BlockData& blockData)
 		: _position(posX, posY, posZ)
-		, _model(model)
 		, _subChunk(subChunk)
+		, _blockData(blockData)
 	{
 	}
 
-	void Block::operator=(const Block &other) {
+	void Block::operator=(const Block& other)
+	{
 		_position = other._position;
-		_model = other._model;
 		_subChunk = other._subChunk;
+		_blockData = other._blockData;
 	}
 
 	BlockPosition Block::GetPosition() const
@@ -34,7 +35,7 @@ namespace arterra {
 
 	BlockPosition Block::GetPositionRaw() const { return { _position._x, _position._y, _position._z }; }
 
-	CullableModel& Block::GetModel() const { return _model; }
+	BlockData& Block::GetData() const { return _blockData; }
 
 	std::array<bool, 6> Block::GetVisibleFaces() const { return _visibleFaces; }
 

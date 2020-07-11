@@ -48,8 +48,7 @@ namespace arterra {
 	void SubChunk::SetBlock(int x, int y, int z, Block &b) {
 		auto pos = ResolveArrayPosition(x, y, z);
 		if (_blocks[pos]) delete _blocks[pos];
-		_blocks[pos] = new Block(x, y, z, b.GetModel(), this);
-		_blocks[pos]->Update(0);
+		_blocks[pos] = new Block(x, y, z, this, b.GetData());
 		_updated = true;
 	} 
 
