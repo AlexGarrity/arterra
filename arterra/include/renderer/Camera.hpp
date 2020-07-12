@@ -8,13 +8,15 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "world/Block.hpp"
 #include "ecs/component/Transform.hpp"
 
 namespace arterra {
 
 	class ViewFrustum {
 		struct Plane {
-			float a, b, c, d;
+			glm::vec3 normal;
+			float d;
 
 			float DistanceToPoint(glm::vec3 point);
 		};
@@ -24,6 +26,7 @@ namespace arterra {
 		void Update(glm::mat4 &viewProjetionMatrix);
 
 		bool PointInFrustum(glm::vec3 point);
+		bool ChunkInFrustum(BlockPosition pos);
 
 	private:
 		std::array<Plane, 6> _planes;
@@ -46,6 +49,8 @@ namespace arterra {
 		glm::mat4 _projection;
 		glm::mat4 _view;
 		glm::mat4 _viewProjection;
+
+		glm::vec3 _viewDirection;
 
 		Transform _transform;
 		ViewFrustum _viewFrustum;

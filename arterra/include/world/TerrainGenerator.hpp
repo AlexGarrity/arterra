@@ -2,8 +2,10 @@
 
 #include "PCH.hpp"
 
-#include "util/OpenSimplex.hpp"
+#include <glm/gtc/noise.hpp>
+
 #include "world/Chunk.hpp"
+#include "block/BlockManager.hpp"
 
 namespace arterra {
 
@@ -11,12 +13,10 @@ namespace arterra {
 		public:
 			TerrainGenerator();
 
-			void GenerateChunk(Chunk &out, Block &block);
+			void GenerateChunk(Chunk &out, BlockManager &blockManager);
 			void GenerateBlock(int x, int y, int z, Block &block);
 
 		private:
-			OpenSimplex2D _generator2D;
-			OpenSimplex3D _generator3D;
 	};
 
 }

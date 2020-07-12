@@ -2,13 +2,11 @@
 
 namespace arterra {
 
-	World::World() {
-		_modifiedSubChunks.reserve(128);
-	}
+	World::World() { _modifiedSubChunks.reserve(128); }
 
 	Chunk* World::CreateChunk(int x, int y, int z)
 	{
-		return CreateChunk(x / 16, z / 16);
+		return CreateChunk(x / (Chunk::SIZE_X * SubChunk::SIZE_X), z / (Chunk::SIZE_Z * SubChunk::SIZE_Z));
 	}
 
 	Chunk* World::CreateChunk(int x, int z)
@@ -17,11 +15,14 @@ namespace arterra {
 		if (chunk != _chunks.end())
 			return &chunk->second;
 		auto pos = BlockPosition(x, 0, z);
-		_chunks.emplace(std::make_pair(pos, Chunk{pos._x, pos._y, pos._z, this}));
+		_chunks.emplace(std::make_pair(pos, Chunk { pos._x, pos._y, pos._z, this }));
 		return GetChunk(x, z);
 	}
 
-	Chunk* World::GetChunk(int x, int y, int z) { return GetChunk(x / 16, z / 16); }
+	Chunk* World::GetChunk(int x, int y, int z)
+	{
+		return GetChunk(x / (Chunk::SIZE_X * SubChunk::SIZE_X), z / (Chunk::SIZE_Z * SubChunk::SIZE_Z));
+	}
 
 	Chunk* World::GetChunk(int x, int z)
 	{
@@ -44,7 +45,7 @@ namespace arterra {
 		auto sc = GetSubChunk(x, y, z);
 		if (!sc)
 			return nullptr;
-		return sc->GetBlock(x % 16, y % 16, z % 16);
+		return sc->GetBlock(x % SubChunk::SIZE_X, y % SubChunk::SIZE_Y, z % SubChunk::SIZE_Z);
 	}
 
 	ChunkMap::iterator World::FindChunk(int x, int z)
@@ -54,16 +55,15 @@ namespace arterra {
 		return pos;
 	}
 
-	void World::Update(float deltaTime) {
+	void World::Update(float deltaTime)
+	{
 		_modifiedSubChunks.clear();
-		for (auto &chunk : _chunks) {
+		for (auto& chunk : _chunks) {
 			auto updatedSubChunks = chunk.second.Update(deltaTime);
 			_modifiedSubChunks.insert(_modifiedSubChunks.end(), updatedSubChunks.begin(), updatedSubChunks.end());
 		}
 	}
 
-	std::vector<SubChunk*> &World::GetModifiedSubChunks() {
-		return _modifiedSubChunks;
-	}
+	std::vector<SubChunk*>& World::GetModifiedSubChunks() { return _modifiedSubChunks; }
 
 }

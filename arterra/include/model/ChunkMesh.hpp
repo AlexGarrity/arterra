@@ -39,7 +39,7 @@ namespace arterra {
 
 		BlockPosition _position;
 
-		bool _shouldRender = false;
+		bool _shouldRender = true;
 	};
 
 }

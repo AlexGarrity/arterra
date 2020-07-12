@@ -8,49 +8,44 @@ namespace arterra {
 	void ViewFrustum::Update(glm::mat4& vpMat)
 	{
 		// Left clipping plane
-		_planes[0].b = vpMat[3][1] + vpMat[0][1];
-		_planes[0].a = vpMat[3][0] + vpMat[0][0];
-		_planes[0].c = vpMat[3][2] + vpMat[0][2];
-		_planes[0].d = vpMat[3][3] + vpMat[0][3];
+		_planes[0].normal.x = vpMat[0][3] + vpMat[0][0];
+		_planes[0].normal.y = vpMat[1][3] + vpMat[1][0];
+		_planes[0].normal.z = vpMat[2][3] + vpMat[2][0];
+		_planes[0].d = vpMat[3][3] + vpMat[3][0];
 		// Right clipping plane
-		_planes[1].a = vpMat[3][0] - vpMat[0][0];
-		_planes[1].b = vpMat[3][1] - vpMat[0][1];
-		_planes[1].c = vpMat[3][2] - vpMat[0][2];
-		_planes[1].d = vpMat[3][3] - vpMat[0][3];
+		_planes[1].normal.x = vpMat[0][3] - vpMat[0][0];
+		_planes[1].normal.y = vpMat[1][3] - vpMat[1][0];
+		_planes[1].normal.z = vpMat[2][3] - vpMat[2][0];
+		_planes[1].d = vpMat[3][3] - vpMat[3][0];
 		// Top clipping plane
-		_planes[2].a = vpMat[3][0] - vpMat[1][0];
-		_planes[2].b = vpMat[3][1] - vpMat[1][1];
-		_planes[2].c = vpMat[3][2] - vpMat[1][2];
-		_planes[2].d = vpMat[3][3] - vpMat[1][3];
+		_planes[2].normal.x = vpMat[0][3] - vpMat[0][1];
+		_planes[2].normal.y = vpMat[1][3] - vpMat[1][1];
+		_planes[2].normal.z = vpMat[2][3] - vpMat[2][1];
+		_planes[2].d = vpMat[3][3] - vpMat[3][1];
 		// Bottom clipping plane
-		_planes[3].a = vpMat[3][0] + vpMat[1][0];
-		_planes[3].b = vpMat[3][1] + vpMat[1][1];
-		_planes[3].c = vpMat[3][2] + vpMat[1][2];
-		_planes[3].d = vpMat[3][3] + vpMat[1][3];
+		_planes[3].normal.x = vpMat[0][3] + vpMat[0][1];
+		_planes[3].normal.y = vpMat[1][3] + vpMat[1][1];
+		_planes[3].normal.z = vpMat[2][3] + vpMat[2][1];
+		_planes[3].d = vpMat[3][3] + vpMat[3][1];
 		// Near clipping plane
-		_planes[4].a = vpMat[3][0] + vpMat[2][0];
-		_planes[4].b = vpMat[3][1] + vpMat[2][1];
-		_planes[4].c = vpMat[3][2] + vpMat[2][2];
-		_planes[4].d = vpMat[3][3] + vpMat[2][3];
+		_planes[4].normal.x = vpMat[0][3] + vpMat[0][2];
+		_planes[4].normal.y = vpMat[1][3] + vpMat[1][2];
+		_planes[4].normal.z = vpMat[2][3] + vpMat[2][2];
+		_planes[4].d = vpMat[3][3] + vpMat[3][2];
 		// Far clipping plane
-		_planes[5].a = vpMat[3][0] - vpMat[2][0];
-		_planes[5].b = vpMat[3][1] - vpMat[2][1];
-		_planes[5].c = vpMat[3][2] - vpMat[2][2];
-		_planes[5].d = vpMat[3][3] - vpMat[2][3];
+		_planes[5].normal.x = vpMat[0][3] - vpMat[0][2];
+		_planes[5].normal.y = vpMat[1][3] - vpMat[1][2];
+		_planes[5].normal.z = vpMat[2][3] - vpMat[2][2];
+		_planes[5].d = vpMat[3][3] - vpMat[3][2];
 
 		for (auto& p : _planes) {
-			float l = 1.0f / sqrtf(p.a * p.a + p.b * p.b + p.c * p.c);
-			p.a *= l;
-			p.b *= l;
-			p.c *= l;
+			float l = 1.0f / glm::length(p.normal);
+			p.normal *= l;
 			p.d *= l;
 		}
 	}
 
-	float ViewFrustum::Plane::DistanceToPoint(glm::vec3 point)
-	{
-		return a * point.x + b * point.y + c * point.z + d;
-	}
+	float ViewFrustum::Plane::DistanceToPoint(glm::vec3 point) { return glm::dot(point, normal) + d; }
 
 	bool ViewFrustum::PointInFrustum(glm::vec3 point)
 	{
@@ -59,6 +54,35 @@ namespace arterra {
 				return false;
 		}
 		return true;
+	}
+
+	bool ViewFrustum::ChunkInFrustum(BlockPosition pos)
+	{
+		auto getVP = [&](float x, float y, float z) {
+			auto res = pos;
+			res._x += (x > 0) ? 16 : 0;
+			res._y += (y > 0) ? 16 : 0;
+			res._z += (z > 0) ? 16 : 0;
+			return glm::vec3 { res._x, res._y, res._z };
+		};
+
+		auto getVN = [&](float x, float y, float z) {
+			auto res = pos;
+			res._x += (x < 0) ? 16 : 0;
+			res._y += (y < 0) ? 16 : 0;
+			res._z += (z < 0) ? 16 : 0;
+			return glm::vec3 { res._x, res._y, res._z };
+		};
+
+		bool result = true;
+		for (auto& plane : _planes) {
+			if (plane.DistanceToPoint(getVP(plane.normal.x, plane.normal.y, plane.normal.z)) < 0) {
+				return false;
+			} else if (plane.DistanceToPoint(getVN(plane.normal.x, plane.normal.y, plane.normal.z)) < 0) {
+				result = true;
+			}
+		}
+		return result;
 	}
 
 	Camera::Camera()
@@ -75,38 +99,37 @@ namespace arterra {
 
 		// Whole bunch of input handling
 		if (glfwGetKey(window.GetHandle(), GLFW_KEY_W) == GLFW_PRESS) {
-			_transform.Position() -= _transform.Forward() * _speed;
+			_transform.Position() += _transform.Forward() * _speed;
 		}
 		if (glfwGetKey(window.GetHandle(), GLFW_KEY_S) == GLFW_PRESS) {
-			_transform.Position() += _transform.Forward() * _speed;
+			_transform.Position() -= _transform.Forward() * _speed;
 		}
 
 		if (glfwGetKey(window.GetHandle(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-			_transform.Position() -= _transform.Up() * _speed;
+			_transform.Position() += _transform.Up() * _speed;
 		}
 		if (glfwGetKey(window.GetHandle(), GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
-			_transform.Position() += _transform.Up() * _speed;
+			_transform.Position() -= _transform.Up() * _speed;
 		}
 
 		if (glfwGetKey(window.GetHandle(), GLFW_KEY_A) == GLFW_PRESS) {
-			_transform.Position() += _transform.Right() * _speed;
+			_transform.Position() -= _transform.Right() * _speed;
 		}
 		if (glfwGetKey(window.GetHandle(), GLFW_KEY_D) == GLFW_PRESS) {
-			_transform.Position() -= _transform.Right() * _speed;
+			_transform.Position() += _transform.Right() * _speed;
+		}
+
+		if (glfwGetKey(window.GetHandle(), GLFW_KEY_Q) == GLFW_PRESS) {
+			_transform.Rotate(0.0f, _speed, 0.0f);
+		}
+		if (glfwGetKey(window.GetHandle(), GLFW_KEY_E) == GLFW_PRESS) {
+			_transform.Rotate(0.0f, -_speed, 0.0f);
 		}
 
 		// Update the view projection to account for movement
 		_view = glm::mat4 { 1.0f };
 		_viewProjection = glm::mat4 { 1.0f };
-		_view = glm::translate(_view, _transform.Position());
-		// Convert Quaternion to Euler angles
-		/*
-		auto euler = glm::eulerAngles(_transform.Rotation());
-		_view = glm::rotate(_view, glm::radians(euler.x), glm::vec3(1.0f, 0.0f, 0.0f));
-		_view = glm::rotate(_view, glm::radians(euler.y), glm::vec3(0.0f, 1.0f, 0.0f));
-		_view = glm::rotate(_view, glm::radians(euler.z), glm::vec3(0.0f, 0.0f, 1.0f));
-		*/
-		// Create the view projection
+		_view = glm::lookAt(_transform.Position(), _transform.Position() + _transform.Forward(), _transform.Up());
 		_viewProjection = _projection * _view;
 		_viewFrustum.Update(_viewProjection);
 	}

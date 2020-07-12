@@ -11,6 +11,11 @@ namespace arterra {
 
 	class Chunk {
 	public:
+		static const size_t SIZE_X = 1;
+		static const size_t SIZE_Y = 64;
+		static const size_t SIZE_Z = 1;
+		static const size_t SIZE = SIZE_X * SIZE_Y * SIZE_Z;
+
 		Chunk() = default;
 		Chunk(int posX, int posY, int posZ, World *world);
 		Chunk(const Chunk &other);

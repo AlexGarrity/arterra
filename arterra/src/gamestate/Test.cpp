@@ -21,19 +21,25 @@ namespace arterra {
 			_atlas.LoadTexture("textures/stone.png", "stone");
 			_atlas.LoadTexture("textures/grass_top.png", "grass_top");
 			_atlas.LoadTexture("textures/grass_side.png", "grass_side");
+			_atlas.LoadTexture("textures/sand.png", "sand");
+			_atlas.LoadTexture("textures/dirt.png", "dirt");
+
 			auto stoneTexture = _atlas.GetTexture("stone");
 			auto grassTextureTop = _atlas.GetTexture("grass_top");
 			auto grassTextureSide = _atlas.GetTexture("grass_side");
+			auto sandTexture = _atlas.GetTexture("sand");
+			auto dirtTexture = _atlas.GetTexture("dirt");
 
 			_blockManager.AddBlock(BlockData { *stoneTexture, *stoneTexture, *stoneTexture, _cubeModel }, "stone");
 			_blockManager.AddBlock(
-				BlockData { *grassTextureTop, *grassTextureSide, *grassTextureSide, _cubeModel }, "grass");
-			Block defaultBlock { 0, 0, 0, nullptr, *_blockManager.GetBlock("grass") };
+				BlockData { *grassTextureTop, *grassTextureSide, *dirtTexture, _cubeModel }, "grass");
+			_blockManager.AddBlock(BlockData { *dirtTexture, *dirtTexture, *dirtTexture, _cubeModel }, "dirt");
+			_blockManager.AddBlock(BlockData { *sandTexture, *sandTexture, *sandTexture, _cubeModel }, "sand");
 
-			for (auto z = 0; z < 4; ++z) {
-				for (auto x = 0; x < 4; ++x) {
+			for (auto z = -4; z < 4; ++z) {
+				for (auto x = -4; x < 4; ++x) {
 					auto chunk = _world.CreateChunk(x, z);
-					_terrainGenerator.GenerateChunk(*chunk, defaultBlock);
+					_terrainGenerator.GenerateChunk(*chunk, _blockManager);
 				}
 			}
 		}
