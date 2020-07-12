@@ -6,12 +6,13 @@
 #include "world/Chunk.hpp"
 #include "world/SubChunk.hpp"
 #include "renderer/Camera.hpp"
+#include "renderer/Renderer.hpp"
 
 namespace arterra {
 
 	class ChunkRenderer {
 	public:
-		ChunkRenderer();
+		ChunkRenderer(Renderer *renderer);
 		~ChunkRenderer();
 
 		void AddChunk(Chunk* chunk);
@@ -32,6 +33,7 @@ namespace arterra {
 
 	private:
 		std::vector<ChunkMesh> _renderables;
+		Renderer *_renderer;
 	};
 
 }

@@ -14,7 +14,7 @@ namespace arterra {
 		Logger::Get().Log(Logger::Debug, "Constructing camera");
 		_camera = new Camera();
 		Logger::Get().Log(Logger::Debug, "Constructing renderer");
-		_renderer = new Renderer(_camera);
+		_renderer = new Renderer();
 
 		Logger::Get().Log(Logger::Debug, "Hooking input system to window");
 		// Input system hook

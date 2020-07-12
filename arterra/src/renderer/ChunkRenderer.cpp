@@ -2,8 +2,9 @@
 
 namespace arterra {
 
-	ChunkRenderer::ChunkRenderer()
+	ChunkRenderer::ChunkRenderer(Renderer *renderer)
 	{
+		_renderer = renderer;
 		_renderables.reserve(128);
 		_renderables.clear();
 	}
@@ -92,6 +93,7 @@ namespace arterra {
 		for (auto& renderable : _renderables) {
 			if (renderable.ShouldRender()) {
 				renderable.Bind();
+				_renderer->DrawTriangles(renderable.GetVertexCount());
 				glDrawArrays(GL_TRIANGLES, 0, renderable.GetVertexCount());
 			}		
 		}

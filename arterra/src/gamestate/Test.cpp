@@ -7,6 +7,7 @@ namespace arterra {
 		Test::Test(Engine* engine)
 			: Base(engine)
 			, _atlas { 256, 256 }
+			, _chunkRenderer{engine->GetRenderer()}
 		{
 			_engine->GetWindow()->SetVsync(true);
 			_engine->GetWindow()->SetClearColour(0.6f, 0.8f, 1.0f, 1.0f);
@@ -83,7 +84,6 @@ namespace arterra {
 		{
 			// Clear the window
 			_engine->GetWindow()->Clear();
-			_engine->GetRenderer()->DrawTestCube();
 
 			_shaderManager.UseShader("basic");
 			_atlas.Bind();

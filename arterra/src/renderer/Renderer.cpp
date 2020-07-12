@@ -2,13 +2,10 @@
 
 namespace arterra {
 
-	Renderer::Renderer(Camera* camera)
-		: _camera { camera }
+	Renderer::Renderer()
 	{
 		// Give GLAD the GLFW extension loader function
 		gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
-
-		_textureHandle.Load("textures/stone.png");
 
 		// Enable depth testing
 		glEnable(GL_DEPTH_TEST);
@@ -25,6 +22,8 @@ namespace arterra {
 
 	void Renderer::Update() {}
 
-	void Renderer::DrawTestCube() { _textureHandle.Bind(); }
+	void Renderer::DrawTriangles(size_t vertexCount) {
+		glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+	}
 
 }

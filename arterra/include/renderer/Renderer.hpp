@@ -17,20 +17,15 @@
 namespace arterra {
 	class Renderer {
 	public:
-		Renderer(Camera* camera);
+		Renderer();
 
 		// Update the renderer to account for input
 		void Update();
 
-		// Draw a rainbow cube
-		void DrawTestCube();
+		// Draw a triangle array
+		void DrawTriangles(size_t vertexCount);
 
 	private:
-		GLint _viewProjectionUniform;
-		Camera* _camera;
-
-		Model _cubeModel;
-		TextureHandle _textureHandle;
 	};
 
 }

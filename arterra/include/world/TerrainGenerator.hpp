@@ -19,6 +19,7 @@ namespace arterra {
 			void GenerateBlock(int x, int y, int z, Block &block);
 
 		private:
+			uint16_t seedX, seedY, seedZ;
 	};
 
 }
