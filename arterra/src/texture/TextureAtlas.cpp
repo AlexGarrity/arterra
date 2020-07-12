@@ -62,6 +62,7 @@ namespace arterra {
 				static_cast<int>(dataHandle._resource->_data.size()), &width, &height, &channels, 4);
 		}
 		AddTexture(width, height, data, identifier);
+		stbi_image_free(data);
 		return true;
 	}
 

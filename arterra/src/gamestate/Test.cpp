@@ -63,6 +63,7 @@ namespace arterra {
 
 			_world.Update(deltaTime);
 			_chunkRenderer.UpdateSubChunks(_world.GetModifiedSubChunks());
+			_chunkRenderer.CullRenderables(*_engine->GetCamera());
 
 			// Every 5 seconds, perform garbage collection
 			_timeToResourceUnload -= deltaTime;

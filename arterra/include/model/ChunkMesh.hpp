@@ -22,6 +22,8 @@ namespace arterra {
 		void AddFace(std::vector<float_t> posVertices, std::vector<float_t> texVertices);
 
 		void GenerateMesh();
+		void SetShouldRender(bool shouldRender) { _shouldRender = shouldRender; }
+		bool ShouldRender() const { return _shouldRender; }
 
 		void Bind();
 		GLuint GetVertexCount();
@@ -36,6 +38,8 @@ namespace arterra {
 		VertexBuffer _texBuffer;
 
 		BlockPosition _position;
+
+		bool _shouldRender = false;
 	};
 
 }

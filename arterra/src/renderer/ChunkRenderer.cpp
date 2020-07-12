@@ -56,6 +56,15 @@ namespace arterra {
 
 	void ChunkRenderer::AddMesh(ChunkMesh mesh) { _renderables.push_back(mesh); }
 
+	void ChunkRenderer::CullRenderables(Camera &camera) {
+		auto frustum = camera.GetViewFrustum();
+		for (auto &r : _renderables) {
+			auto pos = r.GetPosition();
+			auto gPos = glm::vec3(pos._x, pos._y, pos._z);
+			r.SetShouldRender(frustum.PointInFrustum(gPos));
+		}
+	}
+
 	ChunkMesh* ChunkRenderer::GetChunkMesh(BlockPosition position)
 	{
 		for (auto& r : _renderables) {
@@ -83,8 +92,10 @@ namespace arterra {
 	void ChunkRenderer::Render()
 	{
 		for (auto& renderable : _renderables) {
-			renderable.Bind();
-			glDrawArrays(GL_TRIANGLES, 0, renderable.GetVertexCount());
+			if (renderable.ShouldRender()) {
+				renderable.Bind();
+				glDrawArrays(GL_TRIANGLES, 0, renderable.GetVertexCount());
+			}		
 		}
 	}
 

@@ -5,6 +5,7 @@
 #include "model/ChunkMesh.hpp"
 #include "world/Chunk.hpp"
 #include "world/SubChunk.hpp"
+#include "renderer/Camera.hpp"
 
 namespace arterra {
 
@@ -18,6 +19,8 @@ namespace arterra {
 		void AddSubChunk(SubChunk* subChunk);
 		void AddSubChunk(SubChunk& subChunk);
 		void AddMesh(ChunkMesh mesh);
+
+		void CullRenderables(Camera &camera);
 
 		void UpdateSubChunks(std::vector<SubChunk*>& subChunks);
 		ChunkMesh* GetChunkMesh(BlockPosition position);

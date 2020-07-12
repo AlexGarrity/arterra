@@ -21,8 +21,10 @@ namespace arterra {
 		}
 		// Get the full filepath to the resource.
 		std::string path = (std::filesystem::current_path() / "res" / name).string();
-		if (!std::filesystem::exists(path))
+		if (!std::filesystem::exists(path)) {
+			Logger::Get().Log(Logger::Error, "Requested file '", name, "' does not exist");
 			return false;
+		}
 		// Open the file if it exists.
 		std::vector<uint8_t> data;
 		std::ifstream file;
