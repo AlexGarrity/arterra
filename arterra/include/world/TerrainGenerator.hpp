@@ -2,6 +2,8 @@
 
 #include "PCH.hpp"
 
+#include <immintrin.h>
+
 #include <glm/gtc/noise.hpp>
 
 #include "world/Chunk.hpp"

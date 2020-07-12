@@ -59,9 +59,7 @@ namespace arterra {
 	void ChunkRenderer::CullRenderables(Camera &camera) {
 		auto frustum = camera.GetViewFrustum();
 		for (auto &r : _renderables) {
-			auto pos = r.GetPosition();
-			auto gPos = glm::vec3(pos._x, pos._y, pos._z);
-			r.SetShouldRender(frustum.PointInFrustum(gPos));
+			r.SetShouldRender(frustum.ChunkInFrustum(r.GetPosition()));
 		}
 	}
 

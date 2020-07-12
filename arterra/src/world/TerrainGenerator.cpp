@@ -11,8 +11,8 @@ namespace arterra {
 		auto cp = out.GetPosition();
 		for (auto z = 0; z < SubChunk::SIZE_Z * Chunk::SIZE_Z; ++z) {
 			for (auto x = 0; x < SubChunk::SIZE_X * Chunk::SIZE_X; ++x) {
-				auto fX = static_cast<float>(x + cp._x) * 0.02f;
-				auto fZ = static_cast<float>(z + cp._z) * 0.02f;
+				auto fX = static_cast<float>(x + cp._x) / 64.0f;
+				auto fZ = static_cast<float>(z + cp._z) / 64.0f;
 				float g1 = glm::simplex(glm::vec2(fX, fZ)) * 0.0625f;
 				float g2 = glm::simplex(glm::vec2(fX * 0.25f, fZ * 0.25f)) * 0.25f;
 				float g3 = glm::simplex(glm::vec2(fX * 0.125f, fZ * 0.125f)) * 0.5f;
