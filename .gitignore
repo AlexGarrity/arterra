@@ -11,6 +11,5 @@ compile_commands.json
 **.ps1
 
 # Resource files
-*.png
 *.obj
 *.exe

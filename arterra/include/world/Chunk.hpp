@@ -23,6 +23,7 @@ namespace arterra {
 		Chunk(const Chunk &other);
 
 		void CreateSubChunk(int x, int y, int z);
+		void CreateSubChunksToHeight(int x, int y, int z, int height);
 
 		SubChunk* GetSubChunk(int x, int y, int z);
 		SubChunkMap& GetSubChunks();

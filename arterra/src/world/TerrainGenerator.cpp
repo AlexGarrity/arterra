@@ -27,6 +27,14 @@ namespace arterra {
 			}
 		}
 
+		size_t largestHeight = 0;
+		for (auto x : _heightMap) {
+			if (x > largestHeight)
+				largestHeight = x;
+		}
+
+		out.CreateSubChunksToHeight(0, 0, 0, largestHeight);
+
 		auto grassBlock = blockManager.GetBlock("grass");
 		auto dirtBlock = blockManager.GetBlock("dirt");
 		auto stoneBlock = blockManager.GetBlock("stone");

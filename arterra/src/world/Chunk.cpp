@@ -8,15 +8,6 @@ namespace arterra {
 		: _position { posX, posY, posZ }
 		, _world { world }
 	{
-		_subChunks.reserve(SIZE_X * SIZE_Y * 0.25 * SIZE_Z);
-		for (auto y = 0; y < SIZE_Y * 0.25; ++y) {
-			for (auto z = 0; z < SIZE_Z; ++z) {
-				for (auto x = 0; x < SIZE_X; ++x) {
-					auto pos = BlockPosition(x, y, z);
-					_subChunks.emplace(pos, SubChunk(x, y, z, this));
-				}
-			}
-		}
 	}
 
 	Chunk::Chunk(const Chunk& other)
@@ -35,6 +26,16 @@ namespace arterra {
 		if (_subChunks.find(pos) != _subChunks.end())
 			return;
 		_subChunks.emplace(pos, SubChunk(pos._x, pos._y, pos._z, this));
+	}
+
+	void Chunk::CreateSubChunksToHeight(int x, int y, int z, int height)
+	{
+		auto adjustedHeight = height - y;
+		auto chunkHeight = adjustedHeight / 16;
+		for (auto iY = 0; iY <= chunkHeight; ++iY) {
+			_subChunks.emplace(
+				BlockPosition(x, iY, z), SubChunk(x, iY, z, this));
+		}
 	}
 
 	SubChunkMap& Chunk::GetSubChunks() { return _subChunks; }
