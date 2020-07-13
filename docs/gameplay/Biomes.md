@@ -1,4 +1,4 @@
-# Biomes and the World
+# World and the Biomes
 Ideas for different biome types and general world generation.
 
 ## Biomes
@@ -12,4 +12,10 @@ Biomes are defined by their humidity, elevation and temperature, from the genera
 
 There are no seasons, so any cold biomes will always have snow on them. Likewise and hot biomes will always remain hot.
 
+## Structures
+Separation of natural and man-made structures. Natural structures generate as-is with no extra logic. Man-made structures generate based on "puzzle" pieces which have pre-defined acceptable arrangements.
 
+A special block in the schematic file would be needed to tell the game when to dig-out existing terrain blocks.
+
+## Ores
+A selection of coal,copper,tin,iron,gold,diamond ores. Tools would progressively increase in strength/durability. Higher-end tools would be made from alloys, such as `diamond-infused-steel` for instance. These would have special workbench blocks and more in-depth mechanics.
