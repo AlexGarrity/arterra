@@ -42,7 +42,7 @@ namespace arterra {
 	struct BlockPositionHash {
 		size_t operator()(const BlockPosition& pos) const
 		{
-			return std::hash<int> {}(pos._x) ^ std::hash<int> {}(pos._y) ^ std::hash<int> {}(pos._z);
+			return (pos._x * 131071) ^ (pos._y * 524287) ^ (pos._z * 8191);
 		}
 	};
 

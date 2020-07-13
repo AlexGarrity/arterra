@@ -56,14 +56,17 @@ namespace arterra {
 			auto texture = blockData.GetTexture(Direction(i));
 
 			auto position = block.GetPosition();
-			for (auto j = 0; j < posVertices.size() / 3; ++j) {
-				posVertices[(j * 3) + 0] += position._x;
-				posVertices[(j * 3) + 1] += position._y;
-				posVertices[(j * 3) + 2] += position._z;
-				texVertices[(j * 2) + 0] *= texture._width;
-				texVertices[(j * 2) + 0] += texture._x;
-				texVertices[(j * 2) + 1] *= texture._height;
-				texVertices[(j * 2) + 1] += texture._y;
+			for (size_t j = 0; j < posVertices.size() / 3; ++j) {
+				auto iPos = j * 3;
+				posVertices[iPos + 0] += position._x;
+				posVertices[iPos + 1] += position._y;
+				posVertices[iPos + 2] += position._z;
+
+				auto iTex = j * 2;
+				texVertices[iTex + 0] *= texture._width;
+				texVertices[iTex + 0] += texture._x;
+				texVertices[iTex + 1] *= texture._height;
+				texVertices[iTex + 1] += texture._y;
 			}
 			AddFace(posVertices, texVertices);
 		}
