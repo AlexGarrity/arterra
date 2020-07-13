@@ -24,11 +24,13 @@ target_link_libraries(arterra ${OPENGL_LIBRARIES})
 target_link_libraries(arterra glad sfml-graphics glm)
 
 # Move the res directory next to the build
-if (${MSVC})
-    file(COPY res DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/Debug")
-    file(COPY res DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/Release")
-else()
-    file(COPY res DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+if (WIN32)
+    add_custom_command(TARGET arterra POST_BUILD COMMAND ${CMAKE_COMMAND} -E create_symlink "${CMAKE_CURRENT_SOURCE_DIR}/res" "${CMAKE_CURRENT_BINARY_DIR}/Debug/res")
+    add_custom_command(TARGET arterra POST_BUILD COMMAND ${CMAKE_COMMAND} -E create_symlink "${CMAKE_CURRENT_SOURCE_DIR}/res" "${CMAKE_CURRENT_BINARY_DIR}/Release/res")
+    add_custom_command(TARGET arterra POST_BUILD COMMAND ${CMAKE_COMMAND} -E create_symlink "${CMAKE_CURRENT_SOURCE_DIR}/res" "${CMAKE_CURRENT_BINARY_DIR}/RelWithDebInfo/res")
+    add_custom_command(TARGET arterra POST_BUILD COMMAND ${CMAKE_COMMAND} -E create_symlink "${CMAKE_CURRENT_SOURCE_DIR}/res" "${CMAKE_CURRENT_BINARY_DIR}/MinSizeRel/res")
+elseif(UNIX)
+add_custom_command(TARGET arterra POST_BUILD COMMAND ${CMAKE_COMMAND} -E create_symlink "${CMAKE_CURRENT_SOURCE_DIR}/res" "${CMAKE_CURRENT_BUILD_DIR}/res")
 endif()
 
 # Export compile commands (for clangd)
