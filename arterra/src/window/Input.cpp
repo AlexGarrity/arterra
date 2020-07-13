@@ -2,31 +2,39 @@
 
 namespace arterra {
 
-	// Re-declerations of static members.
-	std::unordered_map<int, KeyBind> Input::_pressedKeys;
+	KeyBind::KeyBind() {}
 
-	void Input::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
-	{
-		switch (action) {
-			case GLFW_PRESS:
-				// Triggers in the frame when the key is initially pressed down.
-				// The key may not exist, so it is created here and given a name.
-				// The state is set to active.
-				{
-					_pressedKeys[key]._active = true;
-					_pressedKeys[key]._name = "unknown";
-					auto keyName = glfwGetKeyName(key, scancode);
-					if (keyName)
-						_pressedKeys[key]._name = keyName;
-				}
-				break;
-			case GLFW_RELEASE:
-				// Triggers in the frame when the key is released.
-				// Set the key to be inactive, and reset its held time.
-				_pressedKeys[key]._active = false;
-				_pressedKeys[key]._timeHeld = 0.0f;
-				break;
+	void KeyBind::Update(float deltaTime) {
+		auto pressed = sf::Keyboard::isKeyPressed(_keyCode);
+		if (_active && !pressed) {
+			_active = false;
+			_timeHeld = 0.0f;
 		}
+		else {
+			_active = true;
+			_timeHeld += deltaTime;
+		}
+	}
+
+	void KeyBind::CallSubscribers()
+	{
+		for (auto i : _subscribers) {
+			i(_timeHeld);
+		}
+	}
+
+	void KeyBind::AddSubscriber(std::function<void(float_t)> subscriber) {
+		_subscribers.push_back(subscriber);
+	}
+
+	void KeyBind::DumpToLog(std::string title)
+	{
+		Logger::Get().Log("\t", title, " - code: ", _keyCode, "; active:", _active, "; time held:", _timeHeld,
+			"; sub count: ", _subscribers.size());
+	}
+
+	Input::Input(sf::Event &event) {
+		_event = &event;
 	}
 
 	void Input::Update(float_t deltaTime)
@@ -38,23 +46,20 @@ namespace arterra {
 
 		// Increase the hold time for all actively held keys.
 		for (auto& i : _pressedKeys) {
-			if (i.second._active) {
-				i.second._timeHeld += deltaTime;
-				i.second.CallSubscribers();
-			}
+			i.second.Update(deltaTime);
 		}
 
 		// DEBUG
 		// PrintInformation();
 	}
 
-	void Input::RegisterKeySubscriber(const int key, const std::function<void(float_t)> callback)
+	void Input::RegisterKeySubscriber(const sf::Keyboard::Key key, const std::function<void(float_t)> callback)
 	{
 		auto keyIndex = _pressedKeys.find(key);
 		if (keyIndex == _pressedKeys.end())
 			return;
 		// Add the callback function to the key subscription.
-		keyIndex->second._subscribers.emplace_back(callback);
+		keyIndex->second.AddSubscriber(callback);
 	}
 
 	void Input::PrintInformation()

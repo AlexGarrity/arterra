@@ -94,37 +94,26 @@ namespace arterra {
 	void Camera::Update(Window& window, float_t deltaTime)
 	{
 		// Set speed to account for deltaTime
-		_speed = deltaTime * 15.0f;
+		_speed = deltaTime * 16.0f;
+		_rotSpeed = deltaTime * 15.0f;
 		_transform.Update();
 
-		// Whole bunch of input handling
-		if (glfwGetKey(window.GetHandle(), GLFW_KEY_W) == GLFW_PRESS) {
-			_transform.Position() += _transform.Forward() * _speed;
-		}
-		if (glfwGetKey(window.GetHandle(), GLFW_KEY_S) == GLFW_PRESS) {
-			_transform.Position() -= _transform.Forward() * _speed;
-		}
-
-		if (glfwGetKey(window.GetHandle(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-			_transform.Position() += _transform.Up() * _speed;
-		}
-		if (glfwGetKey(window.GetHandle(), GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
-			_transform.Position() -= _transform.Up() * _speed;
-		}
-
-		if (glfwGetKey(window.GetHandle(), GLFW_KEY_A) == GLFW_PRESS) {
-			_transform.Position() -= _transform.Right() * _speed;
-		}
-		if (glfwGetKey(window.GetHandle(), GLFW_KEY_D) == GLFW_PRESS) {
-			_transform.Position() += _transform.Right() * _speed;
-		}
-
-		if (glfwGetKey(window.GetHandle(), GLFW_KEY_Q) == GLFW_PRESS) {
-			_transform.Rotate(0.0f, _speed, 0.0f);
-		}
-		if (glfwGetKey(window.GetHandle(), GLFW_KEY_E) == GLFW_PRESS) {
-			_transform.Rotate(0.0f, -_speed, 0.0f);
-		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+			_transform.Translate(_transform.Forward() * _speed);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+			_transform.Translate(_transform.Forward() * -_speed);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+			_transform.Translate(_transform.Right() * -_speed);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+			_transform.Translate(_transform.Right() * _speed);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+			_transform.Translate(_transform.Up() * _speed);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
+			_transform.Translate(_transform.Up() * -_speed);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+			_transform.Rotate(0.0f, _rotSpeed, 0.0f);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+			_transform.Rotate(0.0f, -_rotSpeed, 0.0f);
 
 		// Update the view projection to account for movement
 		_view = glm::mat4 { 1.0f };

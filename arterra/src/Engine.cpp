@@ -11,14 +11,12 @@ namespace arterra {
 		// Initialise engine components
 		Logger::Get().Log(Logger::Debug, "Constructing window");
 		_window = new Window(1280, 720, "arterra");
+		Logger::Get().Log(Logger::Debug, "Constructing input system");
+		_input = new Input(_window->GetEvent());
 		Logger::Get().Log(Logger::Debug, "Constructing camera");
 		_camera = new Camera();
 		Logger::Get().Log(Logger::Debug, "Constructing renderer");
 		_renderer = new Renderer();
-
-		Logger::Get().Log(Logger::Debug, "Hooking input system to window");
-		// Input system hook
-		glfwSetKeyCallback(_window->GetHandle(), Input::KeyCallback);
 	}
 
 	Engine::~Engine()
@@ -33,6 +31,10 @@ namespace arterra {
 	{
 		Logger::Get().Log(Logger::Debug, "Beginning main engine loop");
 		while (!_shouldExit) {
+			_input->Update(_time.GetDeltaTime());
+			_camera->Update(*_window, _time.GetDeltaTime());
+			
+
 			auto currentState = GetState();
 			if (!currentState) {
 				Logger::Get().Log(Logger::Error, "Engine has no state, exiting");

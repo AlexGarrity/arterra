@@ -47,12 +47,7 @@ namespace arterra {
 
 		void Test::Input(float_t deltaTime)
 		{
-			Input::Update(deltaTime);
-
-			// Close engine with [Esc]
-			if (_engine->GetWindow()->IsKeyPressed(GLFW_KEY_ESCAPE)) {
-				_engine->SetShouldExit(true);
-			}
+			if (_engine->GetWindow()->ShouldClose()) _engine->SetShouldExit(true);
 		}
 
 		void Test::Update(float_t deltaTime)

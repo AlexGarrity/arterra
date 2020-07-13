@@ -9,27 +9,21 @@ namespace arterra {
 		, _title { title }
 	{
 
-		// Initialise GLFW
-		if (!glfwInit()) {
-			// If that fails, error and return
-			Logger::Get().Log(Logger::Fatal, "GLFW failed to initialise");
-		}
+		sf::ContextSettings settings;
+		settings.antialiasingLevel = 0;
+		settings.depthBits = 24;
+		settings.majorVersion = 4;
+		settings.minorVersion = 0;
+		settings.sRgbCapable = false;
+		settings.stencilBits = 8;
+		settings.attributeFlags = sf::ContextSettings::Attribute::Core;
 
-		// Sets GL Version to 4.0
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-		// Sets GL profile to core
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-		// Create a unique ptr to the window
-		auto x = std::unique_ptr<GLFWwindow, GLFWwindowDeleter>(
-			glfwCreateWindow(width, height, title.data(), nullptr, nullptr));
-		_window.swap(x);
+		_window.create(sf::VideoMode(width, height), title, sf::Style::Default, settings);
 
 		SetShouldClose(false);
 
 		// Make this window the active GL context
-		glfwMakeContextCurrent(_window.get());
+		_window.setActive(true);
 
 		// Loading GL straight after the context avoids access violation errors
 		// Load GL core using GLAD, if it fails then error and return
@@ -39,17 +33,13 @@ namespace arterra {
 			Logger::Get().Log(Logger::Debug, "Successfully initialised GLAD");
 	}
 
-	Window::~Window()
-	{
-		_window.reset();
-		glfwTerminate();
-	}
+	Window::~Window() { _window.close(); }
 
 	// Poll for events
-	void Window::PollEvents() { glfwPollEvents(); }
+	void Window::PollEvents() { _window.pollEvent(_event); }
 
 	// Swap the current buffer
-	void Window::SwapBuffers() { glfwSwapBuffers(_window.get()); }
+	void Window::SwapBuffers() { _window.display(); }
 
 	// Set colour to specified 0-1 floats
 	void Window::SetClearColour(float_t red, float_t green, float_t blue, float_t alpha)
@@ -78,19 +68,18 @@ namespace arterra {
 	{
 		_vsyncEnabled = vsync;
 		// Ternary - if vsync == true then set vsync on, otherwise off
-		(vsync) ? glfwSwapInterval(1) : glfwSwapInterval(0);
+		_window.setVerticalSyncEnabled(vsync);
 	}
 
-	void Window::SetShouldClose(bool shouldClose)
-	{
-		_shouldClose = shouldClose;
-		glfwSetWindowShouldClose(_window.get(), shouldClose);
-	}
+	void Window::SetShouldClose(bool shouldClose) { _shouldClose = shouldClose; }
 
 	void Window::Update(float_t deltaTime)
 	{
 		PollEvents();
 		SwapBuffers();
-		glfwGetWindowSize(_window.get(), &_width, &_height);
+		if (_event.type == sf::Event::Closed) SetShouldClose(true);
+		auto size = _window.getSize();
+		_width = size.x;
+		_height = size.y;
 	}
 }

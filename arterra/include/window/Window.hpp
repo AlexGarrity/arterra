@@ -4,13 +4,10 @@
 
 #include <glad/glad.h>
 
-#include <GLFW/glfw3.h>
+#include <SFML/Window/Event.hpp>
+#include <SFML/Window/Window.hpp>
 
 namespace arterra {
-
-	struct GLFWwindowDeleter {
-		void operator()(GLFWwindow* window) { glfwDestroyWindow(window); }
-	};
 
 	class Window {
 	public:
@@ -43,16 +40,12 @@ namespace arterra {
 		inline std::string GetTitle() const { return _title; }
 
 		inline bool ShouldClose() const { return _shouldClose; }
-		inline bool IsKeyPressed(uint32_t glfwKeycode) const
-		{
-			return (glfwGetKey(_window.get(), glfwKeycode) == GLFW_PRESS);
-		}
-		inline GLFWwindow* GetHandle() { return _window.get(); }
+		inline sf::Window& GetHandle() { return _window; }
+		inline sf::Event& GetEvent() { return _event; }
 
 	private:
-		// Unique ptr to window
-		// Automatically deleted when the class is destroyed.  Can only be one instance.
-		std::unique_ptr<GLFWwindow, GLFWwindowDeleter> _window;
+		sf::Window _window;
+		sf::Event _event;
 
 		// Cache width, height, and title
 		int _width;

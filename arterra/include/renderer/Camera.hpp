@@ -8,8 +8,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "world/Block.hpp"
 #include "ecs/component/Transform.hpp"
+#include "world/Block.hpp"
 
 namespace arterra {
 
@@ -23,7 +23,7 @@ namespace arterra {
 
 	public:
 		ViewFrustum();
-		void Update(glm::mat4 &viewProjetionMatrix);
+		void Update(glm::mat4& viewProjetionMatrix);
 
 		bool PointInFrustum(glm::vec3 point);
 		bool ChunkInFrustum(BlockPosition pos);
@@ -41,10 +41,11 @@ namespace arterra {
 
 		// Get the view projection
 		inline glm::mat4 ViewProjection() const { return _viewProjection; }
-		inline ViewFrustum &GetViewFrustum() { return _viewFrustum; }
+		inline ViewFrustum& GetViewFrustum() { return _viewFrustum; }
 
 	private:
 		float_t _speed = 2.0f;
+		float_t _rotSpeed = glm::radians(15.0f);
 
 		glm::mat4 _projection;
 		glm::mat4 _view;

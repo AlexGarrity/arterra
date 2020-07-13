@@ -5,6 +5,7 @@
 #include "block/BlockManager.hpp"
 #include "gamestate/Base.hpp"
 #include "renderer/ChunkRenderer.hpp"
+#include "renderer/ShaderManager.hpp"
 #include "texture/TextureAtlas.hpp"
 #include "world/TerrainGenerator.hpp"
 #include "world/World.hpp"

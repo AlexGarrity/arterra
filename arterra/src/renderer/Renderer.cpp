@@ -4,9 +4,6 @@ namespace arterra {
 
 	Renderer::Renderer()
 	{
-		// Give GLAD the GLFW extension loader function
-		gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
-
 		// Enable depth testing
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_BLEND);

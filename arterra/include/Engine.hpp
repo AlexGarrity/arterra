@@ -2,8 +2,11 @@
 
 #include "PCH.hpp"
 
-#include "renderer/Renderer.hpp"
 #include "util/Time.hpp"
+
+#include "renderer/Camera.hpp"
+#include "renderer/Renderer.hpp"
+
 #include "window/Input.hpp"
 #include "window/Window.hpp"
 
@@ -41,6 +44,7 @@ namespace arterra {
 		Window* _window;
 		Renderer* _renderer;
 		Camera* _camera;
+		Input* _input;
 
 		Time _time;
 	};

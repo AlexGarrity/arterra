@@ -21,17 +21,13 @@ option(GLAD_EXPORT "Set export variables for external project" ON)
 add_subdirectory(glad)
 
 
-### GLFW + Settings
-# Don't build tests
-option(GLFW_BUILD_TESTS "Build the GLFW test programs" OFF)
-# Don't build docs
-option(GLFW_BUILD_DOCS "Build the GLFW documentation" OFF)
-# Don't generate install target
-option(GLFW_INSTALL "Generate installation target" ON)
-# Not using Vulkan (yet)
-option(GLFW_VULKAN_STATIC "Assume the Vulkan loader is linked with the application" OFF)
+### SFML + Settings
+set(SFML_BUILD_WINDOW TRUE CACHE BOOL "TRUE to build SFML's Window module. This setting is ignored, if the graphics module is built." FORCE)
+set(SFML_BUILD_GRAPHICS FALSE CACHE BOOL "TRUE to build SFML's Graphics module." FORCE)
+set(SFML_BUILD_AUDIO FALSE CACHE BOOL "TRUE to build SFML's Audio module." FORCE)
+set(SFML_BUILD_NETWORK FALSE CACHE BOOL "TRUE to build SFML's Network module." FORCE)
 # Add subdir
-add_subdirectory(glfw)
+add_subdirectory(SFML)
 
 ### GLM (No settings)
 add_subdirectory(glm)
