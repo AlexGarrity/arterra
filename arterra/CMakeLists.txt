@@ -21,7 +21,7 @@ target_include_directories(arterra PRIVATE ${OPENGL_INCLUDE_DIRS})
 target_link_libraries(arterra ${OPENGL_LIBRARIES})
 
 # Link other libraries to executable
-target_link_libraries(arterra glad sfml-graphics glm)
+target_link_libraries(arterra glad sfml-graphics glm yaml-cpp)
 
 # Move the res directory next to the build
 if (WIN32)

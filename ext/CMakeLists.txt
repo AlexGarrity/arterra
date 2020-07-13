@@ -31,3 +31,6 @@ add_subdirectory(SFML)
 
 ### GLM (No settings)
 add_subdirectory(glm)
+
+### YAML-CPP
+add_subdirectory(yaml-cpp)

@@ -73,6 +73,7 @@ namespace arterra {
 	private:
 		bool _visible;
 		std::array<bool, 6> _visibleFaces;
+		std::array<bool, 6> _cullFaces;
 
 		BlockData& _blockData;
 		SubChunk* _subChunk;
