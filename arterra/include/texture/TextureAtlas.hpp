@@ -50,7 +50,7 @@ namespace arterra {
 
 		bool LoadTexture(std::string filepath, std::string identifier);
 		void AddTexture(size_t width, size_t height, std::vector<uint8_t>& data, std::string identifier);
-		void AddTexture(size_t width, size_t height, void* data, std::string identifier);
+		void AddTexture(size_t width, size_t height, const void* data, std::string identifier);
 
 		AtlasTexture* GetTexture(std::string identifier);
 

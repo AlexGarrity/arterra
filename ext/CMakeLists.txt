@@ -23,7 +23,7 @@ add_subdirectory(glad)
 
 ### SFML + Settings
 set(SFML_BUILD_WINDOW TRUE CACHE BOOL "TRUE to build SFML's Window module. This setting is ignored, if the graphics module is built." FORCE)
-set(SFML_BUILD_GRAPHICS FALSE CACHE BOOL "TRUE to build SFML's Graphics module." FORCE)
+set(SFML_BUILD_GRAPHICS TRUE CACHE BOOL "TRUE to build SFML's Graphics module." FORCE)
 set(SFML_BUILD_AUDIO FALSE CACHE BOOL "TRUE to build SFML's Audio module." FORCE)
 set(SFML_BUILD_NETWORK FALSE CACHE BOOL "TRUE to build SFML's Network module." FORCE)
 # Add subdir
@@ -31,13 +31,3 @@ add_subdirectory(SFML)
 
 ### GLM (No settings)
 add_subdirectory(glm)
-
-### stb_image
-project (stb_image C)
-add_library(stb_image INTERFACE)
-target_include_directories(
-  stb_image
-  INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/stb>
-            $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-
-install(TARGETS stb_image)

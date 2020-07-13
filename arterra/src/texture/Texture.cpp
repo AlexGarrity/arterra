@@ -1,7 +1,6 @@
 #include "texture/Texture.hpp"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include <SFML/Graphics/Image.hpp>
 
 namespace arterra {
 
@@ -19,26 +18,23 @@ namespace arterra {
 			Logger::Get().Log(Logger::Debug, "Failed to load texture '", filepath, "'");
 			return false;
 		}
-		stbi_set_flip_vertically_on_load(1);
-		uint8_t* data;
+		sf::Image image;
 		{
 			// Get a handle to the resource, use stb to parse it properly
 			auto dataHandle = ResourceManager::Get().GetHandle(filepath);
-			data = stbi_load_from_memory(dataHandle._resource->_data.data(),
-				static_cast<int>(dataHandle._resource->_data.size()), &_width, &_height, &_channels, 4);
+			image.loadFromMemory(dataHandle._resource->_data.data(), dataHandle._resource->_data.size());
+			image.flipVertically();
 		}
 		// Bind the texture and buffer data
 		glBindTexture(GL_TEXTURE_2D, _handle);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, static_cast<GLsizei>(_width), static_cast<GLsizei>(_height), 0,
-			GL_RGBA, GL_UNSIGNED_BYTE, data);
+			GL_RGBA, GL_UNSIGNED_BYTE, image.getPixelsPtr());
 		// Auto-generate mipmaps
 		glGenerateMipmap(GL_TEXTURE_2D);
 		// Set scaling to nearest
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-		// Free image data memory
-		stbi_image_free(data);
 		// Success
 		return true;
 	}

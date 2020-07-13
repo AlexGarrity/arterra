@@ -1,6 +1,6 @@
 #include "texture/TextureAtlas.hpp"
 
-#include "stb_image.h"
+#include <SFML/Graphics/Image.hpp>
 
 namespace arterra {
 
@@ -52,17 +52,14 @@ namespace arterra {
 		// Load the texture using the resource manager
 		auto result = ResourceManager::Get().Load(filepath);
 
-		stbi_set_flip_vertically_on_load(1);
-		int width, height, channels;
-		uint8_t* data;
+		sf::Image image;
 		{
 			// Get a handle to the resource, use stb to parse it properly
 			auto dataHandle = ResourceManager::Get().GetHandle(filepath);
-			data = stbi_load_from_memory(dataHandle._resource->_data.data(),
-				static_cast<int>(dataHandle._resource->_data.size()), &width, &height, &channels, 4);
+			image.loadFromMemory(dataHandle._resource->_data.data(), dataHandle._resource->_data.size());
+			image.flipVertically();
 		}
-		AddTexture(width, height, data, identifier);
-		stbi_image_free(data);
+		AddTexture(image.getSize().x, image.getSize().y, image.getPixelsPtr(), identifier);
 		return true;
 	}
 
@@ -86,7 +83,7 @@ namespace arterra {
 		_lastHeight = height;
 	}
 
-	void TextureAtlas::AddTexture(size_t width, size_t height, void* data, std::string identifier)
+	void TextureAtlas::AddTexture(size_t width, size_t height, const void* data, std::string identifier)
 	{
 		if (_textures.find(identifier) != _textures.end())
 			return;
