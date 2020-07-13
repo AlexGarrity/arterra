@@ -39,6 +39,13 @@ namespace arterra {
 		}
 	};
 
+	struct BlockPositionHash {
+		size_t operator()(const BlockPosition& pos) const
+		{
+			return std::hash<int> {}(pos._x) ^ std::hash<int> {}(pos._y) ^ std::hash<int> {}(pos._z);
+		}
+	};
+
 	class SubChunk;
 
 	class Block {
@@ -58,15 +65,14 @@ namespace arterra {
 		std::array<bool, 6> GetVisibleFaces() const;
 
 		void Update(size_t width);
-		void UpdateVisiblity();
-		void UpdateNeighbours();
+		void UpdateVisiblity(std::array<Block*, 6>& neighbours);
+		std::array<Block*, 6> GetNeighbours();
 
 		void SetParent(SubChunk* subChunk);
 
 	private:
 		bool _visible;
 		std::array<bool, 6> _visibleFaces;
-		std::array<Block*, 6> _neighbours;
 
 		BlockData& _blockData;
 		SubChunk* _subChunk;

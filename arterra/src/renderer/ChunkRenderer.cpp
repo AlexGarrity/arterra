@@ -22,14 +22,14 @@ namespace arterra {
 		if (!chunk)
 			return;
 		for (auto& sc : chunk->GetSubChunks()) {
-			AddSubChunk(sc);
+			AddSubChunk(sc.second);
 		}
 	}
 
 	void ChunkRenderer::AddChunk(Chunk& chunk)
 	{
 		for (auto& sc : chunk.GetSubChunks()) {
-			AddSubChunk(sc);
+			AddSubChunk(sc.second);
 		}
 	}
 

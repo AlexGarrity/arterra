@@ -41,11 +41,11 @@ namespace arterra {
 
 	void Block::Update(size_t width)
 	{
-		UpdateNeighbours();
-		UpdateVisiblity();
+		auto neighbours = GetNeighbours();
+		UpdateVisiblity(neighbours);
 
 		if (width != 0) {
-			for (auto n : _neighbours) {
+			for (auto n : neighbours) {
 				if (!n)
 					continue;
 				n->Update(width - 1);
@@ -53,26 +53,25 @@ namespace arterra {
 		}
 	}
 
-	void Block::UpdateVisiblity()
+	void Block::UpdateVisiblity(std::array<Block*, 6> &neighbours)
 	{
-		bool visible = false;
+		_visible = false;
 		for (auto i = 0; i < 6; ++i) {
-			auto blockExists = (_neighbours[i] != nullptr);
+			auto blockExists = (neighbours[i]);
 			_visibleFaces[i] = (!blockExists);
 			if (!blockExists)
-				visible = true;
+				_visible = true;
 		}
-		_visible = visible;
 	}
 
-	void Block::UpdateNeighbours()
+	std::array<Block*, 6> Block::GetNeighbours()
 	{
-		_neighbours[0] = _subChunk->GetBlock(_position._x + 1, _position._y, _position._z);
-		_neighbours[1] = _subChunk->GetBlock(_position._x - 1, _position._y, _position._z);
-		_neighbours[2] = _subChunk->GetBlock(_position._x, _position._y + 1, _position._z);
-		_neighbours[3] = _subChunk->GetBlock(_position._x, _position._y - 1, _position._z);
-		_neighbours[4] = _subChunk->GetBlock(_position._x, _position._y, _position._z + 1);
-		_neighbours[5] = _subChunk->GetBlock(_position._x, _position._y, _position._z - 1);
+		return { _subChunk->GetBlock(_position._x + 1, _position._y, _position._z),
+			_subChunk->GetBlock(_position._x - 1, _position._y, _position._z),
+			_subChunk->GetBlock(_position._x, _position._y + 1, _position._z),
+			_subChunk->GetBlock(_position._x, _position._y - 1, _position._z),
+			_subChunk->GetBlock(_position._x, _position._y, _position._z + 1),
+			_subChunk->GetBlock(_position._x, _position._y, _position._z - 1) };
 	}
 
 	void Block::SetParent(SubChunk* subChunk) { _subChunk = subChunk; }

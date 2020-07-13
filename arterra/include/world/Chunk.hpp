@@ -7,6 +7,8 @@
 
 namespace arterra {
 
+	using SubChunkMap = std::unordered_map<BlockPosition, SubChunk, BlockPositionHash>;
+
 	class World;
 
 	class Chunk {
@@ -20,8 +22,10 @@ namespace arterra {
 		Chunk(int posX, int posY, int posZ, World *world);
 		Chunk(const Chunk &other);
 
+		void CreateSubChunk(int x, int y, int z);
+
 		SubChunk* GetSubChunk(int x, int y, int z);
-		std::vector<SubChunk>& GetSubChunks();
+		SubChunkMap& GetSubChunks();
 
 		BlockPosition GetPosition();
 		std::vector<SubChunk*> Update(float deltaTime);
@@ -29,7 +33,7 @@ namespace arterra {
 		inline World *GetWorld() { return _world; }
 
 	private:
-		std::vector<SubChunk> _subChunks;
+		SubChunkMap _subChunks;
 
 		World *_world;
 

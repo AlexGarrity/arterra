@@ -6,13 +6,6 @@
 
 namespace arterra {
 
-	struct BlockPositionHash {
-		size_t operator()(const BlockPosition& pos) const
-		{
-			return std::hash<int> {}(pos._x) ^ std::hash<int> {}(pos._y) ^ std::hash<int> {}(pos._z);
-		}
-	};
-
 	using ChunkMap = std::unordered_map<BlockPosition, Chunk, BlockPositionHash>;
 
 	class World {
