@@ -56,7 +56,7 @@ namespace arterra {
 		return true;
 	}
 
-	bool ViewFrustum::ChunkInFrustum(BlockPosition pos)
+	bool ViewFrustum::ChunkInFrustum(WorldPosition pos)
 	{
 		auto getVP = [&](float x, float y, float z) {
 			auto res = pos;

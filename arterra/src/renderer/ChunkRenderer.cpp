@@ -64,7 +64,7 @@ namespace arterra {
 		}
 	}
 
-	ChunkMesh* ChunkRenderer::GetChunkMesh(BlockPosition position)
+	ChunkMesh* ChunkRenderer::GetChunkMesh(WorldPosition position)
 	{
 		for (auto& r : _renderables) {
 			auto pos = r.GetPosition();
@@ -74,7 +74,7 @@ namespace arterra {
 		return nullptr;
 	}
 
-	void ChunkRenderer::DeleteMesh(BlockPosition position)
+	void ChunkRenderer::DeleteMesh(WorldPosition position)
 	{
 		auto pos = -1;
 		for (auto i = 0; i < _renderables.size(); ++i) {

@@ -26,13 +26,13 @@ namespace arterra {
 		void SetBlock(int x, int y, int z, BlockData &data);
 		void DeleteBlock(int x, int y, int z);
 
-		BlockPosition GetPosition();
+		WorldPosition GetPosition();
 		inline Chunk* GetChunk() { return _chunk; };
 
 		bool Update(float deltaTime);
 
 	private:
-		BlockPosition _position;
+		WorldPosition _position;
 		Chunk* _chunk;
 		bool _updated = true;
 

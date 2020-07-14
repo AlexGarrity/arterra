@@ -5,7 +5,7 @@ The design and data ideas for general in-game world related things.
 A chunk is comprised of a potentially infinite quantity of subchunks, which are of `16*16*16` size. Frustum culling works on a subchunk basis.  The sizes of both of these classes can be changed at compile time, as they are defined as const values, and the codebase uses these rather than hard-defined constants.
 
 Each subchunk is an `array<Block*>` containing `4096` (`16*16*16`) blocks.
-A chunk is made up of an `unordered_map<BlockPosition, SubChunk>` which can contain a potentially infinite number of subchunks vertically, but will only store the data for subchunks in use.  Theoretically, a floating island could exist 10000 blocks above the surface and it would only use the surface plus a few more subchunks worth of storage.
+A chunk is made up of an `unordered_map<WorldPosition, SubChunk>` which can contain a potentially infinite number of subchunks vertically, but will only store the data for subchunks in use.  Theoretically, a floating island could exist 10000 blocks above the surface and it would only use the surface plus a few more subchunks worth of storage.
 
 The chunk data is stored from the bottom up, along the x-axis first, then along the z-axis.
 Block data will be serialised in order, with zero representing air or any other value being a mapped block data struct.  Position data is not saved as it will be read linearly

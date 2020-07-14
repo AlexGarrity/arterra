@@ -59,7 +59,7 @@ namespace arterra {
 		_updated = true;
 	}
 
-	BlockPosition SubChunk::GetPosition()
+	WorldPosition SubChunk::GetPosition()
 	{
 		auto cp = _chunk->GetPosition();
 		return { (_position._x * static_cast<int>(SIZE_X)) + cp._x,

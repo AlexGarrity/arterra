@@ -22,7 +22,7 @@ namespace arterra {
 
 	void Chunk::CreateSubChunk(int x, int y, int z)
 	{
-		auto pos = BlockPosition(x, y, z);
+		auto pos = WorldPosition(x, y, z);
 		if (_subChunks.find(pos) != _subChunks.end())
 			return;
 		_subChunks.emplace(pos, SubChunk(pos._x, pos._y, pos._z, this));
@@ -34,7 +34,7 @@ namespace arterra {
 		auto chunkHeight = adjustedHeight / 16;
 		for (auto iY = 0; iY <= chunkHeight; ++iY) {
 			_subChunks.emplace(
-				BlockPosition(x, iY, z), SubChunk(x, iY, z, this));
+				WorldPosition(x, iY, z), SubChunk(x, iY, z, this));
 		}
 	}
 
@@ -45,7 +45,7 @@ namespace arterra {
 		auto scX = x / SubChunk::SIZE_X;
 		auto scY = y / SubChunk::SIZE_Y;
 		auto scZ = z / SubChunk::SIZE_Z;
-		auto pos = BlockPosition(x, y, z);
+		auto pos = WorldPosition(x, y, z);
 		auto sc = _subChunks.find(pos);
 		if (sc == _subChunks.end())
 			_subChunks.emplace(pos, SubChunk(pos._x, pos._y, pos._z, this));
@@ -53,7 +53,7 @@ namespace arterra {
 		return &sc->second;
 	}
 
-	BlockPosition Chunk::GetPosition()
+	WorldPosition Chunk::GetPosition()
 	{
 		return { _position._x * static_cast<int>(SubChunk::SIZE_X),
 			_position._y * static_cast<int>(SubChunk::SIZE_Y), _position._z * static_cast<int>(SubChunk::SIZE_Z) };

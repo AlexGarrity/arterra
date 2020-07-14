@@ -26,14 +26,14 @@ namespace arterra {
 		_blockData = other._blockData;
 	}
 
-	BlockPosition Block::GetPosition() const
+	WorldPosition Block::GetPosition() const
 	{
 		auto scPosition = _subChunk->GetPosition();
-		return BlockPosition { _position._x + scPosition._x, _position._y + scPosition._y,
+		return WorldPosition { _position._x + scPosition._x, _position._y + scPosition._y,
 			_position._z + scPosition._z };
 	}
 
-	BlockPosition Block::GetPositionRaw() const { return { _position._x, _position._y, _position._z }; }
+	WorldPosition Block::GetPositionRaw() const { return { _position._x, _position._y, _position._z }; }
 
 	BlockData& Block::GetData() const { return _blockData; }
 

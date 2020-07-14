@@ -92,6 +92,6 @@ namespace arterra {
 
 	GLuint ChunkMesh::GetVertexCount() { return _vertexArray.GetVertexCount(); }
 
-	BlockPosition ChunkMesh::GetPosition() { return _position; }
+	WorldPosition ChunkMesh::GetPosition() { return _position; }
 
 }

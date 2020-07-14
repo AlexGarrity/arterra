@@ -24,8 +24,8 @@ namespace arterra {
 		void CullRenderables(Camera &camera);
 
 		void UpdateSubChunks(std::vector<SubChunk*>& subChunks);
-		ChunkMesh* GetChunkMesh(BlockPosition position);
-		void DeleteMesh(BlockPosition position);
+		ChunkMesh* GetChunkMesh(WorldPosition position);
+		void DeleteMesh(WorldPosition position);
 
 		void Render();
 
