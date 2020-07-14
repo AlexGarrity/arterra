@@ -12,6 +12,7 @@ namespace arterra {
 			_engine->GetWindow()->SetVsync(true);
 			_engine->GetWindow()->SetClearColour(0.6f, 0.8f, 1.0f, 1.0f);
 			
+			_engine->GetInput()->RegisterKeyBind("quit", sf::Keyboard::Escape);
 			// Set up player control keybinds.
 			_engine->GetInput()->RegisterKeyBind("forward", sf::Keyboard::W);
 			_engine->GetInput()->RegisterKeyBind("backward", sf::Keyboard::S);
@@ -19,9 +20,12 @@ namespace arterra {
 			_engine->GetInput()->RegisterKeyBind("right", sf::Keyboard::D);
 			_engine->GetInput()->RegisterKeyBind("up", sf::Keyboard::LShift);
 			_engine->GetInput()->RegisterKeyBind("down", sf::Keyboard::LControl);
-			_engine->GetInput()->RegisterKeyBind("rot-left", sf::Keyboard::Q);
-			_engine->GetInput()->RegisterKeyBind("rot-right", sf::Keyboard::E);
-
+			//_engine->GetInput()->RegisterKeyBind("rot-left", sf::Keyboard::Q);
+			//_engine->GetInput()->RegisterKeyBind("rot-right", sf::Keyboard::E);
+			_engine->GetInput()->RegisterMouseBind("rot-left", sf::Mouse::Button::Left);
+			_engine->GetInput()->RegisterMouseBind("rot-right", sf::Mouse::Button::Right);
+			
+			
 			// Load the basic shader and use it
 			_shaderManager.LoadShader("shaders/basic.frag", "shaders/basic.vert", "basic");
 			_shaderManager.UseShader("basic");
@@ -80,11 +84,22 @@ namespace arterra {
 			if (_engine->GetInput()->PollKeyBind("down")._isActive) {
 				cameraTransform.Translate(cameraTransform.Up() * -_speed);
 			}
-			if (_engine->GetInput()->PollKeyBind("rot-left")._isActive) {
+			/* if (_engine->GetInput()->PollKeyBind("rot-left")._isActive) {
 				cameraTransform.Rotate(0.0f, -_rotSpeed, 0.0f);
 			}
 			if (_engine->GetInput()->PollKeyBind("rot-right")._isActive) {
 				cameraTransform.Rotate(0.0f, _rotSpeed, 0.0f);
+			} */
+			if (_engine->GetInput()->PollMouseBind("rot-left")._isActive) {
+				cameraTransform.Rotate(0.0f, -_rotSpeed, 0.0f);
+			}
+			if (_engine->GetInput()->PollMouseBind("rot-right")._isActive) {
+				cameraTransform.Rotate(0.0f, _rotSpeed, 0.0f);
+			}
+			
+			// Close the window with [Esc]
+			if (_engine->GetInput()->PollKeyBind("quit")._isActive) {
+				_engine->SetShouldExit(true);
 			}
 			
 			if (_engine->GetWindow()->ShouldClose()) _engine->SetShouldExit(true);

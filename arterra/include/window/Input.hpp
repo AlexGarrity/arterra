@@ -20,11 +20,15 @@ namespace arterra {
 		// Polling methods for keybinds.
 		void RegisterKeyBind(const std::string identifier, sf::Keyboard::Key key);
 		KeyBindData PollKeyBind(const std::string identifier);
+		// Polling methods for mousebinds.
+		void RegisterMouseBind(const std::string identifier, sf::Mouse::Button button);
+		MouseBindData PollMouseBind(const std::string identifier);
 
 	private:
 		// List of current keybinds
 		// sf::Keyboard::Key = keycode, KeyBind = properties for this bind.
 		std::unordered_map<std::string, KeyBind> _keyBinds;
+		std::unordered_map<std::string, MouseBind> _mouseBinds;
 		
 		sf::Event *_event;
 		

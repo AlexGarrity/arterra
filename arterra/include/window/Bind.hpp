@@ -40,9 +40,40 @@ namespace arterra {
 			sf::Keyboard::Key _keyCode;
 			// Whether the key is currently actively pressed or not.
 			bool _isActive;
-			// Time when the key was initially pressed.
+			// Time when the key was initially pressed/released.
 			std::chrono::high_resolution_clock::time_point _pressedTime;
 			
+	};
+	
+	struct MouseBindData {
+		// Whether they button is currently actively pressed or not.
+		bool _isActive;
+		// The time the button has been currently pressed down for.
+		float_t _timePressed;
+		
+		MouseBindData();
+		MouseBindData(bool isActive, float_t timePressed);
+	};
+	
+	class MouseBind : public DataObject {
+		
+		public:
+			MouseBind(sf::Mouse::Button button);
+			// Keeps track of whether they button changes state.
+			void Update();
+			// Generate data struct for this mousebind.
+			MouseBindData GetData();
+			
+			virtual void DumpToLog(std::string title = "--- MOUSEBIND ---") override;
+		
+		private:
+			// The buttonCode for this mousebind.
+			sf::Mouse::Button _buttonCode;
+			// Whether the button is currently actively pressed or not.
+			bool _isActive;
+			// Time when the button was pressed/released.
+			std::chrono::high_resolution_clock::time_point _pressedTime;
+		
 	};
 	
 }
