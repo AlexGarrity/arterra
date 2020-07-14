@@ -10,6 +10,7 @@ namespace arterra {
 			, _chunkRenderer{engine->GetRenderer()}
 		{
 			_engine->GetWindow()->SetVsync(true);
+			_engine->GetWindow()->SetLockCursor(true);
 			_engine->GetWindow()->SetClearColour(0.6f, 0.8f, 1.0f, 1.0f);
 			
 			_engine->GetInput()->RegisterKeyBind("quit", sf::Keyboard::Escape);
