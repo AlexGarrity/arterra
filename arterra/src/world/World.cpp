@@ -14,7 +14,7 @@ namespace arterra {
 		auto chunk = FindChunk(x, z);
 		if (chunk != _chunks.end())
 			return &chunk->second;
-		auto pos = BlockPosition(x, 0, z);
+		auto pos = WorldPosition(x, 0, z);
 		_chunks.emplace(std::make_pair(pos, Chunk { pos._x, pos._y, pos._z, this }));
 		return GetChunk(x, z);
 	}
@@ -50,7 +50,7 @@ namespace arterra {
 
 	ChunkMap::iterator World::FindChunk(int x, int z)
 	{
-		auto bPos = BlockPosition { x, 0, z };
+		auto bPos = WorldPosition { x, 0, z };
 		auto pos = _chunks.find(bPos);
 		return pos;
 	}

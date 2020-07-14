@@ -6,7 +6,7 @@
 
 namespace arterra {
 
-	using ChunkMap = std::unordered_map<BlockPosition, Chunk, BlockPositionHash>;
+	using ChunkMap = std::unordered_map<WorldPosition, Chunk, WorldPositionHash>;
 
 	class World {
 	public:

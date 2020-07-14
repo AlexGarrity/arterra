@@ -26,7 +26,7 @@ namespace arterra {
 		void Update(glm::mat4& viewProjetionMatrix);
 
 		bool PointInFrustum(glm::vec3 point);
-		bool ChunkInFrustum(BlockPosition pos);
+		bool ChunkInFrustum(WorldPosition pos);
 
 	private:
 		std::array<Plane, 6> _planes;

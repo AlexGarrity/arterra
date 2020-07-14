@@ -27,7 +27,7 @@ namespace arterra {
 
 		void Bind();
 		GLuint GetVertexCount();
-		BlockPosition GetPosition();
+		WorldPosition GetPosition();
 
 	private:
 		std::vector<float_t> _posVertices;
@@ -37,7 +37,7 @@ namespace arterra {
 		VertexBuffer _posBuffer;
 		VertexBuffer _texBuffer;
 
-		BlockPosition _position;
+		WorldPosition _position;
 
 		bool _shouldRender = true;
 	};
