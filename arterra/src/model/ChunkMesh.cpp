@@ -47,9 +47,12 @@ namespace arterra {
 		if (!block.IsVisible())
 			return;
 		auto visibleFaces = block.GetVisibleFaces();
-		for (auto i = 0; i < visibleFaces.size(); ++i) {
-			if (visibleFaces[i] == false)
-				continue;
+		for (auto i = 0; i < visibleFaces.size()+1; ++i) {
+			if (i != 6) {
+				if (visibleFaces[i] == false)
+					continue;
+			}
+			
 			auto blockData = block.GetData();
 			auto posVertices = blockData.GetModel().GetPosVertices(Direction(i));
 			auto texVertices = blockData.GetModel().GetTexVertices(Direction(i));

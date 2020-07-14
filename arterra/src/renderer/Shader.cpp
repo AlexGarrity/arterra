@@ -45,7 +45,7 @@ namespace arterra {
 
 	ShaderProgram::ShaderProgram(std::string vertPath, std::string fragPath) { Create(vertPath, fragPath); }
 
-	ShaderProgram::~ShaderProgram() { glDeleteProgram(_glID); }
+	ShaderProgram::~ShaderProgram() { /* glDeleteProgram(_glID); */ }
 
 	bool ShaderProgram::Create(std::string vertPath, std::string fragPath)
 	{
@@ -71,7 +71,7 @@ namespace arterra {
 		glBindFragDataLocation(_glID, 0, "outColor");
 		// Link the program.
 		glLinkProgram(_glID);
-
+		
 		return true;
 	}
 

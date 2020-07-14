@@ -15,6 +15,7 @@ namespace arterra {
 		enum ShaderType { Fragment, Vertex, Geometry };
 
 		Shader(ShaderType shaderType, std::string path);
+		~Shader() { glDeleteShader(_glID); }
 		virtual void DumpToLog(std::string title = "Shader") override;
 		inline GLuint Handle() { return _glID; }
 

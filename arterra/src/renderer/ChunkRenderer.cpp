@@ -94,7 +94,6 @@ namespace arterra {
 			if (renderable.ShouldRender()) {
 				renderable.Bind();
 				_renderer->DrawTriangles(renderable.GetVertexCount());
-				glDrawArrays(GL_TRIANGLES, 0, renderable.GetVertexCount());
 			}		
 		}
 	}
