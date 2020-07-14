@@ -6,6 +6,7 @@
 
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Window.hpp>
+#include <SFML/Window/Mouse.hpp>
 
 namespace arterra {
 
@@ -28,6 +29,8 @@ namespace arterra {
 		void Clear();
 		// Turn vsync on / off
 		void SetVsync(bool vsync);
+		// Lock/unlock the cursor to the window
+		void SetLockCursor(bool lock);
 		// Set the window to close
 		void SetShouldClose(bool shouldClose);
 		// Helper for updating
@@ -51,8 +54,11 @@ namespace arterra {
 		int _width;
 		int _height;
 		std::string _title;
+		
+		// Window options.
 		bool _vsyncEnabled { true };
 		bool _shouldClose { false };
+		bool _cursorLocked { false };
 	};
 
 }

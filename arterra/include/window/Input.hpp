@@ -6,49 +6,44 @@
 #include <SFML/Window/Joystick.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>
+#include "window/Window.hpp"
 
-#include "util/DataObject.hpp"
+#include "window/Bind.hpp"
 
 namespace arterra {
-
-	class KeyBind : public DataObject {
-	public:
-		KeyBind();
-
-		void Update(float deltaTime);
-		void CallSubscribers();
-		void AddSubscriber(std::function<void(float_t)> subscriber);
-
-		// Logging method
-		virtual void DumpToLog(std::string title = "KeyBind") override;
-
-	private:
-		sf::Keyboard::Key _keyCode;
-		// Whether the key is currently pressed down or not.
-		bool _active = false;
-		// Time the key has been held in seconds.
-		float_t _timeHeld = 0.0f;
-		// Callback functions to fire when the key becomes active.
-		std::vector<std::function<void(float_t)>> _subscribers {};
+	
+	enum MouseAxis {
+		Horizontal = 0,
+		Vertical = 1,
 	};
 
 	class Input {
 
 	public:
-		Input(sf::Event &windowEvent);
-		// Update tracked information for active keys.
+		Input(sf::Event &windowEvent, Window *window);
+		// Update keybind data.
 		void Update(float_t deltaTime);
-		// Register keybind subscriber.
-		void RegisterKeySubscriber(const sf::Keyboard::Key key, const std::function<void(float_t)> callback);
-
-		// Debug method
-		void PrintInformation();
-
+		// Polling methods for keybinds.
+		void RegisterKeyBind(const std::string identifier, sf::Keyboard::Key key);
+		KeyBindData PollKeyBind(const std::string identifier);
+		// Polling methods for mousebinds.
+		void RegisterMouseBind(const std::string identifier, sf::Mouse::Button button);
+		MouseBindData PollMouseBind(const std::string identifier);
+		// Polling methods for mouse axis.
+		MouseAxisData PollMouseAxis(MouseAxis axis);
+		
 	private:
-		// List of currently pressed down keys,
-		// sf::Keyboard::Key = keycode, KeyBind = properties for this key.
-		std::unordered_map<sf::Keyboard::Key, KeyBind> _pressedKeys;
+		// List of current keybinds
+		// sf::Keyboard::Key = keycode, KeyBind = properties for this bind.
+		std::unordered_map<std::string, KeyBind> _keyBinds;
+		std::unordered_map<std::string, MouseBind> _mouseBinds;
+		
+		// Stores the mouse movement per frame.
+		sf::Vector2i _mouseDelta { 0, 0 };
+		
 		sf::Event *_event;
+		Window* _window;
+		
 	};
 
 }

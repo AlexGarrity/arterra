@@ -10,8 +10,23 @@ namespace arterra {
 			, _chunkRenderer{engine->GetRenderer()}
 		{
 			_engine->GetWindow()->SetVsync(true);
+			_engine->GetWindow()->SetLockCursor(true);
 			_engine->GetWindow()->SetClearColour(0.6f, 0.8f, 1.0f, 1.0f);
-
+			
+			_engine->GetInput()->RegisterKeyBind("quit", sf::Keyboard::Escape);
+			// Set up player control keybinds.
+			_engine->GetInput()->RegisterKeyBind("forward", sf::Keyboard::W);
+			_engine->GetInput()->RegisterKeyBind("backward", sf::Keyboard::S);
+			_engine->GetInput()->RegisterKeyBind("left", sf::Keyboard::A);
+			_engine->GetInput()->RegisterKeyBind("right", sf::Keyboard::D);
+			_engine->GetInput()->RegisterKeyBind("up", sf::Keyboard::LShift);
+			_engine->GetInput()->RegisterKeyBind("down", sf::Keyboard::LControl);
+			//_engine->GetInput()->RegisterKeyBind("rot-left", sf::Keyboard::Q);
+			//_engine->GetInput()->RegisterKeyBind("rot-right", sf::Keyboard::E);
+			_engine->GetInput()->RegisterMouseBind("rot-left", sf::Mouse::Button::Left);
+			_engine->GetInput()->RegisterMouseBind("rot-right", sf::Mouse::Button::Right);
+			
+			
 			// Load the basic shader and use it
 			_shaderManager.LoadShader("shaders/basic.frag", "shaders/basic.vert", "basic");
 			_shaderManager.UseShader("basic");
@@ -47,6 +62,40 @@ namespace arterra {
 
 		void Test::Input(float_t deltaTime)
 		{
+			Transform& cameraTransform = _engine->GetCamera()->GetTransform();
+			_speed = deltaTime * 16.0f;
+			_rotSpeed = deltaTime * 3.0f;
+			
+			float_t aa = _engine->GetInput()->PollMouseAxis(MouseAxis::Horizontal)._delta;
+			
+			// Poll for player control inputs.
+			if (_engine->GetInput()->PollKeyBind("forward")._isActive) {
+				cameraTransform.Translate(cameraTransform.Forward() * _speed);
+			}
+			if (_engine->GetInput()->PollKeyBind("backward")._isActive) {
+				cameraTransform.Translate(cameraTransform.Forward() * -_speed);
+			}
+			if (_engine->GetInput()->PollKeyBind("left")._isActive) {
+				cameraTransform.Translate(cameraTransform.Right() * -_speed);
+			}
+			if (_engine->GetInput()->PollKeyBind("right")._isActive) {
+				cameraTransform.Translate(cameraTransform.Right() * _speed);
+			}
+			if (_engine->GetInput()->PollKeyBind("up")._isActive) {
+				cameraTransform.Translate(cameraTransform.Up() * _speed);
+			}
+			if (_engine->GetInput()->PollKeyBind("down")._isActive) {
+				cameraTransform.Translate(cameraTransform.Up() * -_speed);
+			}
+			float_t mouseX = _engine->GetInput()->PollMouseAxis(MouseAxis::Horizontal)._delta;
+			float_t mouseY = _engine->GetInput()->PollMouseAxis(MouseAxis::Vertical)._delta;
+			cameraTransform.Rotate(-_rotSpeed * -mouseY, -_rotSpeed * mouseX, 0.0f);
+			
+			// Close the window with [Esc]
+			if (_engine->GetInput()->PollKeyBind("quit")._isActive) {
+				_engine->SetShouldExit(true);
+			}
+			
 			if (_engine->GetWindow()->ShouldClose()) _engine->SetShouldExit(true);
 		}
 

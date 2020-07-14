@@ -35,6 +35,7 @@ namespace arterra {
 		inline Window* GetWindow() const { return _window; }
 		inline Renderer* GetRenderer() const { return _renderer; }
 		inline Camera* GetCamera() const { return _camera; }
+		inline Input* GetInput() const { return _input; }
 
 	private:
 		bool _shouldExit = false;

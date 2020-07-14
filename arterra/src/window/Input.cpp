@@ -2,75 +2,76 @@
 
 namespace arterra {
 
-	KeyBind::KeyBind() {}
 
-	void KeyBind::Update(float deltaTime) {
-		auto pressed = sf::Keyboard::isKeyPressed(_keyCode);
-		if (_active && !pressed) {
-			_active = false;
-			_timeHeld = 0.0f;
-		}
-		else {
-			_active = true;
-			_timeHeld += deltaTime;
-		}
-	}
-
-	void KeyBind::CallSubscribers()
-	{
-		for (auto i : _subscribers) {
-			i(_timeHeld);
-		}
-	}
-
-	void KeyBind::AddSubscriber(std::function<void(float_t)> subscriber) {
-		_subscribers.push_back(subscriber);
-	}
-
-	void KeyBind::DumpToLog(std::string title)
-	{
-		Logger::Get().Log("\t", title, " - code: ", _keyCode, "; active:", _active, "; time held:", _timeHeld,
-			"; sub count: ", _subscribers.size());
-	}
-
-	Input::Input(sf::Event &event) {
+	Input::Input(sf::Event &event, Window *window) {
 		_event = &event;
+		_window = window;
 	}
 
 	void Input::Update(float_t deltaTime)
 	{
-		// If no keys are being tracked, return quickly.
-		if (_pressedKeys.empty()) {
+		// Iterate through all keys to check if they're getting pressed down,
+		// to start the held timer.
+		for (auto& it: _keyBinds) {
+			it.second.Update();
+		}
+		for (auto& it: _mouseBinds) {
+			it.second.Update();
+		}
+		
+		if (_event->type == sf::Event::MouseMoved) {
+			// Calculate mouse movement since last frame.
+			sf::Vector2i currentPos = sf::Vector2i { _event->mouseMove.x, _event->mouseMove.y };
+			_mouseDelta = -(currentPos - sf::Vector2i(_window->GetWidth() / 2, _window->GetHeight() / 2));
+			
+		}
+		
+	}
+	
+	void Input::RegisterKeyBind(const std::string identifier, sf::Keyboard::Key key) {
+		auto it = _keyBinds.find(identifier);
+		if (it != _keyBinds.end()) {
+			Logger::Get().Log(Logger::Warning, "Trying to bind key `", key, "` which already is bound!");
 			return;
 		}
-
-		// Increase the hold time for all actively held keys.
-		for (auto& i : _pressedKeys) {
-			i.second.Update(deltaTime);
+		_keyBinds.emplace(identifier, key);
+	}
+	
+	KeyBindData Input::PollKeyBind(const std::string identifier) {
+		auto it = _keyBinds.find(identifier);
+		if (it == _keyBinds.end()){
+			Logger::Get().Log(Logger::Warning, "Trying to access keybind `", identifier, "' which doesn't exist!");
+			return KeyBindData();
 		}
-
-		// DEBUG
-		// PrintInformation();
+		return it->second.GetData();
 	}
 
-	void Input::RegisterKeySubscriber(const sf::Keyboard::Key key, const std::function<void(float_t)> callback)
-	{
-		auto keyIndex = _pressedKeys.find(key);
-		if (keyIndex == _pressedKeys.end())
+	void Input::RegisterMouseBind(const std::string identifier, sf::Mouse::Button button) {
+		auto it = _mouseBinds.find(identifier);
+		if (it != _mouseBinds.end()) {
+			Logger::Get().Log(Logger::Warning, "Trying to bind button `", button, "` which already is bound!");
 			return;
-		// Add the callback function to the key subscription.
-		keyIndex->second.AddSubscriber(callback);
-	}
-
-	void Input::PrintInformation()
-	{
-		// Log the pressed keys information.
-		Logger::Get().Log(Logger::Debug, "===================");
-		Logger::Get().Log(Logger::Debug, " KEY INPUTS STORED ");
-		for (auto& i : _pressedKeys) {
-			i.second.DumpToLog();
 		}
-		Logger::Get().Log(Logger::Debug, "===================");
+		_mouseBinds.emplace(identifier, button);
+	}
+	
+	MouseBindData Input::PollMouseBind(const std::string identifier) {
+		auto it = _mouseBinds.find(identifier);
+		if (it == _mouseBinds.end()){
+			Logger::Get().Log(Logger::Warning, "Trying to access mousebind `", identifier, "' which doesn't exist!");
+			return MouseBindData();
+		}
+		return it->second.GetData();
+	}
+	
+	// ===Mouse Axis===
+	MouseAxisData Input::PollMouseAxis(MouseAxis axis) {
+		if (axis == MouseAxis::Horizontal) {
+			return MouseAxisData { static_cast<float_t>(_mouseDelta.x) };
+		}else if (axis == MouseAxis::Vertical) {
+			return MouseAxisData { static_cast<float_t>(_mouseDelta.y)  };
+		}
+		return MouseAxisData {};
 	}
 
 }
