@@ -93,27 +93,8 @@ namespace arterra {
 
 	void Camera::Update(Window& window, float_t deltaTime)
 	{
-		// Set speed to account for deltaTime
-		_speed = deltaTime * 16.0f;
-		_rotSpeed = deltaTime * 15.0f;
-		_transform.Update();
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-			_transform.Translate(_transform.Forward() * _speed);
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-			_transform.Translate(_transform.Forward() * -_speed);
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-			_transform.Translate(_transform.Right() * -_speed);
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-			_transform.Translate(_transform.Right() * _speed);
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
-			_transform.Translate(_transform.Up() * _speed);
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
-			_transform.Translate(_transform.Up() * -_speed);
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
-			_transform.Rotate(0.0f, _rotSpeed, 0.0f);
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
-			_transform.Rotate(0.0f, -_rotSpeed, 0.0f);
+		_transform.Update();
 
 		// Update the view projection to account for movement
 		_view = glm::mat4 { 1.0f };

@@ -9,7 +9,6 @@
 #include "texture/TextureAtlas.hpp"
 #include "world/TerrainGenerator.hpp"
 #include "world/World.hpp"
-
 namespace arterra {
 
 	namespace gamestate {
@@ -32,6 +31,11 @@ namespace arterra {
 			TerrainGenerator _terrainGenerator;
 			BlockManager _blockManager;
 			TextureAtlas _atlas;
+			
+			// Temporary player controller.
+			float_t _speed = 2.0f;
+			float_t _rotSpeed = glm::radians(15.0f);
+			
 		};
 
 	}

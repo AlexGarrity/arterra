@@ -42,11 +42,10 @@ namespace arterra {
 		// Get the view projection
 		inline glm::mat4 ViewProjection() const { return _viewProjection; }
 		inline ViewFrustum& GetViewFrustum() { return _viewFrustum; }
+		
+		inline Transform& GetTransform() { return _transform; }
 
 	private:
-		float_t _speed = 2.0f;
-		float_t _rotSpeed = glm::radians(15.0f);
-
 		glm::mat4 _projection;
 		glm::mat4 _view;
 		glm::mat4 _viewProjection;
