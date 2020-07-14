@@ -3,8 +3,9 @@
 namespace arterra {
 
 
-	Input::Input(sf::Event &event) {
+	Input::Input(sf::Event &event, Window *window) {
 		_event = &event;
+		_window = window;
 	}
 
 	void Input::Update(float_t deltaTime)
@@ -16,6 +17,13 @@ namespace arterra {
 		}
 		for (auto& it: _mouseBinds) {
 			it.second.Update();
+		}
+		
+		if (_event->type == sf::Event::MouseMoved) {
+			// Calculate mouse movement since last frame.
+			sf::Vector2i currentPos = sf::Vector2i { _event->mouseMove.x, _event->mouseMove.y };
+			_mouseDelta = -(currentPos - sf::Vector2i(_window->GetWidth() / 2, _window->GetHeight() / 2));
+			
 		}
 		
 	}
@@ -55,6 +63,15 @@ namespace arterra {
 		}
 		return it->second.GetData();
 	}
-
+	
+	// ===Mouse Axis===
+	MouseAxisData Input::PollMouseAxis(MouseAxis axis) {
+		if (axis == MouseAxis::Horizontal) {
+			return MouseAxisData { static_cast<float_t>(_mouseDelta.x) };
+		}else if (axis == MouseAxis::Vertical) {
+			return MouseAxisData { static_cast<float_t>(_mouseDelta.y)  };
+		}
+		return MouseAxisData {};
+	}
 
 }

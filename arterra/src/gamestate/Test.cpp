@@ -64,7 +64,9 @@ namespace arterra {
 		{
 			Transform& cameraTransform = _engine->GetCamera()->GetTransform();
 			_speed = deltaTime * 16.0f;
-			_rotSpeed = deltaTime * 15.0f;
+			_rotSpeed = deltaTime * 3.0f;
+			
+			float_t aa = _engine->GetInput()->PollMouseAxis(MouseAxis::Horizontal)._delta;
 			
 			// Poll for player control inputs.
 			if (_engine->GetInput()->PollKeyBind("forward")._isActive) {
@@ -85,18 +87,9 @@ namespace arterra {
 			if (_engine->GetInput()->PollKeyBind("down")._isActive) {
 				cameraTransform.Translate(cameraTransform.Up() * -_speed);
 			}
-			/* if (_engine->GetInput()->PollKeyBind("rot-left")._isActive) {
-				cameraTransform.Rotate(0.0f, -_rotSpeed, 0.0f);
-			}
-			if (_engine->GetInput()->PollKeyBind("rot-right")._isActive) {
-				cameraTransform.Rotate(0.0f, _rotSpeed, 0.0f);
-			} */
-			if (_engine->GetInput()->PollMouseBind("rot-left")._isActive) {
-				cameraTransform.Rotate(0.0f, -_rotSpeed, 0.0f);
-			}
-			if (_engine->GetInput()->PollMouseBind("rot-right")._isActive) {
-				cameraTransform.Rotate(0.0f, _rotSpeed, 0.0f);
-			}
+			float_t mouseX = _engine->GetInput()->PollMouseAxis(MouseAxis::Horizontal)._delta;
+			float_t mouseY = _engine->GetInput()->PollMouseAxis(MouseAxis::Vertical)._delta;
+			cameraTransform.Rotate(-_rotSpeed * -mouseY, -_rotSpeed * mouseX, 0.0f);
 			
 			// Close the window with [Esc]
 			if (_engine->GetInput()->PollKeyBind("quit")._isActive) {

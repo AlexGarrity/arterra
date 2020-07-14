@@ -2,6 +2,7 @@
 
 namespace arterra {
 	
+	// === Key Buttons===
 	KeyBindData::KeyBindData()
 		: _isActive(false), _timePressed(0.0f) {}
 	
@@ -45,7 +46,7 @@ namespace arterra {
 		Logger::Get().Log(Logger::Debug, "---------------");
 	}
 	
-	
+	// ===Mouse Buttons===
 	MouseBindData::MouseBindData()
 		: _isActive(false), _timePressed(0.0f) {}
 	
@@ -88,5 +89,15 @@ namespace arterra {
 			" TimePressed: ", data._timePressed);
 		Logger::Get().Log(Logger::Debug, "-----------------");
 	}
+	
+	// ===Mouse Axis===
+	MouseAxisData::MouseAxisData()
+		: _delta(0.0f) {}
+		
+	MouseAxisData::MouseAxisData(float_t delta)
+		: _delta(delta) {}
+		
+	
+	
 	
 }

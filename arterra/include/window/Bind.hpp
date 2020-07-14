@@ -76,4 +76,13 @@ namespace arterra {
 		
 	};
 	
+	struct MouseAxisData {
+		// The movement amount on this axis.
+		float_t _delta;
+		
+		MouseAxisData();
+		MouseAxisData(float_t delta);
+	};
+
+	
 }
