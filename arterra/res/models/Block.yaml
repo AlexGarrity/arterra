@@ -1,0 +1,9 @@
+---
+CullableIndicesData:
+    PosX: [12, 14, 30, 32]
+    NegX: [6, 8, 24, 26]
+    PosY: [0, 2, 18, 20]
+    NegY: [9, 11, 27, 29]
+    PosZ: [3, 5, 21, 23]
+    NegZ: [15, 17, 33, 35]
+    Always: []

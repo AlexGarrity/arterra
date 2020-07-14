@@ -16,6 +16,7 @@ namespace arterra {
 		NegY = 3,
 		PosZ = 4,
 		NegZ = 5,
+		Always = 6,
 	};
 
 	class CullableModel {
@@ -33,8 +34,8 @@ namespace arterra {
 
 	private:
 		// PosX, NegX, PosY, NegY, PosZ, NegZ
-		std::array<std::vector<float_t>, 6> _posVertices;
-		std::array<std::vector<float_t>, 6> _texVertices;
+		std::array<std::vector<float_t>, 7> _posVertices;
+		std::array<std::vector<float_t>, 7> _texVertices;
 
 		size_t _vertexCount;
 	};

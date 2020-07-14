@@ -1,68 +1,98 @@
 #include "model/CullableModel.hpp"
 
 #include "model/OBJ.hpp"
+#include "yaml-cpp/yaml.h"
 
 namespace arterra {
 
-	CullableModel::CullableModel(std::string filepath)
+	CullableModel::CullableModel(std::string modelName)
 		: CullableModel()
 	{
-		Create(filepath);
+		Create(modelName);
 	}
 
-	bool CullableModel::Create(std::string filepath)
+	bool CullableModel::Create(std::string modelName)
 	{
-		// Load and get handle to the resource
-		auto resource = ResourceManager::Get().Load(filepath);
-		if (!resource) {
-			Logger::Get().Log(Logger::Warning, "Failed to load CullableModel '", filepath, "'");
+		// Load and get handle to the model resource
+		std::string modelPath = modelName + ".mobj";
+		std::string configPath = modelName + ".yaml";
+		auto modelResource = ResourceManager::Get().Load(modelPath);
+		if (!modelResource) {
+			Logger::Get().Log(Logger::Warning, "Failed to load CullableModel model'", modelName, "'");
 			return false;
 		}
 
-		// Create vectors for storing useful things
+		// Vectors for temporarily storing vertex data loaded from the model.
 		std::vector<float_t> vertices;
 		std::vector<float_t> normals;
 		std::vector<float_t> uvs;
 
 		{
-			// Get a handle to the resource data
-			auto resourceHandle = ResourceManager::Get().GetHandle(filepath);
+			// Get a handle to the model resource data
+			auto resourceHandle = ResourceManager::Get().GetHandle(modelPath);
 			// Parse the OBJ file
 			OBJ::Load(resourceHandle._resource->_data, vertices, uvs, normals);
 		}
 
-		// TODO - fix this eltritch horror of a ridiculous solution
+		// Parse in the yaml configuration file for the cullable model
+		auto configResource = ResourceManager::Get().Load(configPath);
+		if (!configResource) {
+			Logger::Get().Log(Logger::Warning, "Failed to load config for CullableModel '", modelName, "'");
+			return false;
+		}
+		
+		auto dataHandle = ResourceManager::Get().GetHandle(configPath);
+		std::string configSrc = std::string(dataHandle._resource->_data.begin(), dataHandle._resource->_data.end());
+		YAML::Node modelConfig = YAML::Load(configSrc);
+		if (!modelConfig["CullableIndicesData"]) {
+			Logger::Get().Log(Logger::Warning, "The CullableModel '", modelName,
+				"' config does not contain 'CullableIndicesData'");
+		}
 
-		_posVertices[0].insert(_posVertices[0].end(), vertices.begin() + 36, vertices.begin() + 45);
-		_posVertices[0].insert(_posVertices[0].end(), vertices.begin() + 90, vertices.begin() + 99);
-		_posVertices[1].insert(_posVertices[1].end(), vertices.begin() + 18, vertices.begin() + 27);
-		_posVertices[1].insert(_posVertices[1].end(), vertices.begin() + 72, vertices.begin() + 81);
-		_posVertices[2].insert(_posVertices[2].end(), vertices.begin(), vertices.begin() + 9);
-		_posVertices[2].insert(_posVertices[2].end(), vertices.begin() + 54, vertices.begin() + 63);
-		_posVertices[3].insert(_posVertices[3].end(), vertices.begin() + 27, vertices.begin() + 36);
-		_posVertices[3].insert(_posVertices[3].end(), vertices.begin() + 81, vertices.begin() + 90);
-		_posVertices[5].insert(_posVertices[5].end(), vertices.begin() + 45, vertices.begin() + 54);
-		_posVertices[5].insert(_posVertices[5].end(), vertices.begin() + 99, vertices.begin() + 108);
-		_posVertices[4].insert(_posVertices[4].end(), vertices.begin() + 9, vertices.begin() + 18);
-		_posVertices[4].insert(_posVertices[4].end(), vertices.begin() + 63, vertices.begin() + 72);
+		for (YAML::const_iterator dit = modelConfig["CullableIndicesData"].begin();
+			 dit != modelConfig["CullableIndicesData"].end(); dit++) {
+				 
+			std::string direction = dit->first.as<std::string>();
 
-		_texVertices[0].insert(_texVertices[0].end(), uvs.begin() + 24, uvs.begin() + 30);
-		_texVertices[0].insert(_texVertices[0].end(), uvs.begin() + 60, uvs.begin() + 66);
-		_texVertices[1].insert(_texVertices[1].end(), uvs.begin() + 12, uvs.begin() + 18);
-		_texVertices[1].insert(_texVertices[1].end(), uvs.begin() + 48, uvs.begin() + 54);
-		_texVertices[2].insert(_texVertices[2].end(), uvs.begin() + 0, uvs.begin() + 6);
-		_texVertices[2].insert(_texVertices[2].end(), uvs.begin() + 36, uvs.begin() + 42);
-		_texVertices[3].insert(_texVertices[3].end(), uvs.begin() + 18, uvs.begin() + 24);
-		_texVertices[3].insert(_texVertices[3].end(), uvs.begin() + 54, uvs.begin() + 60);
-		_texVertices[5].insert(_texVertices[5].end(), uvs.begin() + 30, uvs.begin() + 36);
-		_texVertices[5].insert(_texVertices[5].end(), uvs.begin() + 66, uvs.begin() + 72);
-		_texVertices[4].insert(_texVertices[4].end(), uvs.begin() + 6, uvs.begin() + 12);
-		_texVertices[4].insert(_texVertices[4].end(), uvs.begin() + 42, uvs.begin() + 48);
-
+			// Convert the parsed direction value to the equivalent integer.
+			int dir;
+			if (direction == "PosX") {
+				dir = 0;
+			}else if (direction == "NegX") {
+				dir = 1;
+			}else if (direction == "PosY") {
+				dir = 2;
+			}else if (direction == "NegY") {
+				dir = 3;
+			}else if (direction == "PosZ") {
+				dir = 4;
+			}else if (direction == "NegZ") {
+				dir = 5;
+			}else if (direction == "Always") {
+				dir = 6;
+			}
+			
+			// Iterate through all the indices for this direction.
+			for (YAML::const_iterator iit = dit->second.begin(); iit != dit->second.end(); iit++) {
+				// Multiple the indices by 3 since there are 3 floats for each indice.
+				int indiceGroupStart = iit->as<int>();
+				iit++;
+				int indiceGroupEnd = iit->as<int>();
+				
+				// Add the individual floats to the correct vertex array.
+				_posVertices[dir].insert(_posVertices[dir].end(), vertices.begin() + (indiceGroupStart * 3),
+					vertices.begin() + (indiceGroupEnd * 3) + 3);
+				
+				_texVertices[dir].insert(_texVertices[dir].end(), uvs.begin() + (indiceGroupStart * 2),
+					uvs.begin() + (indiceGroupEnd * 2) + 2);
+			}
+			
+		}
+		
 		return true;
 	}
 
-	std::vector<float_t> CullableModel::GetPosVertices(Direction direction) { return _posVertices[direction]; }
+	std::vector<float_t> CullableModel::GetPosVertices(Direction dir) { return _posVertices[dir]; }
 
-	std::vector<float_t> CullableModel::GetTexVertices(Direction direction) { return _texVertices[direction]; }
+	std::vector<float_t> CullableModel::GetTexVertices(Direction dir) { return _texVertices[dir]; }
 }

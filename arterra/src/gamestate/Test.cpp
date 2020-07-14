@@ -17,7 +17,7 @@ namespace arterra {
 			_shaderManager.UseShader("basic");
 
 			// Create cube model.
-			_cubeModel.Create("models/cube.mobj");
+			_blockModel.Create("models/Block");
 
 			_atlas.LoadTexture("textures/stone.png", "stone");
 			_atlas.LoadTexture("textures/grass_top.png", "grass_top");
@@ -31,11 +31,11 @@ namespace arterra {
 			auto sandTexture = _atlas.GetTexture("sand");
 			auto dirtTexture = _atlas.GetTexture("dirt");
 
-			_blockManager.AddBlock(BlockData { *stoneTexture, *stoneTexture, *stoneTexture, _cubeModel }, "stone");
+			_blockManager.AddBlock(BlockData { *stoneTexture, *stoneTexture, *stoneTexture, _blockModel }, "stone");
 			_blockManager.AddBlock(
-				BlockData { *grassTextureTop, *grassTextureSide, *dirtTexture, _cubeModel }, "grass");
-			_blockManager.AddBlock(BlockData { *dirtTexture, *dirtTexture, *dirtTexture, _cubeModel }, "dirt");
-			_blockManager.AddBlock(BlockData { *sandTexture, *sandTexture, *sandTexture, _cubeModel }, "sand");
+				BlockData { *grassTextureTop, *grassTextureSide, *dirtTexture, _blockModel }, "grass");
+			_blockManager.AddBlock(BlockData { *dirtTexture, *dirtTexture, *dirtTexture, _blockModel }, "dirt");
+			_blockManager.AddBlock(BlockData { *sandTexture, *sandTexture, *sandTexture, _blockModel }, "sand");
 
 			for (auto z = -12; z < 12; ++z) {
 				for (auto x = -12; x < 12; ++x) {

@@ -24,7 +24,7 @@ namespace arterra {
 
 		private:
 			float_t _timeToResourceUnload = 5.0f;
-			CullableModel _cubeModel;
+			CullableModel _blockModel;
 			World _world;
 
 			ChunkRenderer _chunkRenderer;
