@@ -61,6 +61,12 @@ namespace arterra {
 			auto uniform = GetUniform(uniformName.c_str());
 			glUniform1d(uniform, value);
 		}
+		
+		inline void SetUniform(std::string uniformName, glm::vec2 vector)
+		{
+			auto uniform = GetUniform(uniformName.c_str());
+			glUniform2fv(uniform, 1, glm::value_ptr(vector));
+		}
 
 		inline void SetUniform(std::string uniformName, glm::vec3 vector)
 		{

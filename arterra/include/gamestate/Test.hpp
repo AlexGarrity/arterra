@@ -8,6 +8,7 @@
 #include "renderer/GuiRenderer.hpp"
 #include "renderer/ShaderManager.hpp"
 #include "texture/TextureAtlas.hpp"
+#include "texture/Texture.hpp"
 #include "world/TerrainGenerator.hpp"
 #include "world/World.hpp"
 
@@ -41,6 +42,8 @@ namespace arterra {
 			
 			// Temporary gui
 			GuiElement _guiElement;
+			GuiElement _guiElement2;
+			TextureHandle _guiTexture;
 			
 		};
 

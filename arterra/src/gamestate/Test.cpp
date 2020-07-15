@@ -31,29 +31,43 @@ namespace arterra {
 			
 			// ===GUI===
 			std::vector<float_t> vPos = {
-				0.5f, 0.5f,
-				-0.5f, -0.5f,
-				0.5f, -0.5f,
-				-0.5f, 0.5f,
-				-0.5f, -0.5f,
-				0.5f, 0.5f
+				400.0f, 200.0f,
+				400.0f, 500.0f,
+				800.0f, 200.0f,
+				800.0f, 200.0f,
+				400.0f, 500.0f,
+				800.0f, 500.0f
+			};
+			std::vector<float_t> vPos2 = {
+				805.0f, 200.0f,
+				805.0f, 500.0f,
+				1100.0f, 200.0f,
+				1100.0f, 200.0f,
+				805.0f, 500.0f,
+				1100.0f, 500.0f
 			};
 			std::vector<float_t> vUV = {
-				1.0f, 1.0f,
+				0.0f, 0.0f,
+				0.0f, 1.0f,
 				1.0f, 0.0f,
-				0.0f, 0.0f,
-				1.0f, 1.0f,
-				0.0f, 0.0f,
-				0.0f, 1.0f
+				1.0f, 0.0f,
+				0.0f, 1.0f,
+				1.0f, 1.0f
 			};
+			
 			_guiElement = GuiElement{vPos, vUV};
 			_guiElement.SetShouldRender(true);
 			_guiRenderer.AddElement(&_guiElement);
+			_guiElement2 = GuiElement{vPos2, vUV};
+			_guiElement2.SetShouldRender(true);
+			_guiRenderer.AddElement(&_guiElement2);
 			
-			// Load the basic shader and use it
+			_guiTexture.Load("textures/gui.png");
+			
+			// Load the shaders.
 			_shaderManager.LoadShader("shaders/basic.frag", "shaders/basic.vert", "basic");
-			_shaderManager.LoadShader("shaders/basicColour.frag", "shaders/basicColour.vert", "gui");
-			_shaderManager.UseShader("basic");
+			_shaderManager.LoadShader("shaders/gui_sprite_simple.frag", "shaders/gui_sprite_simple.vert", "gui");
+			_shaderManager.LoadShader("shaders/gui_sprite_spliced.frag", "shaders/gui_sprite_spliced.vert", "gui-fancy");
 
 			// Create cube model.
 			_blockModel.Create("models/Block");
@@ -156,15 +170,16 @@ namespace arterra {
 			_shaderManager.ActiveProgram().SetUniform("viewProjection", _engine->GetCamera()->ViewProjection());
 			_shaderManager.ActiveProgram().SetUniform("fragmentColour", { 0.2f, 1.0f, 1.0f, 1.0f });
 			
-			
-			
 			_atlas.Bind();
 			//_shaderManager.ActiveProgram().SetUniform("fragmentTexture", 0);
 			_chunkRenderer.Render();
 			
 			_shaderManager.UseShader("gui");
+			_guiTexture.Bind();
+			_shaderManager.ActiveProgram().SetUniform("colourTint", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 			_shaderManager.ActiveProgram().SetUniform("viewProjection", _engine->GetCamera()->GuiProjection());
-			
+			//_shaderManager.ActiveProgram().SetUniform("u_dimensions", glm::vec2(400.0f/static_cast<float>(_engine->GetWindow()->GetWidth()), 300.0f/static_cast<float>(_engine->GetWindow()->GetHeight())));
+			//_shaderManager.ActiveProgram().SetUniform("u_border", 0.01f);
 			_guiRenderer.Render();
 
 			_engine->GetWindow()->Update(deltaTime);

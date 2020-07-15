@@ -86,6 +86,10 @@ namespace arterra {
 		SwapBuffers();
 		if (_event.type == sf::Event::Closed)
 			SetShouldClose(true);
+		if (_event.type == sf::Event::LostFocus)
+			SetLockCursor(false);
+		if (_event.type == sf::Event::GainedFocus)
+			SetLockCursor(true);
 		auto size = _window.getSize();
 		_width = size.x;
 		_height = size.y;

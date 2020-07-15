@@ -17,9 +17,9 @@ namespace arterra {
 	
 	void GuiElement::GenerateMesh() {
 		_posBuffer.Create(_posVertices, 2, GL_FLOAT);
-		//_texBuffer.Create(_uvVertices, 2, GL_FLOAT);
+		_texBuffer.Create(_uvVertices, 2, GL_FLOAT);
 		_vertexArray.AddBuffer(_posBuffer);
-		//_vertexArray.AddBuffer(_texBuffer);
+		_vertexArray.AddBuffer(_texBuffer);
 	}
 	
 	GuiRenderer::GuiRenderer(Renderer *renderer) {
