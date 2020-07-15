@@ -44,7 +44,6 @@ namespace arterra {
 		for (auto renderable : _renderables) {
 			if (renderable->ShouldRender()) {
 				renderable->Bind();
-				std::cout << "drawing " << renderable->GetVertexCount() << " vertices" << std::endl;
 				_renderer->DrawTriangles(renderable->GetVertexCount());
 			}		
 		}

@@ -47,12 +47,12 @@ namespace arterra {
 				1100.0f, 500.0f
 			};
 			std::vector<float_t> vUV = {
+				0.0f, 1.0f,
 				0.0f, 0.0f,
-				0.0f, 1.0f,
-				1.0f, 0.0f,
-				1.0f, 0.0f,
-				0.0f, 1.0f,
-				1.0f, 1.0f
+				1.0f, 1.0f,
+				1.0f, 1.0f,
+				0.0f, 0.0f,
+				1.0f, 0.0f
 			};
 			
 			_guiElement = GuiElement{vPos, vUV};
@@ -60,7 +60,7 @@ namespace arterra {
 			_guiRenderer.AddElement(&_guiElement);
 			_guiElement2 = GuiElement{vPos2, vUV};
 			_guiElement2.SetShouldRender(true);
-			_guiRenderer.AddElement(&_guiElement2);
+			//_guiRenderer.AddElement(&_guiElement2);
 			
 			_guiTexture.Load("textures/gui.png");
 			
@@ -174,12 +174,13 @@ namespace arterra {
 			//_shaderManager.ActiveProgram().SetUniform("fragmentTexture", 0);
 			_chunkRenderer.Render();
 			
-			_shaderManager.UseShader("gui");
+			_shaderManager.UseShader("gui-fancy");
 			_guiTexture.Bind();
-			_shaderManager.ActiveProgram().SetUniform("colourTint", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+			_shaderManager.ActiveProgram().SetUniform("colourTint", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 			_shaderManager.ActiveProgram().SetUniform("viewProjection", _engine->GetCamera()->GuiProjection());
-			//_shaderManager.ActiveProgram().SetUniform("u_dimensions", glm::vec2(400.0f/static_cast<float>(_engine->GetWindow()->GetWidth()), 300.0f/static_cast<float>(_engine->GetWindow()->GetHeight())));
-			//_shaderManager.ActiveProgram().SetUniform("u_border", 0.01f);
+			//_shaderManager.ActiveProgram().SetUniform("u_Pixelborder", glm::vec2(0.01f, 0.01333f));
+			_shaderManager.ActiveProgram().SetUniform("u_Pixelborder", glm::vec2(0.1f, 0.1333f));
+			_shaderManager.ActiveProgram().SetUniform("u_Textureborder", 0.3125f);
 			_guiRenderer.Render();
 
 			_engine->GetWindow()->Update(deltaTime);
