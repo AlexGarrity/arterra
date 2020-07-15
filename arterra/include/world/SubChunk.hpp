@@ -30,7 +30,10 @@ namespace arterra {
 		void SetBlockCS(int x, int y, int z, BlockData &data);
 		void DeleteBlockCS(int x, int y, int z);
 
+		void UpdateBorder(Direction borderDirection);
+
 		WorldPosition GetPosition();
+		int GetPositionRaw();
 		inline Chunk* GetChunk() { return _chunk; };
 
 		bool Update(float deltaTime);

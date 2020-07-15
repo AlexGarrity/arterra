@@ -57,11 +57,8 @@ namespace arterra {
 				}
 			}
 		}
-		for (auto& isc : out.GetSubChunks()) {
-			for (auto &b : isc.second.GetBlocks()) {
-				if (b) b->Update(0);
-			}
-		}
+		out.UpdateBlocks();
+		out.UpdateNeighbours();
 	}
 
 	void TerrainGenerator::GenerateBlock(int x, int y, int z, Block& block) {}

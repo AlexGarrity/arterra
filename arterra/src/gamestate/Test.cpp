@@ -37,8 +37,8 @@ namespace arterra {
 			_blockManager.AddBlock(BlockData { *dirtTexture, *dirtTexture, *dirtTexture, _cubeModel }, "dirt");
 			_blockManager.AddBlock(BlockData { *sandTexture, *sandTexture, *sandTexture, _cubeModel }, "sand");
 
-			for (auto z = 0; z < 1; ++z) {
-				for (auto x = 0; x < 1; ++x) {
+			for (auto z = -2; z < 1; ++z) {
+				for (auto x = -2; x < 1; ++x) {
 					auto chunk = _world.CreateChunkCS(x, z);
 					_terrainGenerator.GenerateChunk(*chunk, _blockManager);
 				}

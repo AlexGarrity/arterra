@@ -26,6 +26,13 @@ namespace arterra {
 		SubChunk* GetSubChunk(int y);
 		SubChunk* GetSubChunkCS(int y);
 
+		void UpdateNeighbours();
+		void UpdateBlocks();
+
+		void UpdateBorder(Direction borderDirection);
+		void UpdateSubChunkBorder(int y, Direction borderDirection);
+		void UpdateSubChunkBorderSC(int y, Direction borderDirection);
+
 		SubChunkMap& GetSubChunks();
 
 		WorldPosition GetPosition();

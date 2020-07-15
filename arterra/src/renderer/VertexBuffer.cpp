@@ -26,7 +26,7 @@ namespace arterra {
 		// Initialise the variables.
 		_count = count;
 		_type = type;
-		_vertexCount = data.size();
+		_vertexCount = data.size() / count;
 		// Calculate array size for setting buffer data.
 		auto typeSize = GetTypeSize(_type);
 		// Generate a new buffer for this vertex buffer.

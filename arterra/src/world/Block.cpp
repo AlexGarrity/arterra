@@ -70,15 +70,16 @@ namespace arterra {
 
 	std::array<Block*, 6> Block::GetNeighbours()
 	{
-		if (_position._y == 15)
-			printf("");
+		Block *b1, *b2, *b3, *b4, *b5, *b6;
+
 		auto pos = GetPosition();
-		auto b1 = _world->GetBlock(pos._x + 1, pos._y, pos._z);
-		auto b2 = _world->GetBlock(pos._x - 1, pos._y, pos._z);
-		auto b3 = _world->GetBlock(pos._x, pos._y + 1, pos._z);
-		auto b4 = _world->GetBlock(pos._x, pos._y - 1, pos._z);
-		auto b5 = _world->GetBlock(pos._x, pos._y, pos._z + 1);
-		auto b6 = _world->GetBlock(pos._x, pos._y, pos._z - 1);
+
+		b1 = _world->GetBlock(pos._x + 1, pos._y, pos._z);
+		b2 = _world->GetBlock(pos._x - 1, pos._y, pos._z);
+		b3 = _world->GetBlock(pos._x, pos._y + 1, pos._z);
+		b4 = _world->GetBlock(pos._x, pos._y - 1, pos._z);
+		b5 = _world->GetBlock(pos._x, pos._y, pos._z + 1);
+		b6 = _world->GetBlock(pos._x, pos._y, pos._z - 1);
 		return { b1, b2, b3, b4, b5, b6 };
 	}
 
