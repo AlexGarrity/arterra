@@ -86,30 +86,30 @@ namespace arterra {
 		std::array<int, 6> bounds = { 0, 0, 0, 0, 0, 0 };
 		switch (borderDirection) {
 			case Direction::PosX:
-				bounds = { 0, SIZE_X, 0, SIZE_Y, SIZE_Z, SIZE_Z };
+				bounds = { SIZE_X - 1, SIZE_X, 0, SIZE_Y, 0, SIZE_Z };
 				break;
 			case Direction::NegX:
-				bounds = { 0, SIZE_X, 0, SIZE_Y, 0, 0 };
+				bounds = { 0, 1, 0, SIZE_Y, 0, SIZE_Z };
 				break;
 			case Direction::PosY:
-				bounds = { 0, SIZE_X, SIZE_Y, SIZE_Y, 0, SIZE_Z };
+				bounds = { 0, SIZE_X, SIZE_Y - 1, SIZE_Y, 0, SIZE_Z };
 				break;
 			case Direction::NegY:
-				bounds = { 0, SIZE_X, 0, 0, 0, SIZE_Z };
+				bounds = { 0, SIZE_X, 0, 1, 0, SIZE_Z };
 				break;
 			case Direction::PosZ:
-				bounds = { SIZE_X, SIZE_X, 0, SIZE_Y, 0, SIZE_Z };
+				bounds = { 0, SIZE_X, 0, SIZE_Y, SIZE_Z - 1, SIZE_Z };
 				break;
 			case Direction::NegZ:
-				bounds = { 0, 0, 0, SIZE_Y, 0, SIZE_Z };
+				bounds = { 0, SIZE_X, 0, SIZE_Y, 0, 1 };
+
 				break;
 		}
 
 		for (auto y = bounds[LowerY]; y < bounds[UpperY]; ++y) {
 			for (auto z = bounds[LowerZ]; z < bounds[UpperZ]; ++z) {
 				for (auto x = bounds[LowerX]; x < bounds[UpperX]; ++x) {
-					auto pos = ResolveArrayPosition(x, y, z);
-					auto b = _blocks[pos];
+					auto b = GetBlockCS(x, y, z);
 					if (b)
 						b->Update(0);
 				}

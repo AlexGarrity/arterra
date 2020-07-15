@@ -29,9 +29,13 @@ namespace arterra {
 
 	SubChunk* World::GetSubChunk(int x, int y, int z)
 	{
-		auto cX = WorldToChunkSpace(x, SubChunk::SIZE_X);
-		auto cY = y / SubChunk::SIZE_Y;
-		auto cZ = WorldToChunkSpace(z, SubChunk::SIZE_Z);
+		int cX = WorldToChunkSpace(x, SubChunk::SIZE_X);
+		int cY;
+		if (y < 0)
+			cY = (y - SubChunk::SIZE_Y) / SubChunk::SIZE_Y;
+		else
+			cY = y / SubChunk::SIZE_Y;
+		int cZ = WorldToChunkSpace(z, SubChunk::SIZE_Z);
 
 		return GetSubChunkCS(cX, cY, cZ);
 	}
@@ -66,7 +70,7 @@ namespace arterra {
 		auto sc = GetSubChunk(x, y, z);
 		if (!sc)
 			return nullptr;
-		return sc->GetBlock(x,y,z);
+		return sc->GetBlock(x, y, z);
 	}
 
 	ChunkMap::iterator World::FindChunk(int x, int z)
