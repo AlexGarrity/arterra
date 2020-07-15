@@ -13,11 +13,12 @@ namespace arterra {
 		World();
 
 		Chunk* CreateChunk(int x, int y, int z);
-		Chunk* CreateChunk(int x, int z);
 		Chunk* GetChunk(int x, int y, int z);
-		Chunk* GetChunk(int x, int z);
-
 		SubChunk* GetSubChunk(int x, int y, int z);
+
+		Chunk* CreateChunkCS(int x, int z);
+		Chunk* GetChunkCS(int x, int z);
+		SubChunk* GetSubChunkCS(int x, int y, int z);
 
 		Block* GetBlock(int x, int y, int z);
 
@@ -26,6 +27,7 @@ namespace arterra {
 
 	private:
 		ChunkMap::iterator FindChunk(int x, int z);
+		ChunkMap::iterator FindChunkCS(int x, int z);
 		std::vector<SubChunk*> _modifiedSubChunks;
 
 		ChunkMap _chunks;

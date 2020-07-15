@@ -52,9 +52,9 @@ namespace arterra {
 			_blockManager.AddBlock(BlockData { *dirtTexture, *dirtTexture, *dirtTexture, _blockModel }, "dirt");
 			_blockManager.AddBlock(BlockData { *sandTexture, *sandTexture, *sandTexture, _blockModel }, "sand");
 
-			for (auto z = -12; z < 12; ++z) {
-				for (auto x = -12; x < 12; ++x) {
-					auto chunk = _world.CreateChunk(x, z);
+			for (auto z = -2; z < 2; ++z) {
+				for (auto x = -2; x < 2; ++x) {
+					auto chunk = _world.CreateChunkCS(x, z);
 					_terrainGenerator.GenerateChunk(*chunk, _blockManager);
 				}
 			}

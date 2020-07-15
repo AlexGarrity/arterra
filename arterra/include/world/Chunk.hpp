@@ -7,25 +7,32 @@
 
 namespace arterra {
 
-	using SubChunkMap = std::unordered_map<WorldPosition, SubChunk, WorldPositionHash>;
+	using SubChunkMap = std::unordered_map<int, SubChunk>;
 
 	class World;
 
 	class Chunk {
 	public:
-		static const size_t SIZE_X = 1;
-		static const size_t SIZE_Y = 64;
-		static const size_t SIZE_Z = 1;
-		static const size_t SIZE = SIZE_X * SIZE_Y * SIZE_Z;
-
 		Chunk() = default;
-		Chunk(int posX, int posY, int posZ, World *world);
+		Chunk(int posX, int posZ, World *world);
 		Chunk(const Chunk &other);
 
-		void CreateSubChunk(int x, int y, int z);
-		void CreateSubChunksToHeight(int x, int y, int z, int height);
+		void CreateSubChunk(int y);
+		void CreateSubChunksToHeight(int height);
+		
+		void CreateSubChunkCS(int y);
+		void CreateSubChunksToHeightCS(int height);
 
-		SubChunk* GetSubChunk(int x, int y, int z);
+		SubChunk* GetSubChunk(int y);
+		SubChunk* GetSubChunkCS(int y);
+
+		void UpdateNeighbours();
+		void UpdateBlocks();
+
+		void UpdateBorder(Direction borderDirection);
+		void UpdateSubChunkBorder(int y, Direction borderDirection);
+		void UpdateSubChunkBorderSC(int y, Direction borderDirection);
+
 		SubChunkMap& GetSubChunks();
 
 		WorldPosition GetPosition();
@@ -38,7 +45,7 @@ namespace arterra {
 
 		World *_world;
 
-		WorldPosition _position;
+		int _posX, _posZ;
 	};
 
 }

@@ -1,4 +1,5 @@
 #include "world/Block.hpp"
+
 #include "world/Chunk.hpp"
 #include "world/SubChunk.hpp"
 #include "world/World.hpp"
@@ -9,6 +10,7 @@ namespace arterra {
 		: _subChunk(other._subChunk)
 		, _position(other.GetPositionRaw())
 		, _blockData(other._blockData)
+		, _world(other._world)
 	{
 	}
 
@@ -17,6 +19,7 @@ namespace arterra {
 		, _subChunk(subChunk)
 		, _blockData(blockData)
 	{
+		_world = _subChunk->GetChunk()->GetWorld();
 	}
 
 	void Block::operator=(const Block& other)
@@ -24,6 +27,7 @@ namespace arterra {
 		_position = other._position;
 		_subChunk = other._subChunk;
 		_blockData = other._blockData;
+		_world = other._world;
 	}
 
 	WorldPosition Block::GetPosition() const
@@ -53,7 +57,7 @@ namespace arterra {
 		}
 	}
 
-	void Block::UpdateVisiblity(std::array<Block*, 6> &neighbours)
+	void Block::UpdateVisiblity(std::array<Block*, 6>& neighbours)
 	{
 		_visible = false;
 		for (auto i = 0; i < 6; ++i) {
@@ -66,14 +70,23 @@ namespace arterra {
 
 	std::array<Block*, 6> Block::GetNeighbours()
 	{
-		return { _subChunk->GetBlock(_position._x + 1, _position._y, _position._z),
-			_subChunk->GetBlock(_position._x - 1, _position._y, _position._z),
-			_subChunk->GetBlock(_position._x, _position._y + 1, _position._z),
-			_subChunk->GetBlock(_position._x, _position._y - 1, _position._z),
-			_subChunk->GetBlock(_position._x, _position._y, _position._z + 1),
-			_subChunk->GetBlock(_position._x, _position._y, _position._z - 1) };
+		Block *b1, *b2, *b3, *b4, *b5, *b6;
+
+		auto pos = GetPosition();
+
+		b1 = _world->GetBlock(pos._x + 1, pos._y, pos._z);
+		b2 = _world->GetBlock(pos._x - 1, pos._y, pos._z);
+		b3 = _world->GetBlock(pos._x, pos._y + 1, pos._z);
+		b4 = _world->GetBlock(pos._x, pos._y - 1, pos._z);
+		b5 = _world->GetBlock(pos._x, pos._y, pos._z + 1);
+		b6 = _world->GetBlock(pos._x, pos._y, pos._z - 1);
+		return { b1, b2, b3, b4, b5, b6 };
 	}
 
-	void Block::SetParent(SubChunk* subChunk) { _subChunk = subChunk; }
+	void Block::SetParent(SubChunk* subChunk)
+	{
+		_subChunk = subChunk;
+		_world = _subChunk->GetChunk()->GetWorld();
+	}
 
 }

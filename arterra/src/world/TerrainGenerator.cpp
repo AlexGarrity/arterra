@@ -14,8 +14,8 @@ namespace arterra {
 		std::vector<uint16_t> _heightMap;
 		_heightMap.resize(256);
 		auto cp = out.GetPosition();
-		for (auto z = 0; z < SubChunk::SIZE_Z * Chunk::SIZE_Z; ++z) {
-			for (auto x = 0; x < SubChunk::SIZE_X * Chunk::SIZE_X; ++x) {
+		for (auto z = 0; z < SubChunk::SIZE_Z; ++z) {
+			for (auto x = 0; x < SubChunk::SIZE_X; ++x) {
 				auto fX = static_cast<float>(x + cp._x + seedX) / 64.0f;
 				auto fZ = static_cast<float>(z + cp._z + seedZ) / 64.0f;
 				float g1 = glm::simplex(glm::vec2(fX, fZ)) * 0.0625f;
@@ -23,7 +23,7 @@ namespace arterra {
 				float g3 = glm::simplex(glm::vec2(fX * 0.125f, fZ * 0.125f)) * 0.5f;
 				float go = g1 + g2 + g3 + 1.0f;
 				uint16_t h = static_cast<uint16_t>(go * 64.0f);
-				_heightMap[x + (SubChunk::SIZE_X * Chunk::SIZE_X * z)] = h;
+				_heightMap[x + z * SubChunk::SIZE_X] = h;
 			}
 		}
 
@@ -33,7 +33,7 @@ namespace arterra {
 				largestHeight = x;
 		}
 
-		out.CreateSubChunksToHeight(0, 0, 0, largestHeight);
+		out.CreateSubChunksToHeight(largestHeight);
 
 		auto grassBlock = blockManager.GetBlock("grass");
 		auto dirtBlock = blockManager.GetBlock("dirt");
@@ -48,19 +48,17 @@ namespace arterra {
 					auto dY = std::max<int>(std::min<int>(height - pos._y, SubChunk::SIZE_Y), 0);
 					for (auto y = 0; y < dY; ++y) {
 						if (pos._y + y < height - 3)
-							sc.SetBlock(x, y, z, *stoneBlock);
+							sc.SetBlockCS(x, y, z, *stoneBlock);
 						else if (pos._y + y < height - 1)
-							sc.SetBlock(x, y, z, *dirtBlock);
+							sc.SetBlockCS(x, y, z, *dirtBlock);
 						else
-							sc.SetBlock(x, y, z, *grassBlock);
+							sc.SetBlockCS(x, y, z, *grassBlock);
 					}
 				}
 			}
-			for (auto& b : sc.GetBlocks()) {
-				if (b)
-					b->Update(0);
-			}
 		}
+		out.UpdateBlocks();
+		out.UpdateNeighbours();
 	}
 
 	void TerrainGenerator::GenerateBlock(int x, int y, int z, Block& block) {}
