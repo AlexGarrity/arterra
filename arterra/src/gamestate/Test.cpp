@@ -37,9 +37,9 @@ namespace arterra {
 			_blockManager.AddBlock(BlockData { *dirtTexture, *dirtTexture, *dirtTexture, _cubeModel }, "dirt");
 			_blockManager.AddBlock(BlockData { *sandTexture, *sandTexture, *sandTexture, _cubeModel }, "sand");
 
-			for (auto z = -12; z < 12; ++z) {
-				for (auto x = -12; x < 12; ++x) {
-					auto chunk = _world.CreateChunk(x, z);
+			for (auto z = 0; z < 1; ++z) {
+				for (auto x = 0; x < 1; ++x) {
+					auto chunk = _world.CreateChunkCS(x, z);
 					_terrainGenerator.GenerateChunk(*chunk, _blockManager);
 				}
 			}
@@ -47,7 +47,10 @@ namespace arterra {
 
 		void Test::Input(float_t deltaTime)
 		{
-			if (_engine->GetWindow()->ShouldClose()) _engine->SetShouldExit(true);
+			if (_engine->GetWindow()->GetEvent().type == sf::Event::Closed)
+				_engine->SetShouldExit(true);
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+				_engine->SetShouldExit(true);
 		}
 
 		void Test::Update(float_t deltaTime)

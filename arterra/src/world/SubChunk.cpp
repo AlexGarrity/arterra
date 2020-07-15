@@ -13,8 +13,8 @@ namespace arterra {
 		return x + (SubChunk::SIZE_X * (z + (SubChunk::SIZE_Z * y)));
 	}
 
-	SubChunk::SubChunk(int posX, int posY, int posZ, Chunk* parent)
-		: _position { posX, posY, posZ }
+	SubChunk::SubChunk(int posY, Chunk* parent)
+		: _position { posY }
 		, _chunk { parent }
 	{
 		_blocks.fill(nullptr);
@@ -35,35 +35,40 @@ namespace arterra {
 
 	std::array<Block*, SubChunk::SIZE>& SubChunk::GetBlocks() { return _blocks; }
 
-	Block* SubChunk::GetBlock(int x, int y, int z) const
+	Block* SubChunk::GetBlock(int x, int y, int z) const { return GetBlockCS(x % 16, y % 16, z % 16); }
+
+	void SubChunk::SetBlock(int x, int y, int z, BlockData& data) { SetBlockCS(x % 16, y % 16, z % 16, data); }
+
+	void SubChunk::DeleteBlock(int x, int y, int z) { DeleteBlockCS(x % 16, y % 16, z % 16); }
+
+	Block* SubChunk::GetBlockCS(int x, int y, int z) const
+	{
+		auto pos = ResolveArrayPosition(x, y, z);
+		return (pos == -1) ? nullptr : _blocks[pos];
+	}
+
+	void SubChunk::SetBlockCS(int x, int y, int z, BlockData& data)
 	{
 		auto pos = ResolveArrayPosition(x, y, z);
 		if (pos == -1)
-			return nullptr;
-		return _blocks[pos];
+			return;
+		if (!_blocks[pos])
+			_blocks[pos] = new Block(x, y, z, this, data);
+		else
+			*_blocks[pos] = Block(x, y, z, this, data);
 	}
 
-	void SubChunk::SetBlock(int x, int y, int z, BlockData &data)
-	{
+	void SubChunk::DeleteBlockCS(int x, int y, int z) {
 		auto pos = ResolveArrayPosition(x, y, z);
-		if (_blocks[pos])
-			delete _blocks[pos];
-		_blocks[pos] = new Block(x, y, z, this, data);
-		_updated = true;
-	}
-
-	void SubChunk::DeleteBlock(int x, int y, int z)
-	{
-		auto pos = ResolveArrayPosition(x, y, z);
+		if (pos == -1)
+			return;
 		delete _blocks[pos];
-		_updated = true;
 	}
 
 	WorldPosition SubChunk::GetPosition()
 	{
 		auto cp = _chunk->GetPosition();
-		return { (_position._x * static_cast<int>(SIZE_X)) + cp._x,
-			(_position._y * static_cast<int>(SIZE_Y)) + cp._y, (_position._z * static_cast<int>(SIZE_Z)) + cp._z };
+		return { cp._x, (_position * static_cast<int>(SIZE_Y)), cp._z };
 	}
 
 	bool SubChunk::Update(float deltaTime)

@@ -10,21 +10,25 @@ namespace arterra {
 	class SubChunk {
 
 	public:
-		static const size_t SIZE_X = 16;
-		static const size_t SIZE_Y = 16;
-		static const size_t SIZE_Z = 16;
-		static const size_t SIZE = SIZE_X * SIZE_Y * SIZE_Z;
+		static const int SIZE_X = 16;
+		static const int SIZE_Y = 16;
+		static const int SIZE_Z = 16;
+		static const int SIZE = SIZE_X * SIZE_Y * SIZE_Z;
 
-		SubChunk(int posX, int posY, int posZ, Chunk* parent);
+		SubChunk(int posY, Chunk* parent);
 		SubChunk(const SubChunk& other);
 		~SubChunk() {}
 		void SetParent(Chunk* chunk);
 
 		std::array<Block*, SIZE>& GetBlocks();
-		Block* GetBlock(int x, int y, int z) const;
 
+		Block* GetBlock(int x, int y, int z) const;
 		void SetBlock(int x, int y, int z, BlockData &data);
 		void DeleteBlock(int x, int y, int z);
+
+		Block* GetBlockCS(int x, int y, int z) const;
+		void SetBlockCS(int x, int y, int z, BlockData &data);
+		void DeleteBlockCS(int x, int y, int z);
 
 		WorldPosition GetPosition();
 		inline Chunk* GetChunk() { return _chunk; };
@@ -32,7 +36,7 @@ namespace arterra {
 		bool Update(float deltaTime);
 
 	private:
-		WorldPosition _position;
+		int _position;
 		Chunk* _chunk;
 		bool _updated = true;
 

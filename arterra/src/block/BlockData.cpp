@@ -25,7 +25,7 @@ namespace arterra {
 		switch (direction) {
 			case Direction::PosY:
 				return _topTexture;
-			case Direction::NegX:
+			case Direction::NegY:
 				return _bottomTexture;
 			default:
 				return _sideTexture;

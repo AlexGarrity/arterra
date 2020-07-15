@@ -6,6 +6,7 @@
 
 namespace arterra {
 
+	class World;
 	class SubChunk;
 
 	class Block {
@@ -36,6 +37,7 @@ namespace arterra {
 
 		BlockData& _blockData;
 		SubChunk* _subChunk;
+		World* _world;
 		WorldPosition _position;
 	};
 

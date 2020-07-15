@@ -4,40 +4,61 @@ namespace arterra {
 
 	World::World() { _modifiedSubChunks.reserve(128); }
 
-	Chunk* World::CreateChunk(int x, int y, int z)
+	int WorldToChunkSpace(int v, int axis)
 	{
-		return CreateChunk(x / (Chunk::SIZE_X * SubChunk::SIZE_X), z / (Chunk::SIZE_Z * SubChunk::SIZE_Z));
+		if (v < 0)
+			return ((v + 1) / axis) - 1;
+		return v / axis;
 	}
 
-	Chunk* World::CreateChunk(int x, int z)
+	Chunk* World::CreateChunk(int x, int y, int z)
 	{
-		auto chunk = FindChunk(x, z);
-		if (chunk != _chunks.end())
-			return &chunk->second;
-		auto pos = WorldPosition(x, 0, z);
-		_chunks.emplace(std::make_pair(pos, Chunk { pos._x, pos._y, pos._z, this }));
-		return GetChunk(x, z);
+		auto cX = WorldToChunkSpace(x, SubChunk::SIZE_X);
+		auto cZ = WorldToChunkSpace(z, SubChunk::SIZE_Z);
+
+		return CreateChunkCS(cX, cZ);
 	}
 
 	Chunk* World::GetChunk(int x, int y, int z)
 	{
-		return GetChunk(x / (Chunk::SIZE_X * SubChunk::SIZE_X), z / (Chunk::SIZE_Z * SubChunk::SIZE_Z));
+		auto cX = WorldToChunkSpace(x, SubChunk::SIZE_X);
+		auto cZ = WorldToChunkSpace(z, SubChunk::SIZE_Z);
+
+		return GetChunkCS(cX, cZ);
 	}
 
-	Chunk* World::GetChunk(int x, int z)
+	SubChunk* World::GetSubChunk(int x, int y, int z)
 	{
-		auto chunk = FindChunk(x, z);
+		auto cX = WorldToChunkSpace(x, SubChunk::SIZE_X);
+		auto cY = y / SubChunk::SIZE_Y;
+		auto cZ = WorldToChunkSpace(z, SubChunk::SIZE_Z);
+
+		return GetSubChunkCS(cX, cY, cZ);
+	}
+
+	Chunk* World::CreateChunkCS(int x, int z)
+	{
+		auto chunk = FindChunkCS(x, z);
+		if (chunk != _chunks.end())
+			return &chunk->second;
+		_chunks.emplace(WorldPosition { x, 0, z }, Chunk { x, z, this });
+		return GetChunkCS(x, z);
+	}
+
+	Chunk* World::GetChunkCS(int x, int z)
+	{
+		auto chunk = FindChunkCS(x, z);
 		if (chunk == _chunks.end())
 			return nullptr;
 		return &chunk->second;
 	}
 
-	SubChunk* World::GetSubChunk(int x, int y, int z)
+	SubChunk* World::GetSubChunkCS(int x, int y, int z)
 	{
-		auto chunk = GetChunk(x, z);
+		auto chunk = GetChunkCS(x, z);
 		if (!chunk)
 			return nullptr;
-		return chunk->GetSubChunk(x, y, z);
+		return chunk->GetSubChunkCS(y);
 	}
 
 	Block* World::GetBlock(int x, int y, int z)
@@ -45,10 +66,19 @@ namespace arterra {
 		auto sc = GetSubChunk(x, y, z);
 		if (!sc)
 			return nullptr;
-		return sc->GetBlock(x % SubChunk::SIZE_X, y % SubChunk::SIZE_Y, z % SubChunk::SIZE_Z);
+		return sc->GetBlock(x,y,z);
 	}
 
 	ChunkMap::iterator World::FindChunk(int x, int z)
+	{
+		auto cX = WorldToChunkSpace(x, SubChunk::SIZE_X);
+		auto cZ = WorldToChunkSpace(z, SubChunk::SIZE_Z);
+		auto bPos = WorldPosition { cX, 0, cZ };
+		auto pos = _chunks.find(bPos);
+		return pos;
+	}
+
+	ChunkMap::iterator World::FindChunkCS(int x, int z)
 	{
 		auto bPos = WorldPosition { x, 0, z };
 		auto pos = _chunks.find(bPos);
