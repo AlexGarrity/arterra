@@ -41,6 +41,7 @@ namespace arterra {
 
 		// Get the view projection
 		inline glm::mat4 ViewProjection() const { return _viewProjection; }
+		inline glm::mat4 GuiProjection() const { return _guiProjection; }
 		inline ViewFrustum& GetViewFrustum() { return _viewFrustum; }
 		
 		inline Transform& GetTransform() { return _transform; }
@@ -54,6 +55,9 @@ namespace arterra {
 
 		Transform _transform;
 		ViewFrustum _viewFrustum;
+		
+		glm::mat4 _guiProjection;
+		
 	};
 
 };

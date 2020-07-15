@@ -8,11 +8,14 @@ namespace arterra {
 			: Base(engine)
 			, _atlas { 256, 256 }
 			, _chunkRenderer{engine->GetRenderer()}
+			, _guiRenderer{engine->GetRenderer()}
 		{
+			
 			_engine->GetWindow()->SetVsync(true);
 			_engine->GetWindow()->SetLockCursor(true);
 			_engine->GetWindow()->SetClearColour(0.6f, 0.8f, 1.0f, 1.0f);
 			
+			// ===Inputs===
 			_engine->GetInput()->RegisterKeyBind("quit", sf::Keyboard::Escape);
 			// Set up player control keybinds.
 			_engine->GetInput()->RegisterKeyBind("forward", sf::Keyboard::W);
@@ -26,9 +29,30 @@ namespace arterra {
 			_engine->GetInput()->RegisterMouseBind("rot-left", sf::Mouse::Button::Left);
 			_engine->GetInput()->RegisterMouseBind("rot-right", sf::Mouse::Button::Right);
 			
+			// ===GUI===
+			std::vector<float_t> vPos = {
+				0.5f, 0.5f,
+				-0.5f, -0.5f,
+				0.5f, -0.5f,
+				-0.5f, 0.5f,
+				-0.5f, -0.5f,
+				0.5f, 0.5f
+			};
+			std::vector<float_t> vUV = {
+				1.0f, 1.0f,
+				1.0f, 0.0f,
+				0.0f, 0.0f,
+				1.0f, 1.0f,
+				0.0f, 0.0f,
+				0.0f, 1.0f
+			};
+			_guiElement = GuiElement{vPos, vUV};
+			_guiElement.SetShouldRender(true);
+			_guiRenderer.AddElement(&_guiElement);
 			
 			// Load the basic shader and use it
 			_shaderManager.LoadShader("shaders/basic.frag", "shaders/basic.vert", "basic");
+			_shaderManager.LoadShader("shaders/basicColour.frag", "shaders/basicColour.vert", "gui");
 			_shaderManager.UseShader("basic");
 
 			// Create cube model.
@@ -52,8 +76,8 @@ namespace arterra {
 			_blockManager.AddBlock(BlockData { *dirtTexture, *dirtTexture, *dirtTexture, _blockModel }, "dirt");
 			_blockManager.AddBlock(BlockData { *sandTexture, *sandTexture, *sandTexture, _blockModel }, "sand");
 
-			for (auto z = -12; z < 12; ++z) {
-				for (auto x = -12; x < 12; ++x) {
+			for (auto z = -1; z < 1; ++z) {
+				for (auto x = -1; x < 1; ++x) {
 					auto chunk = _world.CreateChunk(x, z);
 					_terrainGenerator.GenerateChunk(*chunk, _blockManager);
 				}
@@ -103,10 +127,7 @@ namespace arterra {
 		{
 			_engine->GetCamera()->Update(*_engine->GetWindow(), deltaTime);
 
-			// Set the camera view projection so the world renders in perspective
-			_shaderManager.ActiveProgram().SetUniform("viewProjection", _engine->GetCamera()->ViewProjection());
-			_shaderManager.ActiveProgram().SetUniform("fragmentColour", { 0.2f, 1.0f, 1.0f, 1.0f });
-
+			
 			auto wX = _engine->GetWindow()->GetWidth();
 			auto wY = _engine->GetWindow()->GetHeight();
 
@@ -115,6 +136,7 @@ namespace arterra {
 			_world.Update(deltaTime);
 			_chunkRenderer.UpdateSubChunks(_world.GetModifiedSubChunks());
 			_chunkRenderer.CullRenderables(*_engine->GetCamera());
+			// TODO: guirenderer.updateelements(uimanager.getmodifiedelements)
 
 			// Every 5 seconds, perform garbage collection
 			_timeToResourceUnload -= deltaTime;
@@ -128,12 +150,22 @@ namespace arterra {
 		{
 			// Clear the window
 			_engine->GetWindow()->Clear();
-
+			
+			// Set the camera view projection so the world renders in perspective
 			_shaderManager.UseShader("basic");
+			_shaderManager.ActiveProgram().SetUniform("viewProjection", _engine->GetCamera()->ViewProjection());
+			_shaderManager.ActiveProgram().SetUniform("fragmentColour", { 0.2f, 1.0f, 1.0f, 1.0f });
+			
+			
+			
 			_atlas.Bind();
 			//_shaderManager.ActiveProgram().SetUniform("fragmentTexture", 0);
-
 			_chunkRenderer.Render();
+			
+			_shaderManager.UseShader("gui");
+			_shaderManager.ActiveProgram().SetUniform("viewProjection", _engine->GetCamera()->GuiProjection());
+			
+			_guiRenderer.Render();
 
 			_engine->GetWindow()->Update(deltaTime);
 		}

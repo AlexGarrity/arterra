@@ -31,7 +31,7 @@ namespace arterra {
 	{
 		Logger::Get().Log(Logger::Debug, "Beginning main engine loop");
 		while (!_shouldExit) {
-			_camera->Update(*_window, _time.GetDeltaTime());
+			//_camera->Update(*_window, _time.GetDeltaTime());
 			_input->Update(_time.GetDeltaTime());
 
 			auto currentState = GetState();
