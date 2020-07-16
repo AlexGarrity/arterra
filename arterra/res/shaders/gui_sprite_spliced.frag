@@ -19,8 +19,14 @@ float isInBorder(float coord, float pixelBorder) {
     }else if (coord > (1-pixelBorder)) {
         float percent = 1 - ((pixelBorder - (1-coord)) / pixelBorder);
         return u_Textureborder * percent;
-    }else {
-        return coord;
+    }else if (coord < 0.5) {
+        float stretchLength = 0.5-pixelBorder;
+        float percent = (coord-pixelBorder) * (1/stretchLength);
+        return ((stretchLength * percent)*0.5) + u_Textureborder;
+    }else if (coord > 0.5) {
+        float stretchLength = 0.5-pixelBorder;
+        float percent = (coord-0.5) * (1/stretchLength);
+        return 0.5+((0.5-u_Textureborder) * percent);
     }
 }
 
