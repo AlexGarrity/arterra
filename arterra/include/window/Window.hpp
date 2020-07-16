@@ -29,8 +29,6 @@ namespace arterra {
 		void Clear();
 		// Turn vsync on / off
 		void SetVsync(bool vsync);
-		// Lock/unlock the cursor to the window
-		void SetLockCursor(bool lock);
 		// Set the window to close
 		void SetShouldClose(bool shouldClose);
 		// Helper for updating
@@ -39,6 +37,8 @@ namespace arterra {
 		// Inline const getters
 		inline uint32_t GetWidth() const { return _width; }
 		inline uint32_t GetHeight() const { return _height; }
+		inline sf::Vector2u GetSize() const { return _window.getSize(); }
+		inline sf::Vector2i GetPosition() const { return _window.getPosition(); }
 		inline bool IsVsyncEnabled() const { return _vsyncEnabled; }
 		inline std::string GetTitle() const { return _title; }
 
@@ -58,7 +58,6 @@ namespace arterra {
 		// Window options.
 		bool _vsyncEnabled { true };
 		bool _shouldClose { false };
-		bool _cursorLocked { false };
 	};
 
 }

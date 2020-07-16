@@ -31,6 +31,12 @@ namespace arterra {
 		MouseBindData PollMouseBind(const std::string identifier);
 		// Polling methods for mouse axis.
 		MouseAxisData PollMouseAxis(MouseAxis axis);
+
+		// Set the sensitivity of a mouse axis, where sensitivity is a percentage as an integer
+		void SetMouseSensitivity(MouseAxis axis, float_t sensitivity);
+
+		// Lock/unlock the cursor to the window
+		void SetLockCursor(bool lock);
 		
 	private:
 		// List of current keybinds
@@ -39,7 +45,9 @@ namespace arterra {
 		std::unordered_map<std::string, MouseBind> _mouseBinds;
 		
 		// Stores the mouse movement per frame.
-		sf::Vector2i _mouseDelta { 0, 0 };
+		sf::Vector2f _mouseDelta { 0, 0 };
+		bool _cursorLocked { false };
+		sf::Vector2f _inputSensitivity { 100.0f, 100.0f };
 		
 		sf::Event *_event;
 		Window* _window;

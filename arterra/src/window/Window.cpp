@@ -71,13 +71,6 @@ namespace arterra {
 		_window.setVerticalSyncEnabled(vsync);
 	}
 
-	void Window::SetLockCursor(bool lock)
-	{
-		_cursorLocked = lock;
-		(_cursorLocked) ? _window.setMouseCursorVisible(false) : _window.setMouseCursorVisible(true);
-		(_cursorLocked) ? _window.setMouseCursorGrabbed(true) : _window.setMouseCursorGrabbed(false);
-	}
-
 	void Window::SetShouldClose(bool shouldClose) { _shouldClose = shouldClose; }
 
 	void Window::Update(float_t deltaTime)
@@ -86,19 +79,8 @@ namespace arterra {
 		SwapBuffers();
 		if (_event.type == sf::Event::Closed)
 			SetShouldClose(true);
-		if (_event.type == sf::Event::LostFocus)
-			SetLockCursor(false);
-		if (_event.type == sf::Event::GainedFocus)
-			SetLockCursor(true);
 		auto size = _window.getSize();
 		_width = size.x;
 		_height = size.y;
-
-		// Re-centre cursor if it's locked.
-		if (_cursorLocked) {
-			sf::Mouse::setPosition(sf::Vector2i(_width / 2, _height / 2), _window);
-		}
-		
-		
 	}
 }

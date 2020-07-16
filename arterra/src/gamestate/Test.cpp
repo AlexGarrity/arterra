@@ -12,7 +12,7 @@ namespace arterra {
 		{
 			
 			_engine->GetWindow()->SetVsync(true);
-			_engine->GetWindow()->SetLockCursor(true);
+			_engine->GetInput()->SetLockCursor(true);
 			_engine->GetWindow()->SetClearColour(0.6f, 0.8f, 1.0f, 1.0f);
 			
 			// ===Inputs===
@@ -102,7 +102,7 @@ namespace arterra {
 		{
 			Transform& cameraTransform = _engine->GetCamera()->GetTransform();
 			_speed = deltaTime * 16.0f;
-			_rotSpeed = deltaTime * 3.0f;
+			_rotSpeed = deltaTime * 30.0f;
 			
 			float_t aa = _engine->GetInput()->PollMouseAxis(MouseAxis::Horizontal)._delta;
 			
