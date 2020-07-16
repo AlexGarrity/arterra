@@ -7,7 +7,8 @@
 #include "renderer/ChunkRenderer.hpp"
 #include "renderer/GuiRenderer.hpp"
 #include "renderer/ShaderManager.hpp"
-#include "ui/UIElement.hpp"
+#include "ui/Element.hpp"
+#include "ui/Material.hpp"
 #include "texture/TextureAtlas.hpp"
 #include "texture/Texture.hpp"
 #include "world/TerrainGenerator.hpp"
@@ -43,7 +44,13 @@ namespace arterra {
 			float_t _rotSpeed = glm::radians(15.0f);
 			
 			// Temporary gui
-			UIElement _element1;
+			UI::Element _element1;
+			UI::Element _element2;
+			UI::Element _element3;
+			//UI::Element _element2;
+			UI::Material _mat1;
+			UI::Material _mat2;
+			UI::Material _mat3;
 			AtlasTexture* _guiTexture;
 			
 		};

@@ -12,14 +12,17 @@ uniform vec4 u_ColourTint;
 uniform int u_DebugMode;
 
 // Definition for the thickness of the border
-// as shown on screen (in pixels)
+// as shown on screen (in pixels relative to the equivalent dimension)
+// E.g. sprite width = 500, pixelBorder = 50, pixelBorder.x = 50/500 = 0.1
 uniform vec2 u_Pixelborder;
 
 // Definition for the thickness of the border 
-// as a proportion of texture (in pixels)
+// as a proportion of the texture (in pixels)
+// E.g. texture width = 16, pixel border with = 5, textureBorder.x = 5/16 = 0.3125
 uniform float u_Textureborder;
 
 // Texture x, y, width, height info in atlas-space
+// x: left-most point, y: bottom-most point
 uniform vec4 u_TextureCoords;
 
 // Converts coordinates from atlas space to 0-1 space, or vice-versa

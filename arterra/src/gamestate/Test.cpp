@@ -9,7 +9,7 @@ namespace arterra {
 			, _atlas { 256, 256 }
 			, _guiAtlas { 256, 256 }
 			, _chunkRenderer{engine->GetRenderer()}
-			, _guiRenderer{engine->GetRenderer()}
+			, _guiRenderer{*(engine->GetRenderer()), _shaderManager}
 		{
 			
 			_engine->GetWindow()->SetVsync(true);
@@ -33,13 +33,70 @@ namespace arterra {
 			// ===GUI===
 			_guiAtlas.LoadTexture("textures/gui.png", "gui");
 			_guiTexture = _guiAtlas.GetTexture("gui");
+
+			UI::ShaderParameter p1 ( "u_ColourTint", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), UI::ShaderParameter::Type::Vec4 );
+			UI::ShaderParameter p2 ( "u_ViewProjection", _engine->GetCamera()->GuiProjection(), UI::ShaderParameter::Type::Mat4 );
+			UI::ShaderParameter p3 ( "u_Pixelborder", glm::vec2(0.1f, 0.1333f), UI::ShaderParameter::Type::Vec2 );
+			UI::ShaderParameter p4 ( "u_Textureborder", 0.3125f, UI::ShaderParameter::Type::Float );
+			UI::ShaderParameter p5 ( "u_DebugMode", 0, UI::ShaderParameter::Type::Int );
+			UI::ShaderParameter p6 ( "u_TextureCoords", glm::vec4(_guiTexture->_x, _guiTexture->_y,
+					_guiTexture->_width, _guiTexture->_height), UI::ShaderParameter::Type::Vec4 );
 			
-			_element1 = UIElement ( 400, 300, glm::vec2(100.0f, 100.0f), UIElementAnchor::BottomLeft, _guiTexture);
+			_mat1 = UI::Material { "gui-fancy" };
+			_mat1.AddParameter(p1);
+			_mat1.AddParameter(p2);
+			_mat1.AddParameter(p3);
+			_mat1.AddParameter(p4);
+			_mat1.AddParameter(p5);
+			_mat1.AddParameter(p6);
 			
-			_element1.GetGUIElement()->SetShouldRender(true);
-			_guiRenderer.AddElement(_element1.GetGUIElement());
+			_element1 = UI::Element { 400, 300, glm::vec2(100.0f, 100.0f), UI::ElementAnchor::BottomLeft,
+				_guiTexture, _mat1 };
+			//_element2 = UI::Element ( 200, 200, glm::vec2(800.0f, 500.0f), UI::ElementAnchor::BottomLeft, _guiTexture);
+			
+			_guiRenderer.AddElement(&_element1);
 			
 			
+			UI::ShaderParameter pp1 ( "u_ColourTint", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), UI::ShaderParameter::Type::Vec4 );
+			UI::ShaderParameter pp2 ( "u_ViewProjection", _engine->GetCamera()->GuiProjection(), UI::ShaderParameter::Type::Mat4 );
+			UI::ShaderParameter pp3 ( "u_Pixelborder", glm::vec2(0.1111f, 0.1111f), UI::ShaderParameter::Type::Vec2 );
+			UI::ShaderParameter pp4 ( "u_Textureborder", 0.3125f, UI::ShaderParameter::Type::Float );
+			UI::ShaderParameter pp5 ( "u_DebugMode", 0, UI::ShaderParameter::Type::Int );
+			UI::ShaderParameter pp6 ( "u_TextureCoords", glm::vec4(_guiTexture->_x, _guiTexture->_y,
+					_guiTexture->_width, _guiTexture->_height), UI::ShaderParameter::Type::Vec4 );
+			
+			_mat2 = UI::Material { "gui-fancy" };
+			_mat2.AddParameter(pp1);
+			_mat2.AddParameter(pp2);
+			_mat2.AddParameter(pp3);
+			_mat2.AddParameter(pp4);
+			_mat2.AddParameter(pp5);
+			_mat2.AddParameter(pp6);
+			
+			_element2 = UI::Element { 200, 200, glm::vec2(800.0f, 500.0f), UI::ElementAnchor::BottomLeft,
+				_guiTexture, _mat2 };
+			_guiRenderer.AddElement(&_element2);
+			
+			
+			UI::ShaderParameter ppp1 ( "u_ColourTint", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), UI::ShaderParameter::Type::Vec4 );
+			UI::ShaderParameter ppp2 ( "u_ViewProjection", _engine->GetCamera()->GuiProjection(), UI::ShaderParameter::Type::Mat4 );
+			UI::ShaderParameter ppp3 ( "u_Pixelborder", glm::vec2(0.05f, 0.3f), UI::ShaderParameter::Type::Vec2 );
+			UI::ShaderParameter ppp4 ( "u_Textureborder", 0.3125f, UI::ShaderParameter::Type::Float );
+			UI::ShaderParameter ppp5 ( "u_DebugMode", 0, UI::ShaderParameter::Type::Int );
+			UI::ShaderParameter ppp6 ( "u_TextureCoords", glm::vec4(_guiTexture->_x, _guiTexture->_y,
+					_guiTexture->_width, _guiTexture->_height), UI::ShaderParameter::Type::Vec4 );
+			
+			_mat3 = UI::Material { "gui-fancy" };
+			_mat3.AddParameter(ppp1);
+			_mat3.AddParameter(ppp2);
+			_mat3.AddParameter(ppp3);
+			_mat3.AddParameter(ppp4);
+			_mat3.AddParameter(ppp5);
+			_mat3.AddParameter(ppp6);
+			
+			_element3 = UI::Element { 600, 100, glm::vec2(300.0f, 600.0f), UI::ElementAnchor::BottomLeft,
+				_guiTexture, _mat3 };
+			_guiRenderer.AddElement(&_element3);
 			
 			// Load the shaders.
 			_shaderManager.LoadShader("shaders/basic.frag", "shaders/basic.vert", "basic");
@@ -152,13 +209,6 @@ namespace arterra {
 			
 			_shaderManager.UseShader("gui-fancy");
 			_guiAtlas.Bind();
-			_shaderManager.ActiveProgram().SetUniform("u_ColourTint", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-			_shaderManager.ActiveProgram().SetUniform("u_ViewProjection", _engine->GetCamera()->GuiProjection());
-			_shaderManager.ActiveProgram().SetUniform("u_Pixelborder", glm::vec2(0.1f, 0.1333f));
-			_shaderManager.ActiveProgram().SetUniform("u_Textureborder", 0.3125f);
-			_shaderManager.ActiveProgram().SetUniform("u_DebugMode", 0);
-			_shaderManager.ActiveProgram().SetUniform("u_TextureCoords", glm::vec4(_guiTexture->_x,
-				_guiTexture->_y, _guiTexture->_width, _guiTexture->_height));
 			_guiRenderer.Render();
 
 			_engine->GetWindow()->Update(deltaTime);

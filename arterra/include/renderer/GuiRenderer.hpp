@@ -4,25 +4,26 @@
 
 #include "renderer/Camera.hpp"
 #include "renderer/Renderer.hpp"
-#include "ui/GUIElement.hpp"
+#include "ui/Element.hpp"
+#include "renderer/ShaderManager.hpp"
 
 namespace arterra {
 	
 	class GuiRenderer {
 		
 		public:
-			GuiRenderer(Renderer *renderer);
-			~GuiRenderer();
+			GuiRenderer(Renderer& renderer, ShaderManager& shaderManager);
 			
-			void AddElement(GuiElement* element);
+			void AddElement(UI::Element* element);
 			
 			void Render();
 			
-			std::vector<GuiElement>& GetRenderables();
 		
 		private:
-			std::vector<GuiElement*> _renderables;
+			std::vector<UI::Element*> _renderables;
 			Renderer* _renderer;
+			
+			ShaderManager* _shaderManager;
 			
 	};
 	
