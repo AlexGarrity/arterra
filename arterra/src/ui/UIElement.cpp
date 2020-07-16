@@ -5,20 +5,21 @@ namespace arterra {
 	UIElement::UIElement() 
 		: _width(0), _height(0), _position(glm::vec2(0.0f, 0.0f)), _anchor(UIElementAnchor::BottomLeft) {}
 	
-	UIElement::UIElement(int width, int height, glm::vec2 position, UIElementAnchor anchor)
+	UIElement::UIElement(int width, int height, glm::vec2 position, UIElementAnchor anchor, AtlasTexture* texture)
 		: _width(width), _height(height), _position(position), _anchor(anchor) {
 		
 		// Calculate the vertices position based off the anchor point.
 		std::vector<float_t> vertices;
 		vertices.reserve(12);
 		std::vector<float_t> uvs = {
-			0.0f, 0.0f,
-			1.0f, 0.0f,
-			0.0f, 1.0f,
-			0.0f, 1.0f,
-			1.0f, 0.0f,
-			1.0f, 1.0f
+			texture->_x, texture->_y,
+			texture->_x + texture->_width, texture->_y,
+			texture->_x, texture->_y + texture->_height,
+			texture->_x, texture->_y + texture->_height,
+			texture->_x + texture->_width, texture->_y,
+			texture->_x + texture->_width, texture->_y + texture->_height
 		};
+		
 		int halfWidth = width / 2;
 		int halfHeight = height / 2;
 		

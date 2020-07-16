@@ -7,6 +7,7 @@ namespace arterra {
 		Test::Test(Engine* engine)
 			: Base(engine)
 			, _atlas { 256, 256 }
+			, _guiAtlas { 256, 256 }
 			, _chunkRenderer{engine->GetRenderer()}
 			, _guiRenderer{engine->GetRenderer()}
 		{
@@ -30,12 +31,15 @@ namespace arterra {
 			_engine->GetInput()->RegisterMouseBind("rot-right", sf::Mouse::Button::Right);
 			
 			// ===GUI===
-			_element1 = UIElement { 400, 300, glm::vec2(100.0f, 100.0f), UIElementAnchor::BottomLeft};
+			_guiAtlas.LoadTexture("textures/gui.png", "gui");
+			_guiTexture = _guiAtlas.GetTexture("gui");
+			
+			_element1 = UIElement ( 400, 300, glm::vec2(100.0f, 100.0f), UIElementAnchor::BottomLeft, _guiTexture);
 			
 			_element1.GetGUIElement()->SetShouldRender(true);
 			_guiRenderer.AddElement(_element1.GetGUIElement());
 			
-			_guiTexture.Load("textures/gui.png");
+			
 			
 			// Load the shaders.
 			_shaderManager.LoadShader("shaders/basic.frag", "shaders/basic.vert", "basic");
@@ -144,17 +148,17 @@ namespace arterra {
 			_shaderManager.ActiveProgram().SetUniform("fragmentColour", { 0.2f, 1.0f, 1.0f, 1.0f });
 			
 			_atlas.Bind();
-			//_shaderManager.ActiveProgram().SetUniform("fragmentTexture", 0);
 			_chunkRenderer.Render();
 			
 			_shaderManager.UseShader("gui-fancy");
-			_guiTexture.Bind();
+			_guiAtlas.Bind();
 			_shaderManager.ActiveProgram().SetUniform("u_ColourTint", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-			_shaderManager.ActiveProgram().SetUniform("viewProjection", _engine->GetCamera()->GuiProjection());
-			//_shaderManager.ActiveProgram().SetUniform("u_Pixelborder", glm::vec2(0.01f, 0.01333f));
+			_shaderManager.ActiveProgram().SetUniform("u_ViewProjection", _engine->GetCamera()->GuiProjection());
 			_shaderManager.ActiveProgram().SetUniform("u_Pixelborder", glm::vec2(0.1f, 0.1333f));
 			_shaderManager.ActiveProgram().SetUniform("u_Textureborder", 0.3125f);
 			_shaderManager.ActiveProgram().SetUniform("u_DebugMode", 0);
+			_shaderManager.ActiveProgram().SetUniform("u_TextureCoords", glm::vec4(_guiTexture->_x,
+				_guiTexture->_y, _guiTexture->_width, _guiTexture->_height));
 			_guiRenderer.Render();
 
 			_engine->GetWindow()->Update(deltaTime);

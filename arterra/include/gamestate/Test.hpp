@@ -36,6 +36,7 @@ namespace arterra {
 			TerrainGenerator _terrainGenerator;
 			BlockManager _blockManager;
 			TextureAtlas _atlas;
+			TextureAtlas _guiAtlas;
 			
 			// Temporary player controller.
 			float_t _speed = 2.0f;
@@ -43,7 +44,7 @@ namespace arterra {
 			
 			// Temporary gui
 			UIElement _element1;
-			TextureHandle _guiTexture;
+			AtlasTexture* _guiTexture;
 			
 		};
 

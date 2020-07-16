@@ -2,6 +2,7 @@
 #include <glm/glm.hpp>
 
 #include "ui/GUIElement.hpp"
+#include "texture/TextureAtlas.hpp"
 
 namespace arterra {
 	
@@ -21,7 +22,7 @@ namespace arterra {
 		
 		public:
 			UIElement();
-			UIElement(int width, int height, glm::vec2 position, UIElementAnchor anchor);
+			UIElement(int width, int height, glm::vec2 position, UIElementAnchor anchor, AtlasTexture* texture);
 			
 			inline GuiElement* GetGUIElement() { return &_guiElement; }
 		
