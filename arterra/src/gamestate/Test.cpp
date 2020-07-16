@@ -89,13 +89,6 @@ namespace arterra {
 				BlockData { *grassTextureTop, *grassTextureSide, *dirtTexture, _blockModel }, "grass");
 			_blockManager.AddBlock(BlockData { *dirtTexture, *dirtTexture, *dirtTexture, _blockModel }, "dirt");
 			_blockManager.AddBlock(BlockData { *sandTexture, *sandTexture, *sandTexture, _blockModel }, "sand");
-
-			for (auto z = -2; z < 2; ++z) {
-				for (auto x = -2; x < 2; ++x) {
-					auto chunk = _world.CreateChunkCS(x, z);
-					_terrainGenerator.GenerateChunk(*chunk, _blockManager);
-				}
-			}
 		}
 
 		void Test::Input(float_t deltaTime)
@@ -147,7 +140,13 @@ namespace arterra {
 
 			glViewport(0, 0, wX, wY);
 
+			_world.GenerateNewChunks(_engine->GetCamera()->GetTransform().Position());
+			for (auto &chunk : _world.GetEmptyChunks()) {
+				_terrainGenerator.GenerateChunk(*chunk, _blockManager);
+			}
+			_world.DeleteOldChunks(_engine->GetCamera()->GetTransform().Position());
 			_world.Update(deltaTime);
+			
 			_chunkRenderer.UpdateSubChunks(_world.GetModifiedSubChunks());
 			_chunkRenderer.CullRenderables(*_engine->GetCamera());
 			// TODO: guirenderer.updateelements(uimanager.getmodifiedelements)

@@ -128,6 +128,8 @@ namespace arterra {
 
 	WorldPosition Chunk::GetPosition() { return { _position._x * SubChunk::SIZE_X, 0, _position._z * SubChunk::SIZE_Z }; }
 
+	ChunkPosition Chunk::GetPositionRaw() { return _position; }
+
 	std::vector<SubChunk*> Chunk::Update(float deltaTime)
 	{
 		std::vector<SubChunk*> out;
