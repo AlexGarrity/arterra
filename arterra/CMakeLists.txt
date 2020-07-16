@@ -25,13 +25,12 @@ target_link_libraries(arterra glad sfml-graphics glm yaml-cpp)
 
 # Move the res directory next to the build
 if (WIN32)
-    
     foreach(config IN LISTS CMAKE_CONFIGURATION_TYPES)
         file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${config}")
         add_custom_command(TARGET arterra POST_BUILD COMMAND ${CMAKE_COMMAND} -E create_symlink "${CMAKE_CURRENT_SOURCE_DIR}/res" "${CMAKE_CURRENT_BINARY_DIR}/${config}/res")
     endforeach()
 elseif(UNIX)
-    add_custom_command(TARGET arterra POST_BUILD COMMAND ${CMAKE_COMMAND} -E create_symlink "${CMAKE_CURRENT_SOURCE_DIR}/res" "${CMAKE_CURRENT_BUILD_DIR}/res")
+    add_custom_command(TARGET arterra POST_BUILD COMMAND ${CMAKE_COMMAND} -E create_symlink "${CMAKE_CURRENT_SOURCE_DIR}/res" "${CMAKE_CURRENT_BINARY_DIR}/res")
 endif()
 
 # Export compile commands (for clangd)

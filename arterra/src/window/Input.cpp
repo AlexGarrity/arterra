@@ -33,8 +33,6 @@ namespace arterra {
 
 		_mouseDelta = sf::Vector2f(-dx, -dy);
 
-		Logger::Get().Log("dx: ", dx, "; dy: ", dy);
-
 		if (_window->GetEvent().type == sf::Event::LostFocus)
 			SetLockCursor(false);
 		if (_window->GetEvent().type == sf::Event::GainedFocus)
