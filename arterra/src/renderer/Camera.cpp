@@ -95,7 +95,7 @@ namespace arterra {
 	{
 		// Update the ortho projection in case the window gets resized.
 		_guiProjection = glm::ortho(0.0f, static_cast<float>(window.GetWidth()),
-			static_cast<float>(window.GetHeight()), 0.0f);
+			0.0f, static_cast<float>(window.GetHeight()));
 		
 		_transform.Update();
 		

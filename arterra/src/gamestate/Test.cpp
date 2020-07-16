@@ -30,37 +30,10 @@ namespace arterra {
 			_engine->GetInput()->RegisterMouseBind("rot-right", sf::Mouse::Button::Right);
 			
 			// ===GUI===
-			std::vector<float_t> vPos = {
-				400.0f, 200.0f,
-				400.0f, 500.0f,
-				800.0f, 200.0f,
-				800.0f, 200.0f,
-				400.0f, 500.0f,
-				800.0f, 500.0f
-			};
-			std::vector<float_t> vPos2 = {
-				805.0f, 200.0f,
-				805.0f, 500.0f,
-				1100.0f, 200.0f,
-				1100.0f, 200.0f,
-				805.0f, 500.0f,
-				1100.0f, 500.0f
-			};
-			std::vector<float_t> vUV = {
-				0.0f, 1.0f,
-				0.0f, 0.0f,
-				1.0f, 1.0f,
-				1.0f, 1.0f,
-				0.0f, 0.0f,
-				1.0f, 0.0f
-			};
+			_element1 = UIElement { 400, 300, glm::vec2(100.0f, 100.0f), UIElementAnchor::BottomLeft};
 			
-			_guiElement = GuiElement{vPos, vUV};
-			_guiElement.SetShouldRender(true);
-			_guiRenderer.AddElement(&_guiElement);
-			_guiElement2 = GuiElement{vPos2, vUV};
-			_guiElement2.SetShouldRender(true);
-			//_guiRenderer.AddElement(&_guiElement2);
+			_element1.GetGUIElement()->SetShouldRender(true);
+			_guiRenderer.AddElement(_element1.GetGUIElement());
 			
 			_guiTexture.Load("textures/gui.png");
 			
