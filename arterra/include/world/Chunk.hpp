@@ -45,7 +45,7 @@ namespace arterra {
 
 		World *_world;
 
-		int _posX, _posZ;
+		ChunkPosition _position;
 	};
 
 }

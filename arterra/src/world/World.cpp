@@ -45,8 +45,9 @@ namespace arterra {
 		auto chunk = FindChunkCS(x, z);
 		if (chunk != _chunks.end())
 			return &chunk->second;
-		_chunks.emplace(WorldPosition { x, 0, z }, Chunk { x, z, this });
-		return GetChunkCS(x, z);
+		auto c = _chunks.emplace(ChunkPosition { x, z }, Chunk { x, z, this });
+		if (!c.second) return nullptr;
+		return &(c.first->second);
 	}
 
 	Chunk* World::GetChunkCS(int x, int z)
@@ -77,14 +78,14 @@ namespace arterra {
 	{
 		auto cX = WorldToChunkSpace(x, SubChunk::SIZE_X);
 		auto cZ = WorldToChunkSpace(z, SubChunk::SIZE_Z);
-		auto bPos = WorldPosition { cX, 0, cZ };
+		auto bPos = ChunkPosition { cX, cZ };
 		auto pos = _chunks.find(bPos);
 		return pos;
 	}
 
 	ChunkMap::iterator World::FindChunkCS(int x, int z)
 	{
-		auto bPos = WorldPosition { x, 0, z };
+		auto bPos = ChunkPosition { x, z };
 		auto pos = _chunks.find(bPos);
 		return pos;
 	}

@@ -5,16 +5,14 @@
 namespace arterra {
 
 	Chunk::Chunk(int posX, int posZ, World* world)
-		: _posX { posX }
-		, _posZ { posZ }
+		: _position { posX, posZ }
 		, _world { world }
 	{
 	}
 
 	Chunk::Chunk(const Chunk& other)
 	{
-		_posX = other._posX;
-		_posZ = other._posZ;
+		_position = other._position;
 		_world = other._world;
 		_subChunks = std::move(other._subChunks);
 		for (auto& sc : _subChunks) {
@@ -53,24 +51,26 @@ namespace arterra {
 	void Chunk::UpdateNeighbours()
 	{
 		Chunk* n;
-		n = _world->GetChunkCS(_posX + 1, _posZ);
+		n = _world->GetChunkCS(_position._x + 1, _position._z);
 		if (n)
 			n->UpdateBorder(Direction::NegX);
-		n = _world->GetChunkCS(_posX - 1, _posZ);
+		n = _world->GetChunkCS(_position._x - 1, _position._z);
 		if (n)
 			n->UpdateBorder(Direction::PosX);
-		n = _world->GetChunkCS(_posX, _posZ + 1);
+		n = _world->GetChunkCS(_position._x, _position._z + 1);
 		if (n)
 			n->UpdateBorder(Direction::NegZ);
-		n = _world->GetChunkCS(_posX, _posZ - 1);
+		n = _world->GetChunkCS(_position._x, _position._z - 1);
 		if (n)
 			n->UpdateBorder(Direction::PosZ);
 	}
 
-	void Chunk::UpdateBlocks() {
-		for (auto &sc : _subChunks) {
-			for (auto &b : sc.second.GetBlocks()) {
-				if (b) b->Update(0);
+	void Chunk::UpdateBlocks()
+	{
+		for (auto& sc : _subChunks) {
+			for (auto& b : sc.second.GetBlocks()) {
+				if (b)
+					b->Update(0);
 			}
 		}
 	}
@@ -79,7 +79,7 @@ namespace arterra {
 	{
 		switch (borderDirection) {
 			case Direction::PosY: {
-				Logger::Get().Log(Logger::Debug, "Updating positive Y border for chunk at (", _posX, ", ", _posZ,
+				Logger::Get().Log(Logger::Debug, "Updating positive Y border for chunk at (", _position._x, ", ", _position._z,
 					").  Whilst possible, was this intended?");
 				SubChunkMap::iterator highestSC;
 				for (auto it = _subChunks.begin(); it != _subChunks.end(); ++it) {
@@ -91,7 +91,7 @@ namespace arterra {
 			} break;
 
 			case Direction::NegY: {
-				Logger::Get().Log(Logger::Debug, "Updating negative Y border for chunk at (", _posX, ", ", _posZ,
+				Logger::Get().Log(Logger::Debug, "Updating negative Y border for chunk at (", _position._x, ", ", _position._z,
 					").  Whilst possible, was this intended?");
 				SubChunkMap::iterator lowestSC;
 				for (auto it = _subChunks.begin(); it != _subChunks.end(); ++it) {
@@ -126,7 +126,7 @@ namespace arterra {
 
 	SubChunkMap& Chunk::GetSubChunks() { return _subChunks; }
 
-	WorldPosition Chunk::GetPosition() { return { _posX * SubChunk::SIZE_X, 0, _posZ * SubChunk::SIZE_Z }; }
+	WorldPosition Chunk::GetPosition() { return { _position._x * SubChunk::SIZE_X, 0, _position._z * SubChunk::SIZE_Z }; }
 
 	std::vector<SubChunk*> Chunk::Update(float deltaTime)
 	{

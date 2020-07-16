@@ -61,10 +61,35 @@ namespace arterra {
 	{
 		_visible = false;
 		for (auto i = 0; i < 6; ++i) {
-			auto blockExists = (neighbours[i]);
-			_visibleFaces[i] = (!blockExists);
-			if (!blockExists)
+			bool blockExists = (neighbours[i] != nullptr);
+			if (!blockExists) {
+				_visibleFaces[i] = true;
 				_visible = true;
+			} else {
+				auto sCS = _blockData.GetCullingSettings();
+				auto oCS = neighbours[i]->GetData().GetCullingSettings();
+				switch (sCS._cullingMode) {
+					case CullingSettings::Always: {
+						_visibleFaces[i] = false;
+					} break;
+					case CullingSettings::SameBlock: {
+						bool getsCulled = (sCS._getsCulled[i] && oCS._cullsOther[i]);
+						bool sameBlock = (&_blockData == &neighbours[i]->GetData());
+						_visibleFaces[i] = (getsCulled && sameBlock);
+						_visible = (getsCulled && sameBlock);
+					} break;
+					case CullingSettings::SameModel: {
+						bool getsCulled = (sCS._getsCulled[i] && oCS._cullsOther[i]);
+						bool sameModel = (&_blockData.GetModel() == &neighbours[i]->GetData().GetModel());
+						_visibleFaces[i] = (getsCulled && sameModel);
+						_visible = (getsCulled && sameModel);
+					}
+					case CullingSettings::Never: {
+						_visibleFaces[i] = true;
+						_visible = true;
+					} break;
+				}
+			}
 		}
 	}
 

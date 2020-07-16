@@ -32,4 +32,8 @@ namespace arterra {
 		}
 	}
 
+	CullingSettings BlockData::GetCullingSettings() const {
+		return _cullingSettings;
+	}
+
 }
