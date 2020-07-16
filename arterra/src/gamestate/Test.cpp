@@ -176,11 +176,12 @@ namespace arterra {
 			
 			_shaderManager.UseShader("gui-fancy");
 			_guiTexture.Bind();
-			_shaderManager.ActiveProgram().SetUniform("colourTint", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+			_shaderManager.ActiveProgram().SetUniform("u_ColourTint", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 			_shaderManager.ActiveProgram().SetUniform("viewProjection", _engine->GetCamera()->GuiProjection());
 			//_shaderManager.ActiveProgram().SetUniform("u_Pixelborder", glm::vec2(0.01f, 0.01333f));
 			_shaderManager.ActiveProgram().SetUniform("u_Pixelborder", glm::vec2(0.1f, 0.1333f));
 			_shaderManager.ActiveProgram().SetUniform("u_Textureborder", 0.3125f);
+			_shaderManager.ActiveProgram().SetUniform("u_DebugMode", 0);
 			_guiRenderer.Render();
 
 			_engine->GetWindow()->Update(deltaTime);
