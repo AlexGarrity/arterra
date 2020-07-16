@@ -8,11 +8,14 @@ namespace arterra {
 			: Base(engine)
 			, _atlas { 256, 256 }
 			, _chunkRenderer{engine->GetRenderer()}
+			, _guiRenderer{engine->GetRenderer()}
 		{
+			
 			_engine->GetWindow()->SetVsync(true);
 			_engine->GetWindow()->SetLockCursor(true);
 			_engine->GetWindow()->SetClearColour(0.6f, 0.8f, 1.0f, 1.0f);
 			
+			// ===Inputs===
 			_engine->GetInput()->RegisterKeyBind("quit", sf::Keyboard::Escape);
 			// Set up player control keybinds.
 			_engine->GetInput()->RegisterKeyBind("forward", sf::Keyboard::W);
@@ -26,10 +29,45 @@ namespace arterra {
 			_engine->GetInput()->RegisterMouseBind("rot-left", sf::Mouse::Button::Left);
 			_engine->GetInput()->RegisterMouseBind("rot-right", sf::Mouse::Button::Right);
 			
+			// ===GUI===
+			std::vector<float_t> vPos = {
+				400.0f, 200.0f,
+				400.0f, 500.0f,
+				800.0f, 200.0f,
+				800.0f, 200.0f,
+				400.0f, 500.0f,
+				800.0f, 500.0f
+			};
+			std::vector<float_t> vPos2 = {
+				805.0f, 200.0f,
+				805.0f, 500.0f,
+				1100.0f, 200.0f,
+				1100.0f, 200.0f,
+				805.0f, 500.0f,
+				1100.0f, 500.0f
+			};
+			std::vector<float_t> vUV = {
+				0.0f, 1.0f,
+				0.0f, 0.0f,
+				1.0f, 1.0f,
+				1.0f, 1.0f,
+				0.0f, 0.0f,
+				1.0f, 0.0f
+			};
 			
-			// Load the basic shader and use it
+			_guiElement = GuiElement{vPos, vUV};
+			_guiElement.SetShouldRender(true);
+			_guiRenderer.AddElement(&_guiElement);
+			_guiElement2 = GuiElement{vPos2, vUV};
+			_guiElement2.SetShouldRender(true);
+			//_guiRenderer.AddElement(&_guiElement2);
+			
+			_guiTexture.Load("textures/gui.png");
+			
+			// Load the shaders.
 			_shaderManager.LoadShader("shaders/basic.frag", "shaders/basic.vert", "basic");
-			_shaderManager.UseShader("basic");
+			_shaderManager.LoadShader("shaders/gui_sprite_simple.frag", "shaders/gui_sprite_simple.vert", "gui");
+			_shaderManager.LoadShader("shaders/gui_sprite_spliced.frag", "shaders/gui_sprite_spliced.vert", "gui-fancy");
 
 			// Create cube model.
 			_blockModel.Create("models/Block");
@@ -103,10 +141,7 @@ namespace arterra {
 		{
 			_engine->GetCamera()->Update(*_engine->GetWindow(), deltaTime);
 
-			// Set the camera view projection so the world renders in perspective
-			_shaderManager.ActiveProgram().SetUniform("viewProjection", _engine->GetCamera()->ViewProjection());
-			_shaderManager.ActiveProgram().SetUniform("fragmentColour", { 0.2f, 1.0f, 1.0f, 1.0f });
-
+			
 			auto wX = _engine->GetWindow()->GetWidth();
 			auto wY = _engine->GetWindow()->GetHeight();
 
@@ -115,6 +150,7 @@ namespace arterra {
 			_world.Update(deltaTime);
 			_chunkRenderer.UpdateSubChunks(_world.GetModifiedSubChunks());
 			_chunkRenderer.CullRenderables(*_engine->GetCamera());
+			// TODO: guirenderer.updateelements(uimanager.getmodifiedelements)
 
 			// Every 5 seconds, perform garbage collection
 			_timeToResourceUnload -= deltaTime;
@@ -128,12 +164,25 @@ namespace arterra {
 		{
 			// Clear the window
 			_engine->GetWindow()->Clear();
-
+			
+			// Set the camera view projection so the world renders in perspective
 			_shaderManager.UseShader("basic");
+			_shaderManager.ActiveProgram().SetUniform("viewProjection", _engine->GetCamera()->ViewProjection());
+			_shaderManager.ActiveProgram().SetUniform("fragmentColour", { 0.2f, 1.0f, 1.0f, 1.0f });
+			
 			_atlas.Bind();
 			//_shaderManager.ActiveProgram().SetUniform("fragmentTexture", 0);
-
 			_chunkRenderer.Render();
+			
+			_shaderManager.UseShader("gui-fancy");
+			_guiTexture.Bind();
+			_shaderManager.ActiveProgram().SetUniform("u_ColourTint", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+			_shaderManager.ActiveProgram().SetUniform("viewProjection", _engine->GetCamera()->GuiProjection());
+			//_shaderManager.ActiveProgram().SetUniform("u_Pixelborder", glm::vec2(0.01f, 0.01333f));
+			_shaderManager.ActiveProgram().SetUniform("u_Pixelborder", glm::vec2(0.1f, 0.1333f));
+			_shaderManager.ActiveProgram().SetUniform("u_Textureborder", 0.3125f);
+			_shaderManager.ActiveProgram().SetUniform("u_DebugMode", 0);
+			_guiRenderer.Render();
 
 			_engine->GetWindow()->Update(deltaTime);
 		}

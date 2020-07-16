@@ -5,10 +5,13 @@
 #include "block/BlockManager.hpp"
 #include "gamestate/Base.hpp"
 #include "renderer/ChunkRenderer.hpp"
+#include "renderer/GuiRenderer.hpp"
 #include "renderer/ShaderManager.hpp"
 #include "texture/TextureAtlas.hpp"
+#include "texture/Texture.hpp"
 #include "world/TerrainGenerator.hpp"
 #include "world/World.hpp"
+
 namespace arterra {
 
 	namespace gamestate {
@@ -27,6 +30,7 @@ namespace arterra {
 			World _world;
 
 			ChunkRenderer _chunkRenderer;
+			GuiRenderer _guiRenderer;
 			ShaderManager _shaderManager;
 			TerrainGenerator _terrainGenerator;
 			BlockManager _blockManager;
@@ -35,6 +39,11 @@ namespace arterra {
 			// Temporary player controller.
 			float_t _speed = 2.0f;
 			float_t _rotSpeed = glm::radians(15.0f);
+			
+			// Temporary gui
+			GuiElement _guiElement;
+			GuiElement _guiElement2;
+			TextureHandle _guiTexture;
 			
 		};
 

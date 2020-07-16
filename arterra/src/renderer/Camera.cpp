@@ -93,8 +93,12 @@ namespace arterra {
 
 	void Camera::Update(Window& window, float_t deltaTime)
 	{
-
+		// Update the ortho projection in case the window gets resized.
+		_guiProjection = glm::ortho(0.0f, static_cast<float>(window.GetWidth()),
+			static_cast<float>(window.GetHeight()), 0.0f);
+		
 		_transform.Update();
+		
 
 		// Update the view projection to account for movement
 		_view = glm::mat4 { 1.0f };

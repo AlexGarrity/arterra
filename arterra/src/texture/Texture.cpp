@@ -24,6 +24,8 @@ namespace arterra {
 			auto dataHandle = ResourceManager::Get().GetHandle(filepath);
 			image.loadFromMemory(dataHandle._resource->_data.data(), dataHandle._resource->_data.size());
 			image.flipVertically();
+			_width = image.getSize().x;
+			_height = image.getSize().y;
 		}
 		// Bind the texture and buffer data
 		glBindTexture(GL_TEXTURE_2D, _handle);

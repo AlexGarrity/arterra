@@ -5,7 +5,6 @@ namespace arterra {
 	Renderer::Renderer()
 	{
 		// Enable depth testing
-		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_BLEND);
 
 		// Enable face culling
