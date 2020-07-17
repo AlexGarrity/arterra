@@ -54,6 +54,15 @@ namespace arterra {
 			
 		};
 		
+		struct ElementCollider {
+			
+			ElementCollider();
+			
+			void GenerateCollider();
+			bool IsInside(glm::vec2 position);
+			
+		};
+		
 		class Element {
 			
 			public:

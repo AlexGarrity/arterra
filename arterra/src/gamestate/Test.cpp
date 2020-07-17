@@ -92,9 +92,9 @@ namespace arterra {
 			_mat3.AddParameter(ppp5);
 			_mat3.AddParameter(ppp6);
 			
-			_element3 = UI::Element { 600, 100, glm::vec2(300.0f, 600.0f), 0.0f, UI::ElementAnchor::BottomLeft,
+			_element3 = UI::Element { 600, 100, glm::vec2(500.0f, 400.0f), 0.0f, UI::ElementAnchor::BottomLeft,
 				_guiTexture, _mat3 };
-			//_uiManager.CreateElement("el3", _element3);
+			_uiManager.CreateElement("el3", _element3);
 			
 			// Load the shaders.
 			_shaderManager.LoadShader("shaders/basic.frag", "shaders/basic.vert", "basic");
@@ -186,7 +186,7 @@ namespace arterra {
 			// Temporary gui stuff
 			//_uiManager.GetElement("el1")->ApplyTranslation(glm::vec2(1.0f, 1.0f));
 			_uiManager.GetElement("el1")->ApplyRotation(deltaTime*10.0f);
-			
+			_uiManager.GetElement("el3")->ApplyRotation(deltaTime*10.0f);
 			
 			// Every 5 seconds, perform garbage collection
 			_timeToResourceUnload -= deltaTime;
