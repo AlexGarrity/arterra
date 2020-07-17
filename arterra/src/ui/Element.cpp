@@ -25,6 +25,7 @@ namespace arterra {
 			_transform = glm::scale(_transform, { width , height, 1.0f });
 			_transform = glm::rotate(_transform, 0.0f, { 0.0f, 0.0f, 1.0f });
 			_material.AddParameter(ShaderParameter { "u_ModelProjection", _transform, ShaderParameter::Type::Mat4});
+			_material.AddParameter(ShaderParameter { "u_Rotation", _rotation, ShaderParameter::Type::Float});
 		}
 				
 		void Element::ApplyTranslation(glm::vec2 movementVector) {
@@ -48,6 +49,7 @@ namespace arterra {
 			_transform = glm::scale(_transform, { _width , _height, 1.0f });
 			_transform = glm::rotate(_transform, _rotation, { 0.0f, 0.0f, -1.0f });
 			_material.UpdateParameter("u_ModelProjection", _transform);
+			_material.UpdateParameter("u_Rotation", glm::mod(_rotation, 3.1416f));
 		}
 		
 		void Element::CreateMesh() {

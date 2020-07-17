@@ -27,6 +27,14 @@ namespace arterra {
 			}
 		}
 		
+		void Material::UpdateParameter(std::string name, float_t value) {
+			for (auto &parameter: _shaderParameters) {
+				if (parameter._name == name) {
+					parameter._value = value;
+				}
+			}
+		}
+		
 		
 	}
 	

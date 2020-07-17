@@ -3,6 +3,7 @@ layout(location = 0) in vec2 i_position;
 layout(location = 1) in vec2 i_textureCoords;
 
 uniform mat4 u_ViewProjection;
+uniform mat4 u_ModelProjection;
 
 // Data passed to the fragment shader
 out vData
@@ -16,5 +17,5 @@ void main()
     vertex.textureCoords = i_textureCoords;
     
     // Apply the projection to the coordinates
-    gl_Position = u_ViewProjection * vec4(i_position, 0.0, 1.0);
+    gl_Position = u_ViewProjection * u_ModelProjection * vec4(i_position, 0.0, 1.0);
 }
