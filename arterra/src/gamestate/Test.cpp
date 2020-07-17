@@ -9,8 +9,7 @@ namespace arterra {
 			, _atlas { 256, 256 }
 			, _guiAtlas { 256, 256 }
 			, _chunkRenderer{engine->GetRenderer()}
-			, _guiRenderer{*(engine->GetRenderer()), _shaderManager}
-			, _uiManager { &_guiRenderer }
+			, _uiManager { &_shaderManager, _engine->GetRenderer() }
 		{
 			
 			_engine->GetWindow()->SetVsync(true);
@@ -37,7 +36,7 @@ namespace arterra {
 
 			UI::ShaderParameter p1 ( "u_ColourTint", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), UI::ShaderParameter::Type::Vec4 );
 			UI::ShaderParameter p2 ( "u_ViewProjection", _engine->GetCamera()->GuiProjection(), UI::ShaderParameter::Type::Mat4 );
-			UI::ShaderParameter p3 ( "u_Pixelborder", glm::vec2(0.1f, 0.1333f), UI::ShaderParameter::Type::Vec2 );
+			UI::ShaderParameter p3 ( "u_Pixelborder", glm::vec2(0.1f, 0.13333f), UI::ShaderParameter::Type::Vec2 );
 			UI::ShaderParameter p4 ( "u_Textureborder", 0.3125f, UI::ShaderParameter::Type::Float );
 			UI::ShaderParameter p5 ( "u_DebugMode", 0, UI::ShaderParameter::Type::Int );
 			UI::ShaderParameter p6 ( "u_TextureCoords", glm::vec4(_guiTexture->_x, _guiTexture->_y,
@@ -51,7 +50,7 @@ namespace arterra {
 			_mat1.AddParameter(p5);
 			_mat1.AddParameter(p6);
 			
-			_element1 = UI::Element { 400, 300, glm::vec2(100.0f, 100.0f), UI::ElementAnchor::BottomLeft,
+			_element1 = UI::Element { 400, 300, glm::vec2(500.0f, 300.0f), 0.0f, UI::ElementAnchor::BottomLeft,
 				_guiTexture, _mat1 };
 			_uiManager.CreateElement("el1", _element1);
 			
@@ -72,9 +71,9 @@ namespace arterra {
 			_mat2.AddParameter(pp5);
 			_mat2.AddParameter(pp6);
 			
-			_element2 = UI::Element { 200, 200, glm::vec2(1240.0f, 680.0f), UI::ElementAnchor::TopRight,
+			_element2 = UI::Element { 200, 200, glm::vec2(1240.0f, 680.0f), 0.0f, UI::ElementAnchor::TopRight,
 				_guiTexture, _mat2 };
-			_uiManager.CreateElement("el2", _element2);
+			//_uiManager.CreateElement("el2", _element2);
 			
 			
 			UI::ShaderParameter ppp1 ( "u_ColourTint", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), UI::ShaderParameter::Type::Vec4 );
@@ -93,9 +92,9 @@ namespace arterra {
 			_mat3.AddParameter(ppp5);
 			_mat3.AddParameter(ppp6);
 			
-			_element3 = UI::Element { 600, 100, glm::vec2(300.0f, 600.0f), UI::ElementAnchor::BottomLeft,
+			_element3 = UI::Element { 600, 100, glm::vec2(300.0f, 600.0f), 0.0f, UI::ElementAnchor::BottomLeft,
 				_guiTexture, _mat3 };
-			_uiManager.CreateElement("el3", _element3);
+			//_uiManager.CreateElement("el3", _element3);
 			
 			// Load the shaders.
 			_shaderManager.LoadShader("shaders/basic.frag", "shaders/basic.vert", "basic");
@@ -185,8 +184,8 @@ namespace arterra {
 			_chunkRenderer.CullRenderables(*_engine->GetCamera());
 			
 			// Temporary gui stuff
-			_uiManager.GetElement("el1").Move(glm::vec2(deltaTime*20.0f, deltaTime*20.0f));
-			_uiManager.GetElement("el2").Scale(1.0f);
+			//_uiManager.GetElement("el1")->ApplyTranslation(glm::vec2(1.0f, 1.0f));
+			_uiManager.GetElement("el1")->ApplyRotation(deltaTime*10.0f);
 			
 			
 			// Every 5 seconds, perform garbage collection
@@ -212,7 +211,7 @@ namespace arterra {
 			
 			_shaderManager.UseShader("gui-fancy");
 			_guiAtlas.Bind();
-			_guiRenderer.Render();
+			_uiManager.Render();
 
 			_engine->GetWindow()->Update(deltaTime);
 		}

@@ -19,6 +19,15 @@ namespace arterra {
 			_shaderParameters.push_back(shaderParameter);
 		}
 		
+		void Material::UpdateParameter(std::string name, glm::mat4 value) {
+			for (auto &parameter: _shaderParameters) {
+				if (parameter._name == name) {
+					parameter._value = value;
+				}
+			}
+		}
+		
+		
 	}
 	
 }

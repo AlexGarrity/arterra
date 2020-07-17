@@ -13,26 +13,41 @@ namespace arterra {
 		}
 		
 		Element::Element() 
-			: _width(0), _height(0), _position(glm::vec2(0.0f, 0.0f)), _anchor(ElementAnchor::BottomLeft),
-			_mesh(ElementMesh()), _material(Material()) {}
+			: _width(0), _height(0), _position(glm::vec2(0.0f, 0.0f)), _rotation(0.0f),
+			_anchor(ElementAnchor::BottomLeft),	_mesh(ElementMesh()), _material(Material()) {}
 		
-		Element::Element(int width, int height, glm::vec2 position, ElementAnchor anchor, AtlasTexture* texture,
-			Material material)
-			: _width(width), _height(height), _position(position), _anchor(anchor), _material(material),
-				_texture(texture) {
+		Element::Element(int width, int height, glm::vec2 position, float_t rotation, ElementAnchor anchor,
+			AtlasTexture* texture, Material material)
+			: _width(width), _height(height), _position(position), _rotation(rotation), _anchor(anchor),
+			_material(material), _texture(texture) {
+			
+			_transform = glm::translate(_transform, { position.x, position.y, 0.0f });
+			_transform = glm::scale(_transform, { width , height, 1.0f });
+			_transform = glm::rotate(_transform, 0.0f, { 0.0f, 0.0f, 1.0f });
+			_material.AddParameter(ShaderParameter { "u_ModelProjection", _transform, ShaderParameter::Type::Mat4});
 		}
 				
-		void Element::Move(glm::vec2 movementVector) {
+		void Element::ApplyTranslation(glm::vec2 movementVector) {
 			_position.x += movementVector.x;
 			_position.y += movementVector.y;
-			CreateMesh();
-			
 		}
 		
-		void Element::Scale(float_t scaleFactor) {
+		void Element::ApplyScaling(float_t scaleFactor) {
 			_width += scaleFactor;
 			_height += scaleFactor;
-			CreateMesh();
+		}
+		
+		void Element::ApplyRotation(float_t rotationAngle) {
+			rotationAngle = glm::radians(rotationAngle);
+			_rotation += rotationAngle;
+		}
+		
+		void Element::UpdateTransform() {
+			_transform = glm::mat4 { 1.0f };
+			_transform = glm::translate(_transform, { _position.x, _position.y, 0.0f });
+			_transform = glm::scale(_transform, { _width , _height, 1.0f });
+			_transform = glm::rotate(_transform, _rotation, { 0.0f, 0.0f, -1.0f });
+			_material.UpdateParameter("u_ModelProjection", _transform);
 		}
 		
 		void Element::CreateMesh() {
@@ -49,11 +64,104 @@ namespace arterra {
 				_texture->_x + _texture->_width, _texture->_y + _texture->_height
 			};
 			
-			int halfwidth = _width / 2;
-			int halfheight = _height / 2;
+			int halfwidth = 1 / 2;
+			int halfheight = 1 / 2;
 			
 			// Calculate the vertex positions based off the anchor point.
 			switch (_anchor)
+			{
+			case ElementAnchor::BottomLeft:
+				positions = {
+					0.0f, 0.0f,
+					0.0f + 1.0f, 0.0f,
+					0.0f, 0.0f + 1.0f,
+					0.0f, 0.0f + 1.0f,
+					0.0f + 1.0f, 0.0f,
+					0.0f + 1.0f, 0.0f + 1.0f
+				};
+				break;
+			case ElementAnchor::BottomRight:
+				positions = {
+					0.0f - 1.0f, 0.0f,
+					0.0f, 0.0f,
+					0.0f - 1.0f, 0.0f + 1.0f,
+					0.0f - 1.0f, 0.0f + 1.0f,
+					0.0f, 0.0f,
+					0.0f, 0.0f + 1.0f
+				};
+				break;
+			case ElementAnchor::BottomCentre:
+				positions = {
+					0.0f - halfwidth, 0.0f,
+					0.0f + halfwidth, 0.0f,
+					0.0f - halfwidth, 0.0f + 1.0f,
+					0.0f - halfwidth, 0.0f + 1.0f,
+					0.0f + halfwidth, 0.0f,
+					0.0f + halfwidth, 0.0f + 1.0f
+				};
+				break;
+			case ElementAnchor::TopLeft:
+				positions = {
+					0.0f, 0.0f - 1.0f,
+					0.0f + 1.0f, 0.0f - 1.0f,
+					0.0f, 0.0f,
+					0.0f, 0.0f,
+					0.0f + 1.0f, 0.0f - 1.0f,
+					0.0f + 1.0f, 0.0f
+				};
+				break;
+			case ElementAnchor::TopRight:
+				positions = {
+					0.0f - 1.0f, 0.0f - 1.0f,
+					0.0f, 0.0f - 1.0f,
+					0.0f - 1.0f, 0.0f,
+					0.0f - 1.0f, 0.0f,
+					0.0f, 0.0f - 1.0f,
+					0.0f, 0.0f
+				};
+				break;
+			case ElementAnchor::TopCentre:
+				positions = {
+					0.0f - halfwidth, 0.0f - 1.0f,
+					0.0f + halfwidth, 0.0f - 1.0f,
+					0.0f - halfwidth, 0.0f,
+					0.0f - halfwidth, 0.0f,
+					0.0f + halfwidth, 0.0f - 1.0f,
+					0.0f + halfwidth, 0.0f
+				};
+				break;
+			case ElementAnchor::Left:
+				positions = {
+					0.0f, 0.0f - halfheight,
+					0.0f + 1.0f, 0.0f - halfheight,
+					0.0f, 0.0f + halfheight,
+					0.0f, 0.0f + halfheight,
+					0.0f + 1.0f, 0.0f - halfheight,
+					0.0f + 1.0f, 0.0f + halfheight
+				};
+				break;
+			case ElementAnchor::Right:
+				positions = {
+					0.0f - 1.0f, 0.0f - halfheight,
+					0.0f, 0.0f - halfheight,
+					0.0f - 1.0f, 0.0f + halfheight,
+					0.0f - 1.0f, 0.0f + halfheight,
+					0.0f, 0.0f - halfheight,
+					0.0f, 0.0f + halfheight
+				};
+				break;
+			case ElementAnchor::Centre:
+				positions = {
+					0.0f - halfwidth, 0.0f - halfheight,
+					0.0f + halfwidth, 0.0f - halfheight,
+					0.0f - halfwidth, 0.0f + halfheight,
+					0.0f - halfwidth, 0.0f + halfheight,
+					0.0f + halfwidth, 0.0f - halfheight,
+					0.0f + halfwidth, 0.0f + halfheight
+				};
+				break;
+			}
+			/* switch (_anchor)
 			{
 			case ElementAnchor::BottomLeft:
 				positions = {
@@ -145,11 +253,9 @@ namespace arterra {
 					_position.x + halfwidth, _position.y + halfheight
 				};
 				break;
-			}
+			} */
 			
-			// Destroy the old mesh buffers and data.
-			_mesh.Destroy();
-			// Create the new mesh with the new data.
+			// Create the mesh with the new data.
 			_mesh = ElementMesh { positions, uvs };
 		}
 		

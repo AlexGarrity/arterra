@@ -5,7 +5,6 @@
 #include "block/BlockManager.hpp"
 #include "gamestate/Base.hpp"
 #include "renderer/ChunkRenderer.hpp"
-#include "renderer/GuiRenderer.hpp"
 #include "renderer/ShaderManager.hpp"
 #include "ui/Element.hpp"
 #include "ui/Material.hpp"
@@ -33,7 +32,6 @@ namespace arterra {
 			World _world;
 
 			ChunkRenderer _chunkRenderer;
-			GuiRenderer _guiRenderer;
 			ShaderManager _shaderManager;
 			TerrainGenerator _terrainGenerator;
 			BlockManager _blockManager;

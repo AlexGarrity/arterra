@@ -2,6 +2,7 @@
 
 #include "PCH.hpp"
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "renderer/VertexArray.hpp"
 #include "ui/Material.hpp"
@@ -57,13 +58,15 @@ namespace arterra {
 			
 			public:
 				Element();
-				Element(int width, int height, glm::vec2 position, ElementAnchor anchor, AtlasTexture* texture,
-					Material material);
+				Element(int width, int height, glm::vec2 position, float_t rotation, ElementAnchor anchor,
+					AtlasTexture* texture, Material material);
 				
-				void Move(glm::vec2 movementVector);
-				void Scale(float_t scaleFactor);
+				void ApplyTranslation(glm::vec2 movementVector);
+				void ApplyScaling(float_t scaleFactor);
+				void ApplyRotation(float_t rotationAngle);
 				
 				void CreateMesh();
+				void UpdateTransform();
 				
 				inline glm::vec2 GetPosition() { return _position; }
 				inline Material& GetMaterial() { return _material; }
@@ -74,16 +77,19 @@ namespace arterra {
 				int _width, _height;
 				// The position of the anchor point.
 				glm::vec2 _position;
+				// The rotation about the anchor point.
+				float_t _rotation;
 				// The position of the anchor.
 				ElementAnchor _anchor;
 				
-				// Shader and its uniform data for this ui-element.
+				// Contains the shader reference and the uniform data for this ui-element.
 				Material _material;
-				// This element's mesh data.
+				// The mesh data.
 				ElementMesh _mesh;
-				// This element's texture handle.
+				// The texture handle.
 				AtlasTexture* _texture;
-				
+				// The "model" transformation matrix.
+				glm::mat4 _transform { 1.0f };
 				
 		};
 		
