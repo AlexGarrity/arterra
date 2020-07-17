@@ -10,6 +10,7 @@ namespace arterra {
 			, _guiAtlas { 256, 256 }
 			, _chunkRenderer{engine->GetRenderer()}
 			, _guiRenderer{*(engine->GetRenderer()), _shaderManager}
+			, _uiManager { &_guiRenderer }
 		{
 			
 			_engine->GetWindow()->SetVsync(true);
@@ -52,9 +53,7 @@ namespace arterra {
 			
 			_element1 = UI::Element { 400, 300, glm::vec2(100.0f, 100.0f), UI::ElementAnchor::BottomLeft,
 				_guiTexture, _mat1 };
-			//_element2 = UI::Element ( 200, 200, glm::vec2(800.0f, 500.0f), UI::ElementAnchor::BottomLeft, _guiTexture);
-			
-			_guiRenderer.AddElement(&_element1);
+			_uiManager.CreateElement("el1", _element1);
 			
 			
 			UI::ShaderParameter pp1 ( "u_ColourTint", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), UI::ShaderParameter::Type::Vec4 );
@@ -73,9 +72,9 @@ namespace arterra {
 			_mat2.AddParameter(pp5);
 			_mat2.AddParameter(pp6);
 			
-			_element2 = UI::Element { 200, 200, glm::vec2(800.0f, 500.0f), UI::ElementAnchor::BottomLeft,
+			_element2 = UI::Element { 200, 200, glm::vec2(1240.0f, 680.0f), UI::ElementAnchor::TopRight,
 				_guiTexture, _mat2 };
-			_guiRenderer.AddElement(&_element2);
+			_uiManager.CreateElement("el2", _element2);
 			
 			
 			UI::ShaderParameter ppp1 ( "u_ColourTint", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), UI::ShaderParameter::Type::Vec4 );
@@ -96,7 +95,7 @@ namespace arterra {
 			
 			_element3 = UI::Element { 600, 100, glm::vec2(300.0f, 600.0f), UI::ElementAnchor::BottomLeft,
 				_guiTexture, _mat3 };
-			_guiRenderer.AddElement(&_element3);
+			_uiManager.CreateElement("el3", _element3);
 			
 			// Load the shaders.
 			_shaderManager.LoadShader("shaders/basic.frag", "shaders/basic.vert", "basic");
@@ -184,8 +183,12 @@ namespace arterra {
 			_world.Update(deltaTime);
 			_chunkRenderer.UpdateSubChunks(_world.GetModifiedSubChunks());
 			_chunkRenderer.CullRenderables(*_engine->GetCamera());
-			// TODO: guirenderer.updateelements(uimanager.getmodifiedelements)
-
+			
+			// Temporary gui stuff
+			_uiManager.GetElement("el1").Move(glm::vec2(deltaTime*20.0f, deltaTime*20.0f));
+			_uiManager.GetElement("el2").Scale(1.0f);
+			
+			
 			// Every 5 seconds, perform garbage collection
 			_timeToResourceUnload -= deltaTime;
 			if (_timeToResourceUnload < 0.0f) {

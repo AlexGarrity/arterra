@@ -59,8 +59,13 @@ namespace arterra {
 				Element();
 				Element(int width, int height, glm::vec2 position, ElementAnchor anchor, AtlasTexture* texture,
 					Material material);
-				~Element();
 				
+				void Move(glm::vec2 movementVector);
+				void Scale(float_t scaleFactor);
+				
+				void CreateMesh();
+				
+				inline glm::vec2 GetPosition() { return _position; }
 				inline Material& GetMaterial() { return _material; }
 				inline ElementMesh& GetMesh() { return _mesh; }
 				
@@ -76,6 +81,9 @@ namespace arterra {
 				Material _material;
 				// This element's mesh data.
 				ElementMesh _mesh;
+				// This element's texture handle.
+				AtlasTexture* _texture;
+				
 				
 		};
 		

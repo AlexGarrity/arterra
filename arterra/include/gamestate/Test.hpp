@@ -9,6 +9,7 @@
 #include "renderer/ShaderManager.hpp"
 #include "ui/Element.hpp"
 #include "ui/Material.hpp"
+#include "ui/Manager.hpp"
 #include "texture/TextureAtlas.hpp"
 #include "texture/Texture.hpp"
 #include "world/TerrainGenerator.hpp"
@@ -44,6 +45,7 @@ namespace arterra {
 			float_t _rotSpeed = glm::radians(15.0f);
 			
 			// Temporary gui
+			UI::Manager _uiManager;
 			UI::Element _element1;
 			UI::Element _element2;
 			UI::Element _element3;
