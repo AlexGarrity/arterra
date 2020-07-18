@@ -17,21 +17,25 @@ namespace arterra {
 		
 		ElementCollider::ElementCollider(Element* element)
 			: _element(element), _vertices() {
+			// Reserve the space needed for the vertices.
+			_vertices.reserve(4);
 			GenerateCollider();
 		}
 			
 		void ElementCollider::GenerateCollider() {
+			// Avoid having to fetch the data many times from the element.
 			float_t rotation = _element->GetRotation();
 			glm::vec2 position = _element->GetPosition();
 			float_t width = _element->_width;
 			float_t height = _element->_height;
 			
-			// First clear any previous collider data.
+			// Clear any previous vertex data.
 			_vertices.clear();
+			_simpleCheck = true;
 			
-			// Set up the vertices vector.
-			_vertices.reserve(4);
-			_simpleCheck = false;
+			// For 90-degree rotation intervals, the vertex positions
+			// are predefined to correct values. This is quicker than performing
+			// a "proper" rotation using trigonometry.
 			if (rotation == 0.0f) {
 				_vertices = {
 					glm::vec2(position.x, position.y),
@@ -61,11 +65,35 @@ namespace arterra {
 					glm::vec2(position.x, position.y + height)
 				};
 			}else {
+				// The rotation does not lie of 90-degree intervals.
+				// In this case, a proper rotation must be done on all vertices.
+				// This also invalidates the simple check, as the more
+				// advanced method must be used in 'IsInside()'.
 				_simpleCheck = false;
 				
+				// TODO: currently assuming rotation anchor is bottom-left,
+				// hence _vertices[0] doesn't get rotated as it's the anchor.
+				_vertices.push_back(glm::vec2(position.x, position.y));
+				_vertices.push_back(rotatePoint(glm::vec2(position.x + width, position.y),
+					glm::vec2(position.x, position.y), glm::radians(rotation)));
+				_vertices.push_back(rotatePoint(glm::vec2(position.x, position.y + height),
+					glm::vec2(position.x, position.y), glm::radians(rotation)));
+				_vertices.push_back(rotatePoint(glm::vec2(position.x + width, position.y + height),
+					glm::vec2(position.x, position.y), glm::radians(rotation)));
 			}
 			
-			
+		}
+		
+		glm::vec2 ElementCollider::rotatePoint(glm::vec2 point, glm::vec2 origin, float_t angle) {
+			// Translate point to be relative to origin, i.e. origin is (0,0).
+			point -= origin;
+			// Apply the rotation.
+			glm::vec2 result {
+				(point.x * glm::cos(-angle)) - (point.y * glm::sin(-angle)),
+				(point.x * glm::sin(-angle)) + (point.y * glm::cos(-angle))
+			};
+			// Undo the translation.
+			return result + origin;
 		}
 		
 		bool ElementCollider::IsInside(glm::vec2 position) {
@@ -102,8 +130,8 @@ namespace arterra {
 			pos = (d1 > 0) || (d2 > 0) || (d3 > 0);
 			
 			// Whether the point is inside or outside the triangle.
-			// If inside, *neg* will be true and *pos* will be false.
-			// If outside, *neg* and *pos* will be true.
+			// If inside, 'neg' will be true and 'pos' will be false.
+			// If outside, 'neg' and 'pos' will be true.
 			// Result inverted to make logical sense, otherwise true<->false
 			// would be flipped.
 			result1 = !(neg && pos);
