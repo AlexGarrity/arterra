@@ -50,7 +50,7 @@ namespace arterra {
 			_mat1.AddParameter(p5);
 			_mat1.AddParameter(p6);
 			
-			_element1 = UI::Element { 400, 300, glm::vec2(100.0f, 100.0f), 90.0f, UI::ElementAnchor::BottomLeft,
+			_element1 = UI::Element { 400, 300, glm::vec2(300.0f, 300.0f), 45.0f, UI::Anchor::BottomLeft,
 				_guiTexture, _mat1 };
 			_uiManager.CreateElement("el1", _element1);
 			
@@ -71,7 +71,7 @@ namespace arterra {
 			_mat2.AddParameter(pp5);
 			_mat2.AddParameter(pp6);
 			
-			_element2 = UI::Element { 200, 200, glm::vec2(1240.0f, 680.0f), 0.0f, UI::ElementAnchor::TopRight,
+			_element2 = UI::Element { 200, 200, glm::vec2(1240.0f, 680.0f), 0.0f, UI::Anchor::TopRight,
 				_guiTexture, _mat2 };
 			//_uiManager.CreateElement("el2", _element2);
 			
@@ -92,7 +92,7 @@ namespace arterra {
 			_mat3.AddParameter(ppp5);
 			_mat3.AddParameter(ppp6);
 			
-			_element3 = UI::Element { 600, 100, glm::vec2(500.0f, 400.0f), 0.0f, UI::ElementAnchor::BottomLeft,
+			_element3 = UI::Element { 600, 100, glm::vec2(500.0f, 400.0f), 0.0f, UI::Anchor::BottomLeft,
 				_guiTexture, _mat3 };
 			_uiManager.CreateElement("el3", _element3);
 			
@@ -184,8 +184,8 @@ namespace arterra {
 			_chunkRenderer.CullRenderables(*_engine->GetCamera());
 			
 			// Temporary gui stuff
-			_uiManager.GetElement("el1")->ApplyTranslation(glm::vec2(1.0f, 1.0f));
-			//_uiManager.GetElement("el1")->ApplyRotation(deltaTime*10.0f);
+			//_uiManager.GetElement("el1")->ApplyTranslation(glm::vec2(1.0f, 1.0f));
+			_uiManager.GetElement("el1")->ApplyRotation(deltaTime*10.0f);
 			//_uiManager.GetElement("el3")->ApplyRotation(deltaTime*10.0f);
 			_uiManager.Update();
 			

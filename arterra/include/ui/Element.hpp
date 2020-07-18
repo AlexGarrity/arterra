@@ -6,13 +6,14 @@
 
 #include "renderer/VertexArray.hpp"
 #include "ui/Material.hpp"
+#include "ui/Collider.hpp"
 #include "texture/TextureAtlas.hpp"
 
 namespace arterra {
 	
 	namespace UI {
 		
-		enum ElementAnchor {
+		enum Anchor {
 			TopLeft = 0,
 			TopCentre = 1,
 			TopRight = 2,
@@ -54,33 +55,11 @@ namespace arterra {
 			
 		};
 		
-		class Element;
-		
-		struct ElementCollider {
-			
-			ElementCollider();
-			ElementCollider(Element* element);
-			
-			void GenerateCollider();
-			bool IsInside(glm::vec2 position);
-			bool _simpleCheck;
-			
-			private:
-				// Reference to parent ui-element.
-				Element* _element;
-				// [0] = pos, [1] = width-corner, [2] = height-corner, [3] = opposite pos
-				std::vector<glm::vec2> _vertices;
-				
-				float_t signedDistance(glm::vec2 point, glm::vec2 a, glm::vec2 b);
-				glm::vec2 rotatePoint(glm::vec2 point, glm::vec2 origin, float_t angle);
-				
-		};
-		
 		class Element {                                                
 			
 			public:
 				Element();
-				Element(int width, int height, glm::vec2 position, float_t rotation, ElementAnchor anchor,
+				Element(int width, int height, glm::vec2 position, float_t rotation, Anchor anchor,
 					AtlasTexture* texture, Material material);
 				
 				void ApplyTranslation(glm::vec2 movementVector);
@@ -101,13 +80,17 @@ namespace arterra {
 				int _width, _height;
 				
 			private:
-				
-				// The position of the anchor point.
+				// The position of the anchor point, relative to
+				// that anchor point on the parent.
 				glm::vec2 _position;
-				// The rotation about the anchor point.
+				// The scale applied to the width & height.
+				float_t _scale;
+				// The rotation about the rotation anchor.
 				float_t _rotation;
-				// The position of the anchor.
-				ElementAnchor _anchor;
+				// The type of anchor point responsible for positioning.
+				Anchor _positionAnchor;
+				// The type of anchor point responsible for the rotation axis.
+				Anchor _rotationAnchor;
 				
 				// Contains the shader reference and the uniform data for this ui-element.
 				Material _material;
