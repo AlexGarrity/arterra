@@ -70,7 +70,9 @@ namespace arterra {
 				Element* _element;
 				// [0] = pos, [1] = width-corner, [2] = height-corner, [3] = opposite pos
 				std::vector<glm::vec2> _vertices;
-			
+				
+				float_t signedDistance(glm::vec2 point, glm::vec2 a, glm::vec2 b);
+				
 		};
 		
 		class Element {                                                

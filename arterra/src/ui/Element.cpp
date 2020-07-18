@@ -22,7 +22,6 @@ namespace arterra {
 			
 		void ElementCollider::GenerateCollider() {
 			float_t rotation = _element->GetRotation();
-			std::cout << "ROT " << rotation << std::endl;
 			glm::vec2 position = _element->GetPosition();
 			float_t width = _element->_width;
 			float_t height = _element->_height;
@@ -32,7 +31,7 @@ namespace arterra {
 			
 			// Set up the vertices vector.
 			_vertices.reserve(4);
-			_simpleCheck = true;
+			_simpleCheck = false;
 			if (rotation == 0.0f) {
 				_vertices = {
 					glm::vec2(position.x, position.y),
@@ -63,6 +62,7 @@ namespace arterra {
 				};
 			}else {
 				_simpleCheck = false;
+				
 			}
 			
 			
@@ -73,7 +73,6 @@ namespace arterra {
 			// Do a less computationally expensive checking method if
 			// the element is rotated on 90-degree intervals.
 			if (_simpleCheck) {
-				
 				if ((position.x > _vertices[0].x) &&
 					(position.x < _vertices[3].x) &&
 					(position.y > _vertices[0].y) &&
@@ -83,8 +82,57 @@ namespace arterra {
 					return false;
 				}
 			}
-			return false;
+			
+			// Test using the Barycentric coordinate method.
+			// Explanation: https://youtu.be/HYAgJN3x4GA
+			float_t d1, d2, d3;
+			bool neg, pos;
+			bool result1, result2;
+			glm::vec2 point = position;
+			
+			// Test first triangle 0,1,2.
+			// vertices[0] = A, vertices[1] = B, vertices[2] = C, point = P
+			d1 = signedDistance(point, _vertices[0], _vertices[1]);
+			d2 = signedDistance(point, _vertices[1], _vertices[2]);
+			d3 = signedDistance(point, _vertices[2], _vertices[0]);
+			
+			// Check if the point is definitely inside the triangle (all distances are negative)
+			neg = (d1 < 0) || (d2 < 0) || (d3 < 0);
+			// Check if the point is definitely outside the triangle (all distances are positive)
+			pos = (d1 > 0) || (d2 > 0) || (d3 > 0);
+			
+			// Whether the point is inside or outside the triangle.
+			// If inside, *neg* will be true and *pos* will be false.
+			// If outside, *neg* and *pos* will be true.
+			// Result inverted to make logical sense, otherwise true<->false
+			// would be flipped.
+			result1 = !(neg && pos);
+			
+			// Test second triangle 2,1,3.
+			// vertices[2] = A, vertices[1] = B, vertices[3] = C, point = P
+			d1 = signedDistance(point, _vertices[2], _vertices[1]);
+			d2 = signedDistance(point, _vertices[1], _vertices[3]);
+			d3 = signedDistance(point, _vertices[3], _vertices[2]);
+			neg = (d1 < 0) || (d2 < 0) || (d3 < 0);
+			pos = (d1 > 0) || (d2 > 0) || (d3 > 0);
+			result2 = !(neg && pos);
+			
+			// If either of the triangles are colliding,
+			// return success.
+			return (result1 || result2) ? true : false;
+			
 		}
+		
+		float_t ElementCollider::signedDistance(glm::vec2 point, glm::vec2 a, glm::vec2 b) {
+			// Compute the cross product of the point and the two triangle points which make a line
+			// for it to intercept.
+			// This essentially computes the inverse gradient of the line, then checks
+			// which side of the line the given point is on.
+			// This basically computes how far along A-B line you must move (optionally before
+			// changing direction) to get to Point.
+			return (point.x - b.x) * (a.y - b.y) - (a.x - b.x) * (point.y - b.y);
+		}
+		
 		
 		Element::Element() 
 			: _width(0), _height(0), _position(glm::vec2(0.0f, 0.0f)), _rotation(0.0f),
