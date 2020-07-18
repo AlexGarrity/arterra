@@ -43,6 +43,7 @@ namespace arterra {
 				void AddParameter(ShaderParameter shaderParameter);
 				void UpdateParameter(std::string name, glm::mat4 value);
 				void UpdateParameter(std::string name, float_t value);
+				void UpdateParameter(std::string name, glm::vec4 value);
 				inline std::vector<ShaderParameter>& GetParameters() { return _shaderParameters; }
 			
 			private:

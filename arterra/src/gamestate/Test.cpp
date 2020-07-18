@@ -9,11 +9,11 @@ namespace arterra {
 			, _atlas { 256, 256 }
 			, _guiAtlas { 256, 256 }
 			, _chunkRenderer{engine->GetRenderer()}
-			, _uiManager { &_shaderManager, _engine->GetRenderer() }
+			, _uiManager { &_shaderManager, _engine->GetRenderer(), _engine->GetWindow()->GetEvent() }
 		{
 			
 			_engine->GetWindow()->SetVsync(true);
-			_engine->GetWindow()->SetLockCursor(true);
+			_engine->GetWindow()->SetLockCursor(false);
 			_engine->GetWindow()->SetClearColour(0.6f, 0.8f, 1.0f, 1.0f);
 			
 			// ===Inputs===
@@ -50,7 +50,7 @@ namespace arterra {
 			_mat1.AddParameter(p5);
 			_mat1.AddParameter(p6);
 			
-			_element1 = UI::Element { 400, 300, glm::vec2(500.0f, 300.0f), 0.0f, UI::ElementAnchor::BottomLeft,
+			_element1 = UI::Element { 400, 300, glm::vec2(100.0f, 100.0f), 90.0f, UI::ElementAnchor::BottomLeft,
 				_guiTexture, _mat1 };
 			_uiManager.CreateElement("el1", _element1);
 			
@@ -159,7 +159,7 @@ namespace arterra {
 			}
 			float_t mouseX = _engine->GetInput()->PollMouseAxis(MouseAxis::Horizontal)._delta;
 			float_t mouseY = _engine->GetInput()->PollMouseAxis(MouseAxis::Vertical)._delta;
-			cameraTransform.Rotate(-_rotSpeed * -mouseY, -_rotSpeed * mouseX, 0.0f);
+			//cameraTransform.Rotate(-_rotSpeed * -mouseY, -_rotSpeed * mouseX, 0.0f);
 			
 			// Close the window with [Esc]
 			if (_engine->GetInput()->PollKeyBind("quit")._isActive) {
@@ -184,9 +184,10 @@ namespace arterra {
 			_chunkRenderer.CullRenderables(*_engine->GetCamera());
 			
 			// Temporary gui stuff
-			//_uiManager.GetElement("el1")->ApplyTranslation(glm::vec2(1.0f, 1.0f));
-			_uiManager.GetElement("el1")->ApplyRotation(deltaTime*10.0f);
-			_uiManager.GetElement("el3")->ApplyRotation(deltaTime*10.0f);
+			_uiManager.GetElement("el1")->ApplyTranslation(glm::vec2(1.0f, 1.0f));
+			//_uiManager.GetElement("el1")->ApplyRotation(deltaTime*10.0f);
+			//_uiManager.GetElement("el3")->ApplyRotation(deltaTime*10.0f);
+			_uiManager.Update();
 			
 			// Every 5 seconds, perform garbage collection
 			_timeToResourceUnload -= deltaTime;

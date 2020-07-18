@@ -4,15 +4,16 @@ namespace arterra {
 	
 	namespace UI {
 		
-		Manager::Manager(ShaderManager* shaderManager, Renderer* renderer)
-			: _shaderManager(shaderManager), _renderer(renderer), _elements() {}
+		Manager::Manager(ShaderManager* shaderManager, Renderer* renderer, sf::Event &windowEvent)
+			: _shaderManager(shaderManager), _renderer(renderer), _elements(), _event(&windowEvent) {}
 		
 		void Manager::CreateElement(std::string identifier, Element element) {
 			// First run copy constructor.
 			_elements[identifier] = element;
 			
-			// Then create the mesh on the "proper" copy.
+			// Then create the mesh and collider on the "proper" copy.
 			_elements[identifier].CreateMesh();
+			_elements[identifier].CreateCollider();
 		}
 		
 		void Manager::DestroyElement(std::string identifier) {
@@ -33,6 +34,20 @@ namespace arterra {
 					"' which does not exist!");
 			}
 			return &element->second;
+		}
+		
+		void Manager::Update() {
+			if (_event->type == sf::Event::MouseMoved) {
+				glm::vec2 mousePos = glm::vec2 { _event->mouseMove.x, (720-_event->mouseMove.y) };
+				for (auto it = _elements.begin(); it != _elements.end(); it++) {
+					if (it->second.GetCollider().IsInside(mousePos) == true) {
+						it->second.GetMaterial().UpdateParameter("u_ColourTint", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+					}else {
+						it->second.GetMaterial().UpdateParameter("u_ColourTint", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+					}
+				}
+			}
+			
 		}
 		
 		void Manager::Render() {
