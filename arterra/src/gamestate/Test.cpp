@@ -1,5 +1,19 @@
 #include "gamestate/Test.hpp"
 
+#if defined(_MSC_VER)
+	#if defined(_DEBUG)
+		#define WORLD_SIZE 6
+	#else
+		#define WORLD_SIZE 16
+	#endif
+#else
+	#if defined(NDEBUG)
+		#define WORLD_SIZE 16
+	#else
+		#define WORLD_SIZE 6
+	#endif
+#endif
+
 namespace arterra {
 
 	namespace gamestate {
@@ -7,14 +21,18 @@ namespace arterra {
 		Test::Test(Engine* engine)
 			: Base(engine)
 			, _atlas { 256, 256 }
-			, _chunkRenderer{engine->GetRenderer()}
-			, _guiRenderer{engine->GetRenderer()}
+			, _chunkRenderer { engine->GetRenderer() }
+			, _world { &_terrainGenerator, &_blockManager }
 		{
-			
+
 			_engine->GetWindow()->SetVsync(true);
 			_engine->GetInput()->SetLockCursor(true);
 			_engine->GetWindow()->SetClearColour(0.6f, 0.8f, 1.0f, 1.0f);
-			
+
+			_world.ResizeLoadDistance(WORLD_SIZE);
+
+			_engine->GetCamera()->GetTransform().Translate({0.0f, 70.0f, 0.0f});
+
 			// ===Inputs===
 			_engine->GetInput()->RegisterKeyBind("quit", sf::Keyboard::Escape);
 			// Set up player control keybinds.
@@ -28,46 +46,16 @@ namespace arterra {
 			//_engine->GetInput()->RegisterKeyBind("rot-right", sf::Keyboard::E);
 			_engine->GetInput()->RegisterMouseBind("rot-left", sf::Mouse::Button::Left);
 			_engine->GetInput()->RegisterMouseBind("rot-right", sf::Mouse::Button::Right);
-			
+
 			// ===GUI===
-			std::vector<float_t> vPos = {
-				400.0f, 200.0f,
-				400.0f, 500.0f,
-				800.0f, 200.0f,
-				800.0f, 200.0f,
-				400.0f, 500.0f,
-				800.0f, 500.0f
-			};
-			std::vector<float_t> vPos2 = {
-				805.0f, 200.0f,
-				805.0f, 500.0f,
-				1100.0f, 200.0f,
-				1100.0f, 200.0f,
-				805.0f, 500.0f,
-				1100.0f, 500.0f
-			};
-			std::vector<float_t> vUV = {
-				0.0f, 1.0f,
-				0.0f, 0.0f,
-				1.0f, 1.0f,
-				1.0f, 1.0f,
-				0.0f, 0.0f,
-				1.0f, 0.0f
-			};
-			
-			_guiElement = GuiElement{vPos, vUV};
-			_guiElement.SetShouldRender(true);
-			_guiRenderer.AddElement(&_guiElement);
-			_guiElement2 = GuiElement{vPos2, vUV};
-			_guiElement2.SetShouldRender(true);
-			//_guiRenderer.AddElement(&_guiElement2);
-			
-			_guiTexture.Load("textures/gui.png");
-			
+			std::vector<float_t> vPos = { 400.0f, 200.0f, 400.0f, 500.0f, 800.0f, 200.0f, 800.0f, 200.0f, 400.0f,
+				500.0f, 800.0f, 500.0f };
+			std::vector<float_t> vPos2 = { 805.0f, 200.0f, 805.0f, 500.0f, 1100.0f, 200.0f, 1100.0f, 200.0f,
+				805.0f, 500.0f, 1100.0f, 500.0f };
+			std::vector<float_t> vUV = { 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f };
+
 			// Load the shaders.
 			_shaderManager.LoadShader("shaders/basic.frag", "shaders/basic.vert", "basic");
-			_shaderManager.LoadShader("shaders/gui_sprite_simple.frag", "shaders/gui_sprite_simple.vert", "gui");
-			_shaderManager.LoadShader("shaders/gui_sprite_spliced.frag", "shaders/gui_sprite_spliced.vert", "gui-fancy");
 
 			// Create cube model.
 			_blockModel.Create("models/Block");
@@ -84,7 +72,8 @@ namespace arterra {
 			auto sandTexture = _atlas.GetTexture("sand");
 			auto dirtTexture = _atlas.GetTexture("dirt");
 
-			_blockManager.AddBlock(BlockData { *stoneTexture, *stoneTexture, *stoneTexture, _blockModel }, "stone");
+			_blockManager.AddBlock(
+				BlockData { *stoneTexture, *stoneTexture, *stoneTexture, _blockModel }, "stone");
 			_blockManager.AddBlock(
 				BlockData { *grassTextureTop, *grassTextureSide, *dirtTexture, _blockModel }, "grass");
 			_blockManager.AddBlock(BlockData { *dirtTexture, *dirtTexture, *dirtTexture, _blockModel }, "dirt");
@@ -94,11 +83,11 @@ namespace arterra {
 		void Test::Input(float_t deltaTime)
 		{
 			Transform& cameraTransform = _engine->GetCamera()->GetTransform();
-			_speed = deltaTime * 16.0f;
+			_speed = deltaTime * 6.0f;
 			_rotSpeed = deltaTime * 30.0f;
-			
+
 			float_t aa = _engine->GetInput()->PollMouseAxis(MouseAxis::Horizontal)._delta;
-			
+
 			// Poll for player control inputs.
 			if (_engine->GetInput()->PollKeyBind("forward")._isActive) {
 				cameraTransform.Translate(cameraTransform.Forward() * _speed);
@@ -121,32 +110,28 @@ namespace arterra {
 			float_t mouseX = _engine->GetInput()->PollMouseAxis(MouseAxis::Horizontal)._delta;
 			float_t mouseY = _engine->GetInput()->PollMouseAxis(MouseAxis::Vertical)._delta;
 			cameraTransform.Rotate(-_rotSpeed * -mouseY, -_rotSpeed * mouseX, 0.0f);
-			
+
 			// Close the window with [Esc]
 			if (_engine->GetInput()->PollKeyBind("quit")._isActive) {
 				_engine->SetShouldExit(true);
 			}
-			
-			if (_engine->GetWindow()->ShouldClose()) _engine->SetShouldExit(true);
+
+			if (_engine->GetWindow()->ShouldClose())
+				_engine->SetShouldExit(true);
 		}
 
 		void Test::Update(float_t deltaTime)
 		{
 			_engine->GetCamera()->Update(*_engine->GetWindow(), deltaTime);
 
-			
 			auto wX = _engine->GetWindow()->GetWidth();
 			auto wY = _engine->GetWindow()->GetHeight();
 
 			glViewport(0, 0, wX, wY);
 
-			_world.GenerateNewChunks(_engine->GetCamera()->GetTransform().Position());
-			for (auto &chunk : _world.GetEmptyChunks()) {
-				_terrainGenerator.GenerateChunk(*chunk, _blockManager);
-			}
-			_world.DeleteOldChunks(_engine->GetCamera()->GetTransform().Position());
-			_world.Update(deltaTime);
-			
+			_world.Update(deltaTime, _engine->GetCamera()->GetTransform().Position());
+
+			_chunkRenderer.DeleteChunks(_world.GetEmptyChunks());
 			_chunkRenderer.UpdateSubChunks(_world.GetModifiedSubChunks());
 			_chunkRenderer.CullRenderables(*_engine->GetCamera());
 			// TODO: guirenderer.updateelements(uimanager.getmodifiedelements)
@@ -163,25 +148,15 @@ namespace arterra {
 		{
 			// Clear the window
 			_engine->GetWindow()->Clear();
-			
+
 			// Set the camera view projection so the world renders in perspective
 			_shaderManager.UseShader("basic");
 			_shaderManager.ActiveProgram().SetUniform("viewProjection", _engine->GetCamera()->ViewProjection());
 			_shaderManager.ActiveProgram().SetUniform("fragmentColour", { 0.2f, 1.0f, 1.0f, 1.0f });
-			
+
 			_atlas.Bind();
 			//_shaderManager.ActiveProgram().SetUniform("fragmentTexture", 0);
 			_chunkRenderer.Render();
-			
-			_shaderManager.UseShader("gui-fancy");
-			_guiTexture.Bind();
-			_shaderManager.ActiveProgram().SetUniform("u_ColourTint", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-			_shaderManager.ActiveProgram().SetUniform("viewProjection", _engine->GetCamera()->GuiProjection());
-			//_shaderManager.ActiveProgram().SetUniform("u_Pixelborder", glm::vec2(0.01f, 0.01333f));
-			_shaderManager.ActiveProgram().SetUniform("u_Pixelborder", glm::vec2(0.1f, 0.1333f));
-			_shaderManager.ActiveProgram().SetUniform("u_Textureborder", 0.3125f);
-			_shaderManager.ActiveProgram().SetUniform("u_DebugMode", 0);
-			_guiRenderer.Render();
 
 			_engine->GetWindow()->Update(deltaTime);
 		}

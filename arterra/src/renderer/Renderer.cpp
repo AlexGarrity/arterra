@@ -6,6 +6,7 @@ namespace arterra {
 	{
 		// Enable depth testing
 		glEnable(GL_BLEND);
+		glEnable(GL_DEPTH_TEST);
 
 		// Enable face culling
 		glFrontFace(GL_CCW);

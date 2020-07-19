@@ -1,5 +1,12 @@
 #include "world/TerrainGenerator.hpp"
 
+#include "block/BlockManager.hpp"
+
+#include "world/World.hpp"
+#include "world/Chunk.hpp"
+#include "world/SubChunk.hpp"
+#include "world/Block.hpp"
+
 namespace arterra {
 
 	TerrainGenerator::TerrainGenerator() {

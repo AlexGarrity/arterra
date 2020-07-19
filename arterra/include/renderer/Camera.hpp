@@ -2,16 +2,12 @@
 
 #include "PCH.hpp"
 
-#include "window/Window.hpp"
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 #include "ecs/component/Transform.hpp"
-#include "world/Block.hpp"
 
 namespace arterra {
+
+	class Window;
+	class WorldPosition;
 
 	class ViewFrustum {
 		struct Plane {
@@ -43,7 +39,7 @@ namespace arterra {
 		inline glm::mat4 ViewProjection() const { return _viewProjection; }
 		inline glm::mat4 GuiProjection() const { return _guiProjection; }
 		inline ViewFrustum& GetViewFrustum() { return _viewFrustum; }
-		
+
 		inline Transform& GetTransform() { return _transform; }
 
 	private:
@@ -55,9 +51,8 @@ namespace arterra {
 
 		Transform _transform;
 		ViewFrustum _viewFrustum;
-		
+
 		glm::mat4 _guiProjection;
-		
 	};
 
 };

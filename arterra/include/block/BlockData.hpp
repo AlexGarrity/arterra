@@ -20,21 +20,23 @@ namespace arterra {
 
 	class BlockData {
 	public:
-		BlockData(AtlasTexture& top, AtlasTexture& side, AtlasTexture& bottom, CullableModel& model);
+		BlockData(const AtlasTexture& top, const AtlasTexture& side, const AtlasTexture& bottom, const CullableModel& model);
+		BlockData(const BlockData &other);
+		BlockData(const BlockData &&other);
 
-		void operator=(const BlockData& other);
+		void operator=(const BlockData &other) = delete;
 
-		CullableModel& GetModel() const;
-		AtlasTexture& GetTexture(Direction direction) const;
-		CullingSettings GetCullingSettings() const;
+		const CullableModel& GetModel() const;
+		const AtlasTexture& GetTexture(Direction direction) const;
+		const CullingSettings GetCullingSettings() const;
 
 	private:
-		AtlasTexture& _topTexture;
-		AtlasTexture& _sideTexture;
-		AtlasTexture& _bottomTexture;
+		const AtlasTexture& _topTexture;
+		const AtlasTexture& _sideTexture;
+		const AtlasTexture& _bottomTexture;
 
-		CullableModel& _model;
-		CullingSettings _cullingSettings;
+		const CullableModel& _model;
+		const CullingSettings _cullingSettings;
 	};
 
 }

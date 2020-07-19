@@ -15,8 +15,6 @@ namespace arterra {
 		Block(const Block& other);
 		Block(int posX, int posY, int posZ, SubChunk* subChunk, BlockData& blockData);
 
-		void operator=(const Block& other);
-
 		WorldPosition GetPosition() const;
 		WorldPosition GetPositionRaw() const;
 		BlockData& GetData() const;

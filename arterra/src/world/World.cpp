@@ -1,20 +1,27 @@
 #include "world/World.hpp"
 
-#include <glm/glm.hpp>
+#include "block/BlockManager.hpp"
+#include "world/Block.hpp"
+#include "world/Chunk.hpp"
+#include "world/SubChunk.hpp"
+#include "world/TerrainGenerator.hpp"
 
 namespace arterra {
-
-	World::World()
-	{
-		_modifiedSubChunks.reserve(128);
-		_emptyChunks.reserve(128);
-	}
 
 	int WorldToChunkSpace(int v, int axis)
 	{
 		if (v < 0)
 			return ((v + 1) / axis) - 1;
 		return v / axis;
+	}
+
+	World::World(TerrainGenerator* generator, BlockManager* blockManager)
+	{
+		_modifiedSubChunks.reserve(128);
+		ResizeLoadDistance(16);
+		_emptyChunks.reserve(16);
+		_terrainGenerator = generator;
+		_blockManager = blockManager;
 	}
 
 	Chunk* World::CreateChunk(int x, int y, int z)
@@ -55,11 +62,22 @@ namespace arterra {
 
 	Chunk* World::CreateChunkCS(int x, int z)
 	{
+		// Check that the chunk doesn't already exist
 		auto chunk = FindChunkCS(x, z);
 		if (chunk != _chunks.end())
 			return nullptr;
-		auto c = _chunks.emplace(ChunkPosition { x, z }, new Chunk { x, z, this });
-		return (c.first->second);
+
+		// Check to see if there are any chunks available
+		auto cp = _chunkPool.GetEmptyChunk();
+		if (!cp)
+			return nullptr;
+
+		// Set the chunk
+		cp->_chunk->SetPosition(x, z);
+		cp->_chunk->SetWorld(this);
+		auto c = _chunks.emplace(ChunkPosition { x, z }, cp->_chunk);
+		cp->_state = ChunkPool::Handle::State::Generate;
+		return c.first->second;
 	}
 
 	Chunk* World::GetChunkCS(int x, int z)
@@ -80,9 +98,11 @@ namespace arterra {
 
 	void World::DeleteChunkCS(int x, int z)
 	{
-		auto chunk = FindChunkCS(x, z);
-		if (chunk->second)
-			delete chunk->second;
+		ChunkPosition pos { x, z };
+		auto chunk = _chunks[pos];
+		auto handle = _chunkPool.FindHandle(chunk);
+		if (handle)
+			handle->_state = ChunkPool::Handle::State::Empty;
 		_chunks.erase(ChunkPosition(x, z));
 	}
 
@@ -110,8 +130,11 @@ namespace arterra {
 		return pos;
 	}
 
-	void World::Update(float deltaTime)
+	void World::Update(float deltaTime, glm::vec3 playerPos)
 	{
+		DeleteOldChunks(playerPos);
+		GenerateNewChunks(playerPos);
+
 		_modifiedSubChunks.clear();
 		for (auto& chunk : _chunks) {
 			if (!chunk.second)
@@ -123,8 +146,6 @@ namespace arterra {
 
 	void World::GenerateNewChunks(glm::vec3 playerPosition)
 	{
-		_emptyChunks.clear();
-
 		// Figure out if any new chunks need generating
 		auto playerPos = ChunkPosition(WorldToChunkSpace(playerPosition.x, SubChunk::SIZE_X),
 			WorldToChunkSpace(playerPosition.z, SubChunk::SIZE_Z));
@@ -134,23 +155,30 @@ namespace arterra {
 
 		for (auto z = startZ; z < startZ + _loadDistance; ++z) {
 			for (auto x = startX; x < startX + _loadDistance; ++x) {
-				auto chunk = CreateChunkCS(x, z);
-				if (chunk);
-					_emptyChunks.push_back(chunk);
+				if (ChunkInLoadDistance(ChunkPosition(x, z), playerPos))
+					CreateChunkCS(x, z);
+			}
+		}
+
+		for (auto& c : _chunkPool.GetChunks()) {
+			if (c._state == ChunkPool::Handle::State::Generate) {
+				_terrainGenerator->GenerateChunk(*c._chunk, *_blockManager);
+				c._state = ChunkPool::Handle::State::Active;
 			}
 		}
 	}
 
 	void World::DeleteOldChunks(glm::vec3 playerPosition)
 	{
+		_emptyChunks.clear();
 		// Figure out if any new chunks need generating
 		auto playerPos = ChunkPosition(WorldToChunkSpace(playerPosition.x, SubChunk::SIZE_X),
 			WorldToChunkSpace(playerPosition.z, SubChunk::SIZE_Z));
 
-		for (auto& c : _chunks) {
-			if (!ChunkInLoadDistance(playerPos, c.second->GetPositionRaw())) {
-				auto p = c.second->GetPositionRaw();
-				DeleteChunkCS(p._x, p._z);
+		for (auto& c : _chunkPool.GetChunks()) {
+			if (!ChunkInLoadDistance(c._chunk->GetPositionRaw(), playerPos)) {
+				c._state = ChunkPool::Handle::State::Empty;
+				_chunks.erase(ChunkPosition(c._chunk->GetPositionRaw()));
 			}
 		}
 	}
@@ -189,8 +217,18 @@ namespace arterra {
 		return deltaX + deltaY;
 	}
 
+	void World::ResizeLoadDistance(float_t distance)
+	{
+		_loadDistance = distance;
+		_loadDistance2 = distance * distance;
+
+		// Recalculate the number of points
+		size_t chunks = (_loadDistance + 2) * (_loadDistance + 2);
+		_chunkPool.SetSize(chunks);
+	}
+
 	std::vector<SubChunk*>& World::GetModifiedSubChunks() { return _modifiedSubChunks; }
 
-	std::vector<Chunk*>& World::GetEmptyChunks() { return _emptyChunks; }
+	std::vector<WorldPosition>& World::GetEmptyChunks() { return _emptyChunks; }
 
 }

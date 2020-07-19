@@ -22,6 +22,7 @@ namespace arterra {
 		void AddMesh(ChunkMesh mesh);
 
 		void CullRenderables(Camera &camera);
+		void DeleteChunks(std::vector<WorldPosition> &chunks);
 
 		void UpdateSubChunks(std::vector<SubChunk*>& subChunks);
 		ChunkMesh* GetChunkMesh(WorldPosition position);

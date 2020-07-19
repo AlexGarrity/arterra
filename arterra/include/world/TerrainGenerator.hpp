@@ -4,10 +4,11 @@
 
 #include <glm/gtc/noise.hpp>
 
-#include "world/Chunk.hpp"
-#include "block/BlockManager.hpp"
-
 namespace arterra {
+
+	class Chunk;
+	class BlockManager;
+	class Block;
 
 	class TerrainGenerator {
 		public:

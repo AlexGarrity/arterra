@@ -2,20 +2,25 @@
 
 #include "PCH.hpp"
 
-#include "world/Block.hpp"
+#include "world/WorldPosition.hpp"
 #include "world/SubChunk.hpp"
 
 namespace arterra {
 
-	using SubChunkMap = std::unordered_map<int, SubChunk>;
-
 	class World;
+	enum Direction;
+
+	using SubChunkMap = std::unordered_map<int, SubChunk>;
 
 	class Chunk {
 	public:
 		Chunk() = default;
+		Chunk(World *world);
 		Chunk(int posX, int posZ, World *world);
 		Chunk(const Chunk &other);
+
+		void SetPosition(int posX, int posZ);
+		void SetWorld(World *world);
 
 		void CreateSubChunk(int y);
 		void CreateSubChunksToHeight(int height);

@@ -22,14 +22,6 @@ namespace arterra {
 		_world = _subChunk->GetChunk()->GetWorld();
 	}
 
-	void Block::operator=(const Block& other)
-	{
-		_position = other._position;
-		_subChunk = other._subChunk;
-		_blockData = other._blockData;
-		_world = other._world;
-	}
-
 	WorldPosition Block::GetPosition() const
 	{
 		auto scPosition = _subChunk->GetPosition();

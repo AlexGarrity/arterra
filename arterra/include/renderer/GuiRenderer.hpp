@@ -5,6 +5,9 @@
 #include "renderer/Camera.hpp"
 #include "renderer/Renderer.hpp"
 
+#include "renderer/VertexArray.hpp"
+#include "renderer/VertexBuffer.hpp"
+
 namespace arterra {
 	
 	class GuiElement {

@@ -1,5 +1,7 @@
 #include "world/Chunk.hpp"
 
+#include "world/Block.hpp"
+#include "world/SubChunk.hpp"
 #include "world/World.hpp"
 
 namespace arterra {
@@ -7,6 +9,11 @@ namespace arterra {
 	Chunk::Chunk(int posX, int posZ, World* world)
 		: _position { posX, posZ }
 		, _world { world }
+	{
+	}
+
+	Chunk::Chunk(World* world)
+		: Chunk(0, 0, world)
 	{
 	}
 
@@ -19,6 +26,14 @@ namespace arterra {
 			sc.second.SetParent(this);
 		}
 	}
+
+	void Chunk::SetPosition(int x, int z)
+	{
+		_position._x = x;
+		_position._z = z;
+	}
+
+	void Chunk::SetWorld(World* world) { _world = world; }
 
 	void Chunk::CreateSubChunk(int y) { CreateSubChunkCS(y / SubChunk::SIZE_Y); }
 
@@ -36,7 +51,7 @@ namespace arterra {
 	void Chunk::CreateSubChunksToHeightCS(int height)
 	{
 		for (auto iY = 0; iY <= height; ++iY) {
-			_subChunks.emplace(iY, SubChunk { iY, this });
+			CreateSubChunkCS(iY);
 		}
 	}
 
@@ -79,8 +94,8 @@ namespace arterra {
 	{
 		switch (borderDirection) {
 			case Direction::PosY: {
-				Logger::Get().Log(Logger::Debug, "Updating positive Y border for chunk at (", _position._x, ", ", _position._z,
-					").  Whilst possible, was this intended?");
+				Logger::Get().Log(Logger::Debug, "Updating positive Y border for chunk at (", _position._x, ", ",
+					_position._z, ").  Whilst possible, was this intended?");
 				SubChunkMap::iterator highestSC;
 				for (auto it = _subChunks.begin(); it != _subChunks.end(); ++it) {
 					if (it->second.GetPositionRaw() > highestSC->second.GetPositionRaw()) {
@@ -91,8 +106,8 @@ namespace arterra {
 			} break;
 
 			case Direction::NegY: {
-				Logger::Get().Log(Logger::Debug, "Updating negative Y border for chunk at (", _position._x, ", ", _position._z,
-					").  Whilst possible, was this intended?");
+				Logger::Get().Log(Logger::Debug, "Updating negative Y border for chunk at (", _position._x, ", ",
+					_position._z, ").  Whilst possible, was this intended?");
 				SubChunkMap::iterator lowestSC;
 				for (auto it = _subChunks.begin(); it != _subChunks.end(); ++it) {
 					if (it->second.GetPositionRaw() > lowestSC->second.GetPositionRaw()) {
@@ -126,7 +141,10 @@ namespace arterra {
 
 	SubChunkMap& Chunk::GetSubChunks() { return _subChunks; }
 
-	WorldPosition Chunk::GetPosition() { return { _position._x * SubChunk::SIZE_X, 0, _position._z * SubChunk::SIZE_Z }; }
+	WorldPosition Chunk::GetPosition()
+	{
+		return { _position._x * SubChunk::SIZE_X, 0, _position._z * SubChunk::SIZE_Z };
+	}
 
 	ChunkPosition Chunk::GetPositionRaw() { return _position; }
 

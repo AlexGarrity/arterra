@@ -64,6 +64,10 @@ namespace arterra {
 		}
 	}
 
+	void ChunkRenderer::DeleteChunks(std::vector<WorldPosition> &chunks) {
+		
+	}
+
 	ChunkMesh* ChunkRenderer::GetChunkMesh(WorldPosition position)
 	{
 		for (auto& r : _renderables) {
@@ -89,9 +93,7 @@ namespace arterra {
 	}
 
 	void ChunkRenderer::Render()
-	{
-		glEnable(GL_DEPTH_TEST);
-		
+	{	
 		for (auto& renderable : _renderables) {
 			if (renderable.ShouldRender()) {
 				renderable.Bind();
