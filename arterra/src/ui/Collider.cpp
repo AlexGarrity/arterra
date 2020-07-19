@@ -5,17 +5,23 @@ namespace arterra {
 	
 	namespace UI {
 		
-		ElementCollider::ElementCollider()
-			: _element(nullptr), _vertices() {}
+		Collider::Collider()
+			: _element(nullptr) {}
 		
-		ElementCollider::ElementCollider(Element* element)
-			: _element(element), _vertices() {
-			// Reserve the space needed for the vertices.
+		Collider::Collider(Element* element)
+			: _element(element) {}
+			
+		BoxCollider::BoxCollider()
+			: Collider(), _vertices() {}
+		
+		BoxCollider::BoxCollider(Element* element)
+			: Collider(element), _vertices() {
+			// Reserve the space needed for the box vertices.
 			_vertices.reserve(4);
 			GenerateCollider();
 		}
 			
-		void ElementCollider::GenerateCollider() {
+		void BoxCollider::GenerateCollider() {
 			// Avoid having to fetch the data many times from the element.
 			float_t rotation = _element->GetRotation();
 			std::vector<glm::vec2> points = _element->VerticesFromAnchor(_element->_positionAnchor,
@@ -26,50 +32,7 @@ namespace arterra {
 			
 			// Clear any previous vertex data.
 			_vertices.clear();
-			_simpleCheck = false;
-			/* 
-			// For 90-degree rotation intervals, the vertex positions
-			// are predefined to correct values. This is quicker than performing
-			// a "proper" rotation using trigonometry.
-			if (rotation == 0.0f) {
-				_vertices = {
-					glm::vec2(position.x, position.y),
-					glm::vec2(position.x + width, position.y),
-					glm::vec2(position.x, position.y + height),
-					glm::vec2(position.x + width, position.y + height)
-				};
-			}else if (rotation == 90.0f) {
-				_vertices = {
-					glm::vec2(position.x, position.y - width),
-					glm::vec2(position.x + height, position.y - width),
-					glm::vec2(position.x, position.y),
-					glm::vec2(position.x + height, position.y)
-				};
-			}else if (rotation == 180.0f) {
-				_vertices = {
-					glm::vec2(position.x - width, position.y - height),
-					glm::vec2(position.x, position.y - height),
-					glm::vec2(position.x - width, position.y),
-					glm::vec2(position.x, position.y)
-				};
-			}else if (rotation == 270.0f) {
-				_vertices = {
-					glm::vec2(position.x - height),
-					glm::vec2(position.x, position.y),
-					glm::vec2(position.x - height, position.y + width),
-					glm::vec2(position.x, position.y + height)
-				};
-			}else {
-				// The rotation does not lie of 90-degree intervals.
-				// In this case, a proper rotation must be done on all vertices.
-				// This also invalidates the simple check, as the more
-				// advanced method must be used in 'IsInside()'.
-				_simpleCheck = false;
-				
-				
-			} */
-			
-			
+			// Rotate all 4 box vertices around the origin (UI element anchor point).
 			_vertices.push_back(rotatePoint(points[0], origin, glm::radians(rotation)));
 			_vertices.push_back(rotatePoint(points[1], origin, glm::radians(rotation)));
 			_vertices.push_back(rotatePoint(points[2], origin, glm::radians(rotation)));
@@ -77,33 +40,7 @@ namespace arterra {
 			
 		}
 		
-		glm::vec2 ElementCollider::rotatePoint(glm::vec2 point, glm::vec2 origin, float_t angle) {
-			// Translate point to be relative to origin, i.e. origin is (0,0).
-			point -= origin;
-			// Apply the rotation.
-			glm::vec2 result {
-				(point.x * glm::cos(-angle)) - (point.y * glm::sin(-angle)),
-				(point.x * glm::sin(-angle)) + (point.y * glm::cos(-angle))
-			};
-			// Undo the translation.
-			return result + origin;
-		}
-		
-		bool ElementCollider::IsInside(glm::vec2 position) {
-			
-			// Do a less computationally expensive checking method if
-			// the element is rotated on 90-degree intervals.
-			if (_simpleCheck) {
-				if ((position.x > _vertices[0].x) &&
-					(position.x < _vertices[3].x) &&
-					(position.y > _vertices[0].y) &&
-					(position.y < _vertices[3].y)) {
-					return true;
-				}else {
-					return false;
-				}
-			}
-			
+		bool BoxCollider::ContainsPoint(glm::vec2 position) {
 			// Test using the Barycentric coordinate method.
 			// Explanation: https://youtu.be/HYAgJN3x4GA
 			float_t d1, d2, d3;
@@ -144,7 +81,19 @@ namespace arterra {
 			
 		}
 		
-		float_t ElementCollider::signedDistance(glm::vec2 point, glm::vec2 a, glm::vec2 b) {
+		glm::vec2 BoxCollider::rotatePoint(glm::vec2 point, glm::vec2 origin, float_t angle) {
+			// Translate point to be relative to origin, i.e. origin is (0,0).
+			point -= origin;
+			// Apply the rotation.
+			glm::vec2 result {
+				(point.x * glm::cos(-angle)) - (point.y * glm::sin(-angle)),
+				(point.x * glm::sin(-angle)) + (point.y * glm::cos(-angle))
+			};
+			// Undo the translation.
+			return result + origin;
+		}
+		
+		float_t BoxCollider::signedDistance(glm::vec2 point, glm::vec2 a, glm::vec2 b) {
 			// Compute the cross product of the point and the two triangle points which make a line
 			// for it to intercept.
 			// This essentially computes the inverse gradient of the line, then checks

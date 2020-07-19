@@ -40,7 +40,7 @@ namespace arterra {
 			if (_event->type == sf::Event::MouseMoved) {
 				glm::vec2 mousePos = glm::vec2 { _event->mouseMove.x, (720-_event->mouseMove.y) };
 				for (auto it = _elements.begin(); it != _elements.end(); it++) {
-					if (it->second.GetCollider().IsInside(mousePos) == true) {
+					if (it->second.GetCollider()->ContainsPoint(mousePos) == true) {
 						it->second.GetMaterial().UpdateParameter("u_ColourTint", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 					}else {
 						it->second.GetMaterial().UpdateParameter("u_ColourTint", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));

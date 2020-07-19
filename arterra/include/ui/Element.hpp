@@ -74,7 +74,7 @@ namespace arterra {
 				inline float_t GetRotation() { return glm::degrees(_rotation); }
 				inline Material& GetMaterial() { return _material; }
 				inline ElementMesh& GetMesh() { return _mesh; }
-				inline ElementCollider& GetCollider() { return _collider; }
+				inline Collider* GetCollider() { return _collider; }
 				
 				// Returns list of vertices after undoing anchor relativity.
 				// TODO: proper documentation
@@ -102,7 +102,7 @@ namespace arterra {
 				// The mesh data.
 				ElementMesh _mesh;
 				// The collider data.
-				ElementCollider _collider;
+				Collider* _collider;
 				// The texture handle.
 				AtlasTexture* _texture;
 				// The "model" transformation matrix.

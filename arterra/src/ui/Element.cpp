@@ -18,20 +18,21 @@ namespace arterra {
 		Element::Element() 
 			: _width(0), _height(0), _position(glm::vec2(0.0f, 0.0f)), _rotation(0.0f),
 			_positionAnchor(Anchor::BottomLeft),	_mesh(ElementMesh()), _material(Material()),
-			_collider(ElementCollider()) {}
+			_collider(nullptr) {}
 		
 		Element::Element(int width, int height, glm::vec2 position, float_t rotation, Anchor positionAnchor,
 			Anchor relativeToAnchor, AtlasTexture* texture, Material material)
 			: _width(width), _height(height), _position(position), _rotation(glm::radians(rotation)),
-			_positionAnchor(positionAnchor), _relativeToAnchor(relativeToAnchor), _material(material), _texture(texture) {
+			_positionAnchor(positionAnchor), _relativeToAnchor(relativeToAnchor), _material(material), _texture(texture),
+			_collider(nullptr) {
 			
 			_transform = glm::translate(_transform, { position.x, position.y, 0.0f });
 			_transform = glm::scale(_transform, { width , height, 1.0f });
 			_transform = glm::rotate(_transform, 0.0f, { 0.0f, 0.0f, 1.0f });
 			_material.AddParameter(ShaderParameter { "u_ModelProjection", _transform, ShaderParameter::Type::Mat4});
-			//_material.AddParameter(ShaderParameter { "u_Rotation", _rotation, ShaderParameter::Type::Float});
+			
 		}
-				
+		
 		void Element::ApplyTranslation(glm::vec2 movementVector) {
 			_position.x += movementVector.x;
 			_position.y += movementVector.y;
@@ -43,8 +44,10 @@ namespace arterra {
 		}
 		
 		void Element::ApplyRotation(float_t rotationAngle) {
-			// TODO: if greater than 360 loop round to 0.
 			rotationAngle = glm::radians(rotationAngle);
+			if (rotationAngle > glm::pi<float>()) {
+				rotationAngle = rotationAngle - glm::pi<float>();
+			}
 			_rotation += rotationAngle;
 		}
 		
@@ -58,11 +61,15 @@ namespace arterra {
 			_transform = glm::rotate(_transform, _rotation, { 0.0f, 0.0f, -1.0f });
 			_transform = glm::scale(_transform, { _width , _height, 1.0f });
 			_material.UpdateParameter("u_ModelProjection", _transform);
-			_collider.GenerateCollider();
+			_collider->GenerateCollider();
 		}
 		
 		void Element::CreateCollider() {
-			_collider = ElementCollider { this };
+			// TODO: differentiate collider types on creation.
+			if (_collider) {
+				delete _collider;
+			}
+			_collider = new BoxCollider(this);
 		}
 		
 		std::vector<glm::vec2> Element::VerticesFromAnchor(Anchor anchor, glm::vec2 anchorPosition,
