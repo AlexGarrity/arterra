@@ -20,16 +20,16 @@ namespace arterra {
 			_positionAnchor(Anchor::BottomLeft),	_mesh(ElementMesh()), _material(Material()),
 			_collider(ElementCollider()) {}
 		
-		Element::Element(int width, int height, glm::vec2 position, float_t rotation, Anchor anchor,
-			AtlasTexture* texture, Material material)
-			: _width(width), _height(height), _position(position), _rotation(glm::radians(rotation)), _positionAnchor(anchor),
-			_material(material), _texture(texture) {
+		Element::Element(int width, int height, glm::vec2 position, float_t rotation, Anchor positionAnchor,
+			Anchor relativeToAnchor, AtlasTexture* texture, Material material)
+			: _width(width), _height(height), _position(position), _rotation(glm::radians(rotation)),
+			_positionAnchor(positionAnchor), _relativeToAnchor(relativeToAnchor), _material(material), _texture(texture) {
 			
 			_transform = glm::translate(_transform, { position.x, position.y, 0.0f });
 			_transform = glm::scale(_transform, { width , height, 1.0f });
 			_transform = glm::rotate(_transform, 0.0f, { 0.0f, 0.0f, 1.0f });
 			_material.AddParameter(ShaderParameter { "u_ModelProjection", _transform, ShaderParameter::Type::Mat4});
-			_material.AddParameter(ShaderParameter { "u_Rotation", _rotation, ShaderParameter::Type::Float});
+			//_material.AddParameter(ShaderParameter { "u_Rotation", _rotation, ShaderParameter::Type::Float});
 		}
 				
 		void Element::ApplyTranslation(glm::vec2 movementVector) {
@@ -49,7 +49,7 @@ namespace arterra {
 		}
 		
 		void Element::UpdateTransform() {
-			// WHEN TRANSFORMING!!!
+			// NOTE WHEN TRANSFORMING!!!
 			// Translate -> Rotate -> Scale ALWAYS!!!
 			// Also, translate is not commutative,
 			//		i.e, you can't add movement vector to existing position.
@@ -63,6 +63,93 @@ namespace arterra {
 		
 		void Element::CreateCollider() {
 			_collider = ElementCollider { this };
+		}
+		
+		std::vector<glm::vec2> Element::VerticesFromAnchor(Anchor anchor, glm::vec2 anchorPosition,
+			float_t width, float_t height) {
+			
+			float_t halfWidth = width / 2;
+			float_t halfHeight = height / 2;
+			
+			std::vector<glm::vec2> vertices;
+			vertices.reserve(4);
+			
+			switch (anchor)
+			{
+			case Anchor::BottomLeft:
+				vertices = {
+					glm::vec2(anchorPosition.x, anchorPosition.y),
+					glm::vec2(anchorPosition.x + width, anchorPosition.y),
+					glm::vec2(anchorPosition.x, anchorPosition.y + height),
+					glm::vec2(anchorPosition.x + width, anchorPosition.y + height)
+				};
+				break;
+			case Anchor::BottomCentre:
+				vertices = {
+					glm::vec2(anchorPosition.x - halfWidth, anchorPosition.y),
+					glm::vec2(anchorPosition.x + halfWidth, anchorPosition.y),
+					glm::vec2(anchorPosition.x - halfWidth, anchorPosition.y + height),
+					glm::vec2(anchorPosition.x + halfWidth, anchorPosition.y + height)
+				};
+				break;
+			case Anchor::BottomRight:
+				vertices = {
+					glm::vec2(anchorPosition.x - width, anchorPosition.y),
+					glm::vec2(anchorPosition.x, anchorPosition.y),
+					glm::vec2(anchorPosition.x - width, anchorPosition.y + height),
+					glm::vec2(anchorPosition.x, anchorPosition.y + height)
+				};
+				break;
+			case Anchor::TopLeft:
+				vertices = {
+					glm::vec2(anchorPosition.x, anchorPosition.y - height),
+					glm::vec2(anchorPosition.x + width, anchorPosition.y - height),
+					glm::vec2(anchorPosition.x, anchorPosition.y),
+					glm::vec2(anchorPosition.x + width, anchorPosition.y)
+				};
+				break;
+			case Anchor::TopCentre:
+				vertices = {
+					glm::vec2(anchorPosition.x - halfWidth, anchorPosition.y - height),
+					glm::vec2(anchorPosition.x + halfWidth, anchorPosition.y - height),
+					glm::vec2(anchorPosition.x - halfWidth, anchorPosition.y),
+					glm::vec2(anchorPosition.x + halfWidth, anchorPosition.y)
+				};
+				break;
+			case Anchor::TopRight:
+				vertices = {
+					glm::vec2(anchorPosition.x - width, anchorPosition.y - height),
+					glm::vec2(anchorPosition.x, anchorPosition.y - height),
+					glm::vec2(anchorPosition.x - width, anchorPosition.y),
+					glm::vec2(anchorPosition.x, anchorPosition.y)
+				};
+				break;
+			case Anchor::Left:
+				vertices = {
+					glm::vec2(anchorPosition.x, anchorPosition.y - halfHeight),
+					glm::vec2(anchorPosition.x + width, anchorPosition.y - halfHeight),
+					glm::vec2(anchorPosition.x, anchorPosition.y + halfHeight),
+					glm::vec2(anchorPosition.x + width, anchorPosition.y + halfHeight)
+				};
+				break;
+			case Anchor::Right:
+				vertices = {
+					glm::vec2(anchorPosition.x - width, anchorPosition.y - halfHeight),
+					glm::vec2(anchorPosition.x, anchorPosition.y - halfHeight),
+					glm::vec2(anchorPosition.x - width, anchorPosition.y + halfHeight),
+					glm::vec2(anchorPosition.x, anchorPosition.y + halfHeight)
+				};
+				break;
+			case Anchor::Centre:
+				vertices = {
+					glm::vec2(anchorPosition.x - halfWidth, anchorPosition.y - halfHeight),
+					glm::vec2(anchorPosition.x + halfWidth, anchorPosition.y - halfHeight),
+					glm::vec2(anchorPosition.x - halfWidth, anchorPosition.y + halfHeight),
+					glm::vec2(anchorPosition.x + halfWidth, anchorPosition.y + halfHeight)
+				};
+				break;
+			}
+			return vertices;
 		}
 		
 		void Element::CreateMesh() {
@@ -79,8 +166,8 @@ namespace arterra {
 				_texture->_x + _texture->_width, _texture->_y + _texture->_height
 			};
 			
-			int halfwidth = 1 / 2;
-			int halfheight = 1 / 2;
+			float_t halfwidth = 0.5f;
+			float_t halfheight = 0.5f;
 			
 			// Calculate the vertex positions based off the anchor point.
 			switch (_positionAnchor)

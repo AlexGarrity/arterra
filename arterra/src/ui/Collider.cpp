@@ -18,14 +18,16 @@ namespace arterra {
 		void ElementCollider::GenerateCollider() {
 			// Avoid having to fetch the data many times from the element.
 			float_t rotation = _element->GetRotation();
-			glm::vec2 position = _element->GetPosition();
+			std::vector<glm::vec2> points = _element->VerticesFromAnchor(_element->_positionAnchor,
+				_element->GetPosition(), _element->_width, _element->_height);
+			glm::vec2 origin = _element->GetPosition();
 			float_t width = _element->_width;
 			float_t height = _element->_height;
 			
 			// Clear any previous vertex data.
 			_vertices.clear();
-			_simpleCheck = true;
-			
+			_simpleCheck = false;
+			/* 
 			// For 90-degree rotation intervals, the vertex positions
 			// are predefined to correct values. This is quicker than performing
 			// a "proper" rotation using trigonometry.
@@ -64,16 +66,14 @@ namespace arterra {
 				// advanced method must be used in 'IsInside()'.
 				_simpleCheck = false;
 				
-				// TODO: currently assuming rotation anchor is bottom-left,
-				// hence _vertices[0] doesn't get rotated as it's the anchor.
-				_vertices.push_back(glm::vec2(position.x, position.y));
-				_vertices.push_back(rotatePoint(glm::vec2(position.x + width, position.y),
-					glm::vec2(position.x, position.y), glm::radians(rotation)));
-				_vertices.push_back(rotatePoint(glm::vec2(position.x, position.y + height),
-					glm::vec2(position.x, position.y), glm::radians(rotation)));
-				_vertices.push_back(rotatePoint(glm::vec2(position.x + width, position.y + height),
-					glm::vec2(position.x, position.y), glm::radians(rotation)));
-			}
+				
+			} */
+			
+			
+			_vertices.push_back(rotatePoint(points[0], origin, glm::radians(rotation)));
+			_vertices.push_back(rotatePoint(points[1], origin, glm::radians(rotation)));
+			_vertices.push_back(rotatePoint(points[2], origin, glm::radians(rotation)));
+			_vertices.push_back(rotatePoint(points[3], origin, glm::radians(rotation)));
 			
 		}
 		

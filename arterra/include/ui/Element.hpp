@@ -59,8 +59,8 @@ namespace arterra {
 			
 			public:
 				Element();
-				Element(int width, int height, glm::vec2 position, float_t rotation, Anchor anchor,
-					AtlasTexture* texture, Material material);
+				Element(int width, int height, glm::vec2 position, float_t rotation, Anchor positionAnchor,
+					Anchor relativeToAnchor, AtlasTexture* texture, Material material);
 				
 				void ApplyTranslation(glm::vec2 movementVector);
 				void ApplyScaling(float_t scaleFactor);
@@ -76,21 +76,26 @@ namespace arterra {
 				inline ElementMesh& GetMesh() { return _mesh; }
 				inline ElementCollider& GetCollider() { return _collider; }
 				
+				// Returns list of vertices after undoing anchor relativity.
+				// TODO: proper documentation
+				std::vector<glm::vec2> VerticesFromAnchor(Anchor anchor, glm::vec2 bottomLeftPosition,
+					float_t width, float_t height);
+				
 				// Width and height of this ui-element.
 				int _width, _height;
+				// The location of the anchor point relative to the whole element.
+				Anchor _positionAnchor;
 				
 			private:
-				// The position of the anchor point, relative to
-				// that anchor point on the parent.
+				// The position of the anchor point.
 				glm::vec2 _position;
 				// The scale applied to the width & height.
 				float_t _scale;
 				// The rotation about the rotation anchor.
 				float_t _rotation;
-				// The type of anchor point responsible for positioning.
-				Anchor _positionAnchor;
-				// The type of anchor point responsible for the rotation axis.
-				Anchor _rotationAnchor;
+				
+				// The anchor point responsible for relative positioning.
+				Anchor _relativeToAnchor;
 				
 				// Contains the shader reference and the uniform data for this ui-element.
 				Material _material;
