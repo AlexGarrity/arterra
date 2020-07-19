@@ -17,19 +17,36 @@ namespace arterra {
 		
 		Element::Element() 
 			: _width(0), _height(0), _position(glm::vec2(0.0f, 0.0f)), _rotation(0.0f),
-			_positionAnchor(Anchor::BottomLeft),	_mesh(ElementMesh()), _material(Material()),
+			_positionAnchor(Pivot::BottomLeft),	_mesh(ElementMesh()), _material(Material()),
 			_collider(nullptr) {}
 		
-		Element::Element(int width, int height, glm::vec2 position, float_t rotation, Anchor positionAnchor,
-			Anchor relativeToAnchor, AtlasTexture* texture, Material material)
+		Element::Element(int width, int height, glm::vec2 position, float_t rotation, Pivot positionAnchor,
+			Anchor anchor, AtlasTexture* texture, Material material)
 			: _width(width), _height(height), _position(position), _rotation(glm::radians(rotation)),
-			_positionAnchor(positionAnchor), _relativeToAnchor(relativeToAnchor), _material(material), _texture(texture),
+			_positionAnchor(positionAnchor), _anchor(anchor), _material(material), _texture(texture),
 			_collider(nullptr) {
 			
 			_transform = glm::translate(_transform, { position.x, position.y, 0.0f });
 			_transform = glm::scale(_transform, { width , height, 1.0f });
 			_transform = glm::rotate(_transform, 0.0f, { 0.0f, 0.0f, 1.0f });
 			_material.AddParameter(ShaderParameter { "u_ModelProjection", _transform, ShaderParameter::Type::Mat4});
+			
+		}
+		
+		void Element::Update(glm::vec2 mousePosition, int mouseClick) {
+			// Check whether the mouse is clicking over the UI element.
+			if (_isMouseOver && mouseClick >= 0) {
+				std::cout << "CLICKED" << std::endl;
+			}else {
+				// Check the state of the cursor over the UI element has changed.
+				if (GetCollider()->ContainsPoint(mousePosition) && _isMouseOver == false) {
+					_isMouseOver = true;
+					OnMouseEnter();
+				}else if (GetCollider()->ContainsPoint(mousePosition) == false && _isMouseOver) {
+					_isMouseOver = false;
+					OnMouseLeave();
+				}
+			}
 			
 		}
 		
@@ -72,7 +89,7 @@ namespace arterra {
 			_collider = new BoxCollider(this);
 		}
 		
-		std::vector<glm::vec2> Element::VerticesFromAnchor(Anchor anchor, glm::vec2 anchorPosition,
+		std::vector<glm::vec2> Element::VerticesFromAnchor(Pivot anchor, glm::vec2 anchorPosition,
 			float_t width, float_t height) {
 			
 			float_t halfWidth = width / 2;
@@ -83,7 +100,7 @@ namespace arterra {
 			
 			switch (anchor)
 			{
-			case Anchor::BottomLeft:
+			case Pivot::BottomLeft:
 				vertices = {
 					glm::vec2(anchorPosition.x, anchorPosition.y),
 					glm::vec2(anchorPosition.x + width, anchorPosition.y),
@@ -91,7 +108,7 @@ namespace arterra {
 					glm::vec2(anchorPosition.x + width, anchorPosition.y + height)
 				};
 				break;
-			case Anchor::BottomCentre:
+			case Pivot::BottomCentre:
 				vertices = {
 					glm::vec2(anchorPosition.x - halfWidth, anchorPosition.y),
 					glm::vec2(anchorPosition.x + halfWidth, anchorPosition.y),
@@ -99,7 +116,7 @@ namespace arterra {
 					glm::vec2(anchorPosition.x + halfWidth, anchorPosition.y + height)
 				};
 				break;
-			case Anchor::BottomRight:
+			case Pivot::BottomRight:
 				vertices = {
 					glm::vec2(anchorPosition.x - width, anchorPosition.y),
 					glm::vec2(anchorPosition.x, anchorPosition.y),
@@ -107,7 +124,7 @@ namespace arterra {
 					glm::vec2(anchorPosition.x, anchorPosition.y + height)
 				};
 				break;
-			case Anchor::TopLeft:
+			case Pivot::TopLeft:
 				vertices = {
 					glm::vec2(anchorPosition.x, anchorPosition.y - height),
 					glm::vec2(anchorPosition.x + width, anchorPosition.y - height),
@@ -115,7 +132,7 @@ namespace arterra {
 					glm::vec2(anchorPosition.x + width, anchorPosition.y)
 				};
 				break;
-			case Anchor::TopCentre:
+			case Pivot::TopCentre:
 				vertices = {
 					glm::vec2(anchorPosition.x - halfWidth, anchorPosition.y - height),
 					glm::vec2(anchorPosition.x + halfWidth, anchorPosition.y - height),
@@ -123,7 +140,7 @@ namespace arterra {
 					glm::vec2(anchorPosition.x + halfWidth, anchorPosition.y)
 				};
 				break;
-			case Anchor::TopRight:
+			case Pivot::TopRight:
 				vertices = {
 					glm::vec2(anchorPosition.x - width, anchorPosition.y - height),
 					glm::vec2(anchorPosition.x, anchorPosition.y - height),
@@ -131,7 +148,7 @@ namespace arterra {
 					glm::vec2(anchorPosition.x, anchorPosition.y)
 				};
 				break;
-			case Anchor::Left:
+			case Pivot::Left:
 				vertices = {
 					glm::vec2(anchorPosition.x, anchorPosition.y - halfHeight),
 					glm::vec2(anchorPosition.x + width, anchorPosition.y - halfHeight),
@@ -139,7 +156,7 @@ namespace arterra {
 					glm::vec2(anchorPosition.x + width, anchorPosition.y + halfHeight)
 				};
 				break;
-			case Anchor::Right:
+			case Pivot::Right:
 				vertices = {
 					glm::vec2(anchorPosition.x - width, anchorPosition.y - halfHeight),
 					glm::vec2(anchorPosition.x, anchorPosition.y - halfHeight),
@@ -147,7 +164,7 @@ namespace arterra {
 					glm::vec2(anchorPosition.x, anchorPosition.y + halfHeight)
 				};
 				break;
-			case Anchor::Centre:
+			case Pivot::Centre:
 				vertices = {
 					glm::vec2(anchorPosition.x - halfWidth, anchorPosition.y - halfHeight),
 					glm::vec2(anchorPosition.x + halfWidth, anchorPosition.y - halfHeight),
@@ -179,7 +196,7 @@ namespace arterra {
 			// Calculate the vertex positions based off the anchor point.
 			switch (_positionAnchor)
 			{
-			case Anchor::BottomLeft:
+			case Pivot::BottomLeft:
 				positions = {
 					0.0f, 0.0f,
 					0.0f + 1.0f, 0.0f,
@@ -189,7 +206,7 @@ namespace arterra {
 					0.0f + 1.0f, 0.0f + 1.0f
 				};
 				break;
-			case Anchor::BottomRight:
+			case Pivot::BottomRight:
 				positions = {
 					0.0f - 1.0f, 0.0f,
 					0.0f, 0.0f,
@@ -199,7 +216,7 @@ namespace arterra {
 					0.0f, 0.0f + 1.0f
 				};
 				break;
-			case Anchor::BottomCentre:
+			case Pivot::BottomCentre:
 				positions = {
 					0.0f - halfwidth, 0.0f,
 					0.0f + halfwidth, 0.0f,
@@ -209,7 +226,7 @@ namespace arterra {
 					0.0f + halfwidth, 0.0f + 1.0f
 				};
 				break;
-			case Anchor::TopLeft:
+			case Pivot::TopLeft:
 				positions = {
 					0.0f, 0.0f - 1.0f,
 					0.0f + 1.0f, 0.0f - 1.0f,
@@ -219,7 +236,7 @@ namespace arterra {
 					0.0f + 1.0f, 0.0f
 				};
 				break;
-			case Anchor::TopRight:
+			case Pivot::TopRight:
 				positions = {
 					0.0f - 1.0f, 0.0f - 1.0f,
 					0.0f, 0.0f - 1.0f,
@@ -229,7 +246,7 @@ namespace arterra {
 					0.0f, 0.0f
 				};
 				break;
-			case Anchor::TopCentre:
+			case Pivot::TopCentre:
 				positions = {
 					0.0f - halfwidth, 0.0f - 1.0f,
 					0.0f + halfwidth, 0.0f - 1.0f,
@@ -239,7 +256,7 @@ namespace arterra {
 					0.0f + halfwidth, 0.0f
 				};
 				break;
-			case Anchor::Left:
+			case Pivot::Left:
 				positions = {
 					0.0f, 0.0f - halfheight,
 					0.0f + 1.0f, 0.0f - halfheight,
@@ -249,7 +266,7 @@ namespace arterra {
 					0.0f + 1.0f, 0.0f + halfheight
 				};
 				break;
-			case Anchor::Right:
+			case Pivot::Right:
 				positions = {
 					0.0f - 1.0f, 0.0f - halfheight,
 					0.0f, 0.0f - halfheight,
@@ -259,7 +276,7 @@ namespace arterra {
 					0.0f, 0.0f + halfheight
 				};
 				break;
-			case Anchor::Centre:
+			case Pivot::Centre:
 				positions = {
 					0.0f - halfwidth, 0.0f - halfheight,
 					0.0f + halfwidth, 0.0f - halfheight,

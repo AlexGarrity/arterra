@@ -4,8 +4,9 @@ namespace arterra {
 	
 	namespace UI {
 		
-		Manager::Manager(ShaderManager* shaderManager, Renderer* renderer, sf::Event &windowEvent)
-			: _shaderManager(shaderManager), _renderer(renderer), _elements(), _event(&windowEvent) {}
+		Manager::Manager(ShaderManager* shaderManager, Renderer* renderer, sf::Event &windowEvent, Input* input)
+			: _shaderManager(shaderManager), _renderer(renderer), _elements(), _event(&windowEvent),
+			_input(input) {}
 		
 		void Manager::CreateElement(std::string identifier, Element element) {
 			// First run copy constructor.
@@ -14,6 +15,13 @@ namespace arterra {
 			// Then create the mesh and collider on the "proper" copy.
 			_elements[identifier].CreateMesh();
 			_elements[identifier].CreateCollider();
+			auto e = &_elements[identifier];
+			_elements[identifier].OnMouseEnter = [e](){
+				e->GetMaterial().UpdateParameter("u_ColourTint", glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+			};
+			_elements[identifier].OnMouseLeave = [e](){
+				e->GetMaterial().UpdateParameter("u_ColourTint", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+			};
 		}
 		
 		void Manager::DestroyElement(std::string identifier) {
@@ -38,13 +46,17 @@ namespace arterra {
 		
 		void Manager::Update() {
 			if (_event->type == sf::Event::MouseMoved) {
-				glm::vec2 mousePos = glm::vec2 { _event->mouseMove.x, (720-_event->mouseMove.y) };
 				for (auto it = _elements.begin(); it != _elements.end(); it++) {
-					if (it->second.GetCollider()->ContainsPoint(mousePos) == true) {
-						it->second.GetMaterial().UpdateParameter("u_ColourTint", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
-					}else {
-						it->second.GetMaterial().UpdateParameter("u_ColourTint", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-					}
+					// Iterate through each UI element and update it.
+					it->second.Update(glm::vec2 { _event->mouseMove.x, (720-_event->mouseMove.y) }, -1);
+				}
+			}
+			
+			auto mouseData = _input->PollMouseBind("primary-button");
+			if (mouseData._timePressed == 0.0f && mouseData._isActive) {
+				for (auto it = _elements.begin(); it != _elements.end(); it++) {
+					// Iterate through each UI element and update it.
+					it->second.Update(glm::vec2 { _event->mouseMove.x, (720-_event->mouseMove.y) }, 0);
 				}
 			}
 			

@@ -4,6 +4,7 @@
 #include "ui/Element.hpp"
 #include "renderer/Renderer.hpp"
 #include "renderer/ShaderManager.hpp"
+#include "window/Input.hpp"
 #include <SFML/Window/Event.hpp>
 
 namespace arterra {
@@ -13,7 +14,7 @@ namespace arterra {
 		class Manager {
 			
 			public:
-				Manager(ShaderManager* shaderManager, Renderer* renderer, sf::Event &windowEvent);
+				Manager(ShaderManager* shaderManager, Renderer* renderer, sf::Event &windowEvent, Input* input);
 				
 				void CreateElement(std::string identifier, Element element);
 				void DestroyElement(std::string identifier);
@@ -29,6 +30,7 @@ namespace arterra {
 				
 				ShaderManager* _shaderManager;
 				Renderer* _renderer;
+				Input* _input;
 				sf::Event* _event;
 		};
 		

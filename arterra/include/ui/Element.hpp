@@ -13,7 +13,20 @@ namespace arterra {
 	
 	namespace UI {
 		
-		enum Anchor {
+		enum class Pivot {
+			TopLeft = 0,
+			TopCentre = 1,
+			TopRight = 2,
+			Left = 3,
+			Centre = 4,
+			Right = 5,
+			BottomLeft = 6,
+			BottomCentre = 7,
+			BottomRight = 8
+		};
+		
+		// TODO: Implement anchors which scale along a length
+		enum class Anchor {
 			TopLeft = 0,
 			TopCentre = 1,
 			TopRight = 2,
@@ -59,16 +72,22 @@ namespace arterra {
 			
 			public:
 				Element();
-				Element(int width, int height, glm::vec2 position, float_t rotation, Anchor positionAnchor,
-					Anchor relativeToAnchor, AtlasTexture* texture, Material material);
+				Element(int width, int height, glm::vec2 position, float_t rotation, Pivot positionAnchor,
+					Anchor anchor, AtlasTexture* texture, Material material);
 				
 				void ApplyTranslation(glm::vec2 movementVector);
 				void ApplyScaling(float_t scaleFactor);
 				void ApplyRotation(float_t rotationAngle);
 				
+				void Update(glm::vec2 mousePosition, int mouseClick);
+				
 				void CreateMesh();
 				void CreateCollider();
 				void UpdateTransform();
+				
+				std::function<void()> OnMouseEnter;
+				std::function<void()> OnMouseLeave;
+				std::function<void()> OnMouseClick;
 				
 				inline glm::vec2 GetPosition() { return _position; }
 				inline float_t GetRotation() { return glm::degrees(_rotation); }
@@ -78,16 +97,17 @@ namespace arterra {
 				
 				// Returns list of vertices after undoing anchor relativity.
 				// TODO: proper documentation
-				std::vector<glm::vec2> VerticesFromAnchor(Anchor anchor, glm::vec2 bottomLeftPosition,
+				std::vector<glm::vec2> VerticesFromAnchor(Pivot anchor, glm::vec2 bottomLeftPosition,
 					float_t width, float_t height);
 				
-				// Width and height of this ui-element.
+				// Width and height of this UI element,
+				// in relation to it's pivot point.
 				int _width, _height;
-				// The location of the anchor point relative to the whole element.
-				Anchor _positionAnchor;
+				// The location of the pivot point relative to the whole element.
+				Pivot _positionAnchor;
 				
 			private:
-				// The position of the anchor point.
+				// The position of the pivot point.
 				glm::vec2 _position;
 				// The scale applied to the width & height.
 				float_t _scale;
@@ -95,7 +115,10 @@ namespace arterra {
 				float_t _rotation;
 				
 				// The anchor point responsible for relative positioning.
-				Anchor _relativeToAnchor;
+				Anchor _anchor;
+				
+				// Cached state of if mouse is over the UI element.
+				bool _isMouseOver;
 				
 				// Contains the shader reference and the uniform data for this ui-element.
 				Material _material;
