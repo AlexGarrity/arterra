@@ -10,7 +10,7 @@ namespace arterra {
 	class World;
 	enum Direction;
 
-	using SubChunkMap = std::unordered_map<int, SubChunk>;
+	using SubChunkMap = std::unordered_map<int, SubChunk*>;
 
 	class Chunk {
 	public:
@@ -18,6 +18,7 @@ namespace arterra {
 		Chunk(World *world);
 		Chunk(int posX, int posZ, World *world);
 		Chunk(const Chunk &other);
+		~Chunk();
 
 		void SetPosition(int posX, int posZ);
 		void SetWorld(World *world);

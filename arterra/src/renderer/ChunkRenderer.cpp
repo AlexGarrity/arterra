@@ -2,7 +2,7 @@
 
 namespace arterra {
 
-	ChunkRenderer::ChunkRenderer(Renderer *renderer)
+	ChunkRenderer::ChunkRenderer(Renderer* renderer)
 	{
 		_renderer = renderer;
 		_renderables.reserve(128);
@@ -12,7 +12,8 @@ namespace arterra {
 	ChunkRenderer::~ChunkRenderer()
 	{
 		for (auto& renderable : _renderables) {
-			renderable.Destroy();
+			renderable->Destroy();
+			delete renderable;
 		}
 		_renderables.clear();
 	}
@@ -35,15 +36,15 @@ namespace arterra {
 
 	void ChunkRenderer::AddSubChunk(SubChunk& subChunk)
 	{
-		if (GetChunkMesh(subChunk.GetPosition()))
+		if (GetMesh(subChunk.GetPosition()))
 			return;
 		AddSubChunk(&subChunk);
 	}
 
 	void ChunkRenderer::AddSubChunk(SubChunk* subChunk)
 	{
-		auto&& mesh = ChunkMesh(*subChunk);
-		_renderables.push_back(std::move(mesh));
+		auto mesh = new SubChunkMesh(*subChunk);
+		_renderables.push_back(mesh);
 	}
 
 	void ChunkRenderer::UpdateSubChunks(std::vector<SubChunk*>& subChunks)
@@ -55,34 +56,60 @@ namespace arterra {
 		}
 	}
 
-	void ChunkRenderer::AddMesh(ChunkMesh mesh) { _renderables.push_back(mesh); }
+	void ChunkRenderer::AddMesh(SubChunkMesh *mesh) { _renderables.emplace_back(mesh); }
 
-	void ChunkRenderer::CullRenderables(Camera &camera) {
+	void ChunkRenderer::CullRenderables(Camera& camera)
+	{
 		auto frustum = camera.GetViewFrustum();
-		for (auto &r : _renderables) {
-			r.SetShouldRender(frustum.ChunkInFrustum(r.GetPosition()));
+		for (auto& r : _renderables) {
+			auto pos = r->GetPosition();
+			auto inFrustum = frustum.ChunkInFrustum(pos);
+			r->SetShouldRender(inFrustum);
 		}
 	}
 
-	void ChunkRenderer::DeleteChunks(std::vector<WorldPosition> &chunks) {
-		
+	void ChunkRenderer::DeleteRenderables(std::vector<WorldPosition>& chunks)
+	{
+		for (auto c : chunks) {
+			DeleteMesh(c);
+		}
 	}
 
-	ChunkMesh* ChunkRenderer::GetChunkMesh(WorldPosition position)
+	void ChunkRenderer::DeleteRenderable(WorldPosition position)
+	{
+		auto it = GetMeshIterator(position);
+		if (it == _renderables.end())
+			return;
+		(*it)->Destroy();
+		delete *it;
+		_renderables.erase(it);
+	}
+
+	SubChunkMesh* ChunkRenderer::GetMesh(WorldPosition position)
 	{
 		for (auto& r : _renderables) {
-			auto pos = r.GetPosition();
+			auto pos = r->GetPosition();
 			if (position == pos)
-				return &r;
+				return r;
 		}
 		return nullptr;
+	}
+
+	std::vector<SubChunkMesh*>::iterator ChunkRenderer::GetMeshIterator(WorldPosition position)
+	{
+		for (auto it = _renderables.begin(); it != _renderables.end(); ++it) {
+			auto pos = (*it)->GetPosition();
+			if (position == pos)
+				return it;
+		}
+		return _renderables.end();
 	}
 
 	void ChunkRenderer::DeleteMesh(WorldPosition position)
 	{
 		auto pos = -1;
 		for (auto i = 0; i < _renderables.size(); ++i) {
-			auto rPos = _renderables[i].GetPosition();
+			auto rPos = _renderables[i]->GetPosition();
 			if (position == rPos) {
 				pos = i;
 				break;
@@ -93,15 +120,15 @@ namespace arterra {
 	}
 
 	void ChunkRenderer::Render()
-	{	
+	{
 		for (auto& renderable : _renderables) {
-			if (renderable.ShouldRender()) {
-				renderable.Bind();
-				_renderer->DrawTriangles(renderable.GetVertexCount());
-			}		
+			if (renderable->ShouldRender()) {
+				renderable->Bind();
+				_renderer->DrawTriangles(renderable->GetVertexCount());
+			}
 		}
 	}
 
-	std::vector<ChunkMesh>& ChunkRenderer::GetRenderables() { return _renderables; }
+	std::vector<SubChunkMesh*>& ChunkRenderer::GetRenderables() { return _renderables; }
 
 }

@@ -23,7 +23,15 @@ namespace arterra {
 		_world = other._world;
 		_subChunks = std::move(other._subChunks);
 		for (auto& sc : _subChunks) {
-			sc.second.SetParent(this);
+			sc.second->SetParent(this);
+		}
+	}
+
+	Chunk::~Chunk()
+	{
+		for (auto& sc : _subChunks) {
+			if (sc.second)
+				delete sc.second;
 		}
 	}
 
@@ -45,7 +53,7 @@ namespace arterra {
 	{
 		if (_subChunks.find(y) != _subChunks.end())
 			return;
-		_subChunks.emplace(y, SubChunk(y, this));
+		_subChunks.emplace(y, new SubChunk(y, this));
 	}
 
 	void Chunk::CreateSubChunksToHeightCS(int height)
@@ -60,7 +68,7 @@ namespace arterra {
 		auto it = _subChunks.find(y);
 		if (it == _subChunks.end())
 			return nullptr;
-		return &it->second;
+		return it->second;
 	}
 
 	void Chunk::UpdateNeighbours()
@@ -83,7 +91,7 @@ namespace arterra {
 	void Chunk::UpdateBlocks()
 	{
 		for (auto& sc : _subChunks) {
-			for (auto& b : sc.second.GetBlocks()) {
+			for (auto b : sc.second->GetBlocks()) {
 				if (b)
 					b->Update(0);
 			}
@@ -98,11 +106,11 @@ namespace arterra {
 					_position._z, ").  Whilst possible, was this intended?");
 				SubChunkMap::iterator highestSC;
 				for (auto it = _subChunks.begin(); it != _subChunks.end(); ++it) {
-					if (it->second.GetPositionRaw() > highestSC->second.GetPositionRaw()) {
+					if (it->second->GetPositionRaw() > highestSC->second->GetPositionRaw()) {
 						highestSC = it;
 					}
 				}
-				highestSC->second.UpdateBorder(PosY);
+				highestSC->second->UpdateBorder(PosY);
 			} break;
 
 			case Direction::NegY: {
@@ -110,16 +118,16 @@ namespace arterra {
 					_position._z, ").  Whilst possible, was this intended?");
 				SubChunkMap::iterator lowestSC;
 				for (auto it = _subChunks.begin(); it != _subChunks.end(); ++it) {
-					if (it->second.GetPositionRaw() > lowestSC->second.GetPositionRaw()) {
+					if (it->second->GetPositionRaw() > lowestSC->second->GetPositionRaw()) {
 						lowestSC = it;
 					}
 				}
-				lowestSC->second.UpdateBorder(PosY);
+				lowestSC->second->UpdateBorder(PosY);
 			} break;
 
 			default:
 				for (auto& sc : _subChunks) {
-					sc.second.UpdateBorder(borderDirection);
+					sc.second->UpdateBorder(borderDirection);
 				}
 				break;
 		}
@@ -136,7 +144,7 @@ namespace arterra {
 		auto it = _subChunks.find(y);
 		if (it == _subChunks.end())
 			return;
-		it->second.UpdateBorder(borderDirection);
+		it->second->UpdateBorder(borderDirection);
 	}
 
 	SubChunkMap& Chunk::GetSubChunks() { return _subChunks; }
@@ -151,10 +159,12 @@ namespace arterra {
 	std::vector<SubChunk*> Chunk::Update(float deltaTime)
 	{
 		std::vector<SubChunk*> out;
-		out.reserve(4);
-		for (auto& sc : _subChunks) {
-			if (sc.second.Update(deltaTime)) {
-				out.push_back(&sc.second);
+		out.reserve(6);
+		for (auto sc : _subChunks) {
+			if (!sc.second)
+				continue;
+			if (sc.second->Update(deltaTime)) {
+				out.push_back(sc.second);
 			}
 		}
 		return { out.begin(), out.end() };

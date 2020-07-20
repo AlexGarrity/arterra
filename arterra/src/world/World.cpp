@@ -67,16 +67,7 @@ namespace arterra {
 		if (chunk != _chunks.end())
 			return nullptr;
 
-		// Check to see if there are any chunks available
-		auto cp = _chunkPool.GetEmptyChunk();
-		if (!cp)
-			return nullptr;
-
-		// Set the chunk
-		cp->_chunk->SetPosition(x, z);
-		cp->_chunk->SetWorld(this);
-		auto c = _chunks.emplace(ChunkPosition { x, z }, cp->_chunk);
-		cp->_state = ChunkPool::Handle::State::Generate;
+		auto c = _chunks.emplace(ChunkPosition { x, z }, new Chunk(x, z, this));
 		return c.first->second;
 	}
 
@@ -99,11 +90,14 @@ namespace arterra {
 	void World::DeleteChunkCS(int x, int z)
 	{
 		ChunkPosition pos { x, z };
-		auto chunk = _chunks[pos];
-		auto handle = _chunkPool.FindHandle(chunk);
-		if (handle)
-			handle->_state = ChunkPool::Handle::State::Empty;
-		_chunks.erase(ChunkPosition(x, z));
+		auto it = FindChunkCS(x, z);
+		if (it == _chunks.end()) {
+			Logger::Get().Log(
+				Logger::Error, "Tried to delete a chunk at ", x, ", ", z, " but the chunk could not be found");
+			return;
+		}
+		delete it->second;
+		_chunks.erase(it);
 	}
 
 	Block* World::GetBlock(int x, int y, int z)
@@ -139,6 +133,7 @@ namespace arterra {
 		for (auto& chunk : _chunks) {
 			if (!chunk.second)
 				continue;
+
 			auto updatedSubChunks = chunk.second->Update(deltaTime);
 			_modifiedSubChunks.insert(_modifiedSubChunks.end(), updatedSubChunks.begin(), updatedSubChunks.end());
 		}
@@ -146,40 +141,51 @@ namespace arterra {
 
 	void World::GenerateNewChunks(glm::vec3 playerPosition)
 	{
+		std::vector<Chunk*> newChunks;
+		newChunks.reserve(static_cast<int>(_loadDistance));
+
 		// Figure out if any new chunks need generating
 		auto playerPos = ChunkPosition(WorldToChunkSpace(playerPosition.x, SubChunk::SIZE_X),
 			WorldToChunkSpace(playerPosition.z, SubChunk::SIZE_Z));
 
-		auto startX = (playerPos._x - (static_cast<int>(_loadDistance) / 2));
-		auto startZ = (playerPos._z - (static_cast<int>(_loadDistance) / 2));
+		auto startX = playerPos._x - static_cast<int>(_loadDistance);
+		auto startZ = playerPos._z - static_cast<int>(_loadDistance);
 
-		for (auto z = startZ; z < startZ + _loadDistance; ++z) {
-			for (auto x = startX; x < startX + _loadDistance; ++x) {
+		auto endX = playerPos._x + static_cast<int>(_loadDistance);
+		auto endZ = playerPos._z + static_cast<int>(_loadDistance);
+
+		for (auto z = startZ; z < endZ; ++z) {
+			for (auto x = startX; x < endX; ++x) {
 				if (ChunkInLoadDistance(ChunkPosition(x, z), playerPos))
-					CreateChunkCS(x, z);
+					newChunks.push_back(CreateChunkCS(x, z));
 			}
 		}
 
-		for (auto& c : _chunkPool.GetChunks()) {
-			if (c._state == ChunkPool::Handle::State::Generate) {
-				_terrainGenerator->GenerateChunk(*c._chunk, *_blockManager);
-				c._state = ChunkPool::Handle::State::Active;
-			}
+		for (auto& c : newChunks) {
+			if (!c)
+				continue;
+			_terrainGenerator->GenerateChunk(*c, *_blockManager);
 		}
 	}
 
 	void World::DeleteOldChunks(glm::vec3 playerPosition)
 	{
+		std::vector<ChunkPosition> deletedChunks;
+		deletedChunks.reserve(static_cast<int>(_loadDistance));
 		_emptyChunks.clear();
 		// Figure out if any new chunks need generating
 		auto playerPos = ChunkPosition(WorldToChunkSpace(playerPosition.x, SubChunk::SIZE_X),
 			WorldToChunkSpace(playerPosition.z, SubChunk::SIZE_Z));
 
-		for (auto& c : _chunkPool.GetChunks()) {
-			if (!ChunkInLoadDistance(c._chunk->GetPositionRaw(), playerPos)) {
-				c._state = ChunkPool::Handle::State::Empty;
-				_chunks.erase(ChunkPosition(c._chunk->GetPositionRaw()));
+		for (auto& c : _chunks) {
+			if (!ChunkInLoadDistance(c.second->GetPositionRaw(), playerPos)) {
+				_emptyChunks.push_back(c.second->GetPosition());
+				deletedChunks.push_back(ChunkPosition(c.second->GetPositionRaw()));
 			}
+		}
+		for (auto& d : deletedChunks) {
+			delete _chunks[d];
+			_chunks.erase(d);
 		}
 	}
 
@@ -209,12 +215,12 @@ namespace arterra {
 
 	float_t World::DistanceToChunk2(ChunkPosition a, ChunkPosition c)
 	{
-		auto deltaX = a._x - c._x;
+		auto deltaX = c._x - a._x;
 		deltaX *= deltaX;
-		auto deltaY = a._z - c._z;
+		auto deltaY = c._z - a._z;
 		deltaY *= deltaY;
 
-		return deltaX + deltaY;
+		return static_cast<float_t>(deltaX + deltaY);
 	}
 
 	void World::ResizeLoadDistance(float_t distance)

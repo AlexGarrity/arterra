@@ -1,17 +1,17 @@
-#include "model/ChunkMesh.hpp"
+#include "model/SubChunkMesh.hpp"
 
 namespace arterra {
 
-	ChunkMesh::ChunkMesh() {}
+	SubChunkMesh::SubChunkMesh() {}
 
-	ChunkMesh::ChunkMesh(SubChunk& subChunk)
+	SubChunkMesh::SubChunkMesh(SubChunk& subChunk)
 		: _position { subChunk.GetPosition() }
 	{
 		AddSubChunk(subChunk);
 		GenerateMesh();
 	}
 
-	ChunkMesh::ChunkMesh(const ChunkMesh& other)
+	SubChunkMesh::SubChunkMesh(const SubChunkMesh& other)
 	{
 		_posVertices = std::move(other._posVertices);
 		_uvVertices = std::move(other._uvVertices);
@@ -21,18 +21,18 @@ namespace arterra {
 		_position = other._position;
 	}
 
-	ChunkMesh::~ChunkMesh() {}
+	SubChunkMesh::~SubChunkMesh() {}
 
-	void ChunkMesh::Destroy()
+	void SubChunkMesh::Destroy()
 	{
 		_vertexArray.Destroy();
 		_posBuffer.Destroy();
 		_texBuffer.Destroy();
 	}
 
-	void ChunkMesh::AddChunk() {}
+	void SubChunkMesh::AddChunk() {}
 
-	void ChunkMesh::AddSubChunk(SubChunk& subChunk)
+	void SubChunkMesh::AddSubChunk(SubChunk& subChunk)
 	{
 		for (auto& block : subChunk.GetBlocks()) {
 			if (!block)
@@ -42,7 +42,7 @@ namespace arterra {
 		}
 	}
 
-	void ChunkMesh::AddBlock(Block& block)
+	void SubChunkMesh::AddBlock(Block& block)
 	{
 		if (!block.IsVisible())
 			return;
@@ -75,13 +75,13 @@ namespace arterra {
 		}
 	}
 
-	void ChunkMesh::AddFace(std::vector<float_t> posVertices, std::vector<float_t> texVertices)
+	void SubChunkMesh::AddFace(std::vector<float_t> posVertices, std::vector<float_t> texVertices)
 	{
 		_posVertices.insert(_posVertices.end(), posVertices.begin(), posVertices.end());
 		_uvVertices.insert(_uvVertices.end(), texVertices.begin(), texVertices.end());
 	}
 
-	void ChunkMesh::GenerateMesh()
+	void SubChunkMesh::GenerateMesh()
 	{
 		_posBuffer.Create(_posVertices, 3, GL_FLOAT);
 		_texBuffer.Create(_uvVertices, 2, GL_FLOAT);
@@ -91,10 +91,10 @@ namespace arterra {
 		_uvVertices.clear();
 	}
 
-	void ChunkMesh::Bind() { _vertexArray.Bind(); }
+	void SubChunkMesh::Bind() { _vertexArray.Bind(); }
 
-	GLuint ChunkMesh::GetVertexCount() { return _vertexArray.GetVertexCount(); }
+	GLuint SubChunkMesh::GetVertexCount() { return _vertexArray.GetVertexCount(); }
 
-	WorldPosition ChunkMesh::GetPosition() { return _position; }
+	WorldPosition SubChunkMesh::GetPosition() { return _position; }
 
 }

@@ -35,6 +35,14 @@ namespace arterra {
 		}
 	}
 
+	SubChunk::~SubChunk()
+	{
+		for (auto b : _blocks) {
+			if (b)
+				delete b;
+		}
+	}
+
 	void SubChunk::SetParent(Chunk* chunk) { _chunk = chunk; }
 
 	std::array<Block*, SubChunk::SIZE>& SubChunk::GetBlocks() { return _blocks; }

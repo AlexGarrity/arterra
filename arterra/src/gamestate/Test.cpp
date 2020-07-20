@@ -42,7 +42,7 @@ namespace arterra {
 			_engine->GetInput()->RegisterKeyBind("right", sf::Keyboard::D);
 			_engine->GetInput()->RegisterKeyBind("up", sf::Keyboard::LShift);
 			_engine->GetInput()->RegisterKeyBind("down", sf::Keyboard::LControl);
-			//_engine->GetInput()->RegisterKeyBind("rot-left", sf::Keyboard::Q);
+			_engine->GetInput()->RegisterKeyBind("log", sf::Keyboard::Tilde);
 			//_engine->GetInput()->RegisterKeyBind("rot-right", sf::Keyboard::E);
 			_engine->GetInput()->RegisterMouseBind("rot-left", sf::Mouse::Button::Left);
 			_engine->GetInput()->RegisterMouseBind("rot-right", sf::Mouse::Button::Right);
@@ -107,6 +107,11 @@ namespace arterra {
 			if (_engine->GetInput()->PollKeyBind("down")._isActive) {
 				cameraTransform.Translate(cameraTransform.Up() * -_speed);
 			}
+
+			if (_engine->GetInput()->PollKeyBind("log")._isActive) {
+				Logger::Get().Log("Renderable count: ", _chunkRenderer.GetRenderables().size());
+			}
+
 			float_t mouseX = _engine->GetInput()->PollMouseAxis(MouseAxis::Horizontal)._delta;
 			float_t mouseY = _engine->GetInput()->PollMouseAxis(MouseAxis::Vertical)._delta;
 			cameraTransform.Rotate(-_rotSpeed * -mouseY, -_rotSpeed * mouseX, 0.0f);
@@ -118,6 +123,7 @@ namespace arterra {
 
 			if (_engine->GetWindow()->ShouldClose())
 				_engine->SetShouldExit(true);
+
 		}
 
 		void Test::Update(float_t deltaTime)
@@ -131,10 +137,9 @@ namespace arterra {
 
 			_world.Update(deltaTime, _engine->GetCamera()->GetTransform().Position());
 
-			_chunkRenderer.DeleteChunks(_world.GetEmptyChunks());
+			_chunkRenderer.DeleteRenderables(_world.GetEmptyChunks());
 			_chunkRenderer.UpdateSubChunks(_world.GetModifiedSubChunks());
 			_chunkRenderer.CullRenderables(*_engine->GetCamera());
-			// TODO: guirenderer.updateelements(uimanager.getmodifiedelements)
 
 			// Every 5 seconds, perform garbage collection
 			_timeToResourceUnload -= deltaTime;
