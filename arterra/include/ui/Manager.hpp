@@ -51,10 +51,10 @@ namespace arterra {
 			void DestroyElement(std::string identifier);
 
 			/**
-			 * @brief Gets a pointer to an existing `UI\::Element` stored in
-			 * this class.
+			 * @brief Gets a pointer to an existing `UI\::Element` in the current 
+			 * `GameState`.
 			 * @param identifier The unique identifier of the element.
-			 * @return `Pointer` to the specified `UI\::Element` from `_elements`.
+			 * @return `Pointer` to the specified `UI\::Element` stored in this class.
 			 */
 			Element* GetElement(std::string identifier);
 			/**

@@ -9,7 +9,8 @@ namespace arterra {
 			, _atlas { 256, 256 }
 			, _guiAtlas { 256, 256 }
 			, _chunkRenderer{engine->GetRenderer()}
-			, _uiManager { &_shaderManager, _engine->GetRenderer(), _engine->GetWindow()->GetEvent() }
+			, _uiManager { &_shaderManager, _engine->GetRenderer(), _engine->GetWindow()->GetEvent(),
+				_engine->GetInput() }
 		{
 			
 			_engine->GetWindow()->SetVsync(true);
@@ -29,6 +30,8 @@ namespace arterra {
 			//_engine->GetInput()->RegisterKeyBind("rot-right", sf::Keyboard::E);
 			_engine->GetInput()->RegisterMouseBind("rot-left", sf::Mouse::Button::Left);
 			_engine->GetInput()->RegisterMouseBind("rot-right", sf::Mouse::Button::Right);
+			
+			_engine->GetInput()->RegisterMouseBind("primary-button", sf::Mouse::Button::Left);
 			
 			// ===GUI===
 			_guiAtlas.LoadTexture("textures/gui.png", "gui");
@@ -50,8 +53,8 @@ namespace arterra {
 			_mat1.AddParameter(p5);
 			_mat1.AddParameter(p6);
 			
-			_element1 = UI::Element { 400, 300, glm::vec2(300.0f, 300.0f), 45.0f, UI::Anchor::BottomLeft,
-				_guiTexture, _mat1 };
+			_element1 = UI::Element { glm::vec2(300.0f, 300.0f), 400, 300, 0.0f, UI::Pivot::Centre,
+				UI::Anchor::Left, nullptr, _guiTexture, _mat1 };
 			_uiManager.CreateElement("el1", _element1);
 			
 			
@@ -71,8 +74,8 @@ namespace arterra {
 			_mat2.AddParameter(pp5);
 			_mat2.AddParameter(pp6);
 			
-			_element2 = UI::Element { 200, 200, glm::vec2(1240.0f, 680.0f), 0.0f, UI::Anchor::TopRight,
-				_guiTexture, _mat2 };
+			_element2 = UI::Element { glm::vec2(1240.0f, 680.0f), 200, 200, 0.0f, UI::Pivot::BottomLeft,
+				UI::Anchor::TopRight, nullptr, _guiTexture, _mat2 };
 			//_uiManager.CreateElement("el2", _element2);
 			
 			
@@ -92,8 +95,8 @@ namespace arterra {
 			_mat3.AddParameter(ppp5);
 			_mat3.AddParameter(ppp6);
 			
-			_element3 = UI::Element { 600, 100, glm::vec2(500.0f, 400.0f), 0.0f, UI::Anchor::BottomLeft,
-				_guiTexture, _mat3 };
+			_element3 = UI::Element { glm::vec2(-50.0f, -100.0f), 600, 100, 0.0f, UI::Pivot::TopRight,
+				UI::Anchor::TopRight, nullptr, _guiTexture, _mat3 };
 			_uiManager.CreateElement("el3", _element3);
 			
 			// Load the shaders.

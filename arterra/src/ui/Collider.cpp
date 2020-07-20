@@ -33,16 +33,18 @@ namespace arterra {
 		void BoxCollider::GenerateCollider()
 		{
 			// Avoid having to fetch the data many times from the element.
-			glm::vec2 origin = _element->GetPosition();
-			float_t width = _element->_width;
-			float_t height = _element->_height;
+			glm::vec2 origin = _element->GetGlobalPosition();
+			float_t width = _element->GetWidth();
+			float_t height = _element->GetHeight();
 			float_t rotation = _element->GetRotation();
-			std::vector<glm::vec2> points = _element->VerticesFromAnchor(
-				_element->_positionAnchor, _element->GetPosition(), _element->_width, _element->_height);
+			// From the UI::Element pivot and position, get the 4 vertices which
+			// make up the box, relative to the pivot.
+			std::vector<glm::vec2> points
+				= Element::VerticesFromPivot(_element->GetPivot(), origin, width, height);
 
 			// Clear any previous vertex data.
 			_vertices.clear();
-			// Rotate all 4 box vertices around the origin (UI::Element pivot point).
+			// Rotate all 4 vertices around the origin (UI::Element pivot position).
 			_vertices.push_back(rotatePoint(points[0], origin, glm::radians(rotation)));
 			_vertices.push_back(rotatePoint(points[1], origin, glm::radians(rotation)));
 			_vertices.push_back(rotatePoint(points[2], origin, glm::radians(rotation)));

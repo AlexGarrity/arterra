@@ -17,7 +17,7 @@ namespace arterra {
 		{
 			// Make sure that the identifier isn't already taken.
 			auto eElement = _elements.find(identifier);
-			if (eElement == _elements.end()) {
+			if (eElement != _elements.end()) {
 				Logger::Get().Log(Logger::Error, "[UI] Unable to create new UI element `", identifier,
 					"` since it already exists!");
 				return;
@@ -41,7 +41,6 @@ namespace arterra {
 
 		void Manager::DestroyElement(std::string identifier)
 		{
-			// TODO: first delete element data
 			auto element = _elements.find(identifier);
 			if (element == _elements.end()) {
 				Logger::Get().Log(
@@ -57,6 +56,7 @@ namespace arterra {
 			if (element == _elements.end()) {
 				Logger::Get().Log(
 					Logger::Error, "[UI] Trying to get UI element `", identifier, "' which does not exist!");
+				return nullptr;
 			}
 			return &element->second;
 		}
@@ -83,43 +83,42 @@ namespace arterra {
 
 		void Manager::Render()
 		{
-			for (auto element = _elements.begin(); element != _elements.end(); element++) {
+			for (auto it = _elements.begin(); it != _elements.end(); it++) {
 				// Disable depth test.
 				glDisable(GL_DEPTH_TEST);
 
 				// Update transform in case it's changed.
-				element->second.UpdateTransform();
+				it->second.UpdateTransform();
 
 				// Get all shader parameters for this gui-element's material.
-				auto parameters = element->second.GetMaterial().GetParameters();
-				// TODO: Set the shader program based off the Material.
-				_shaderManager->UseShader("gui-fancy");
-				for (auto param : parameters) {
-					switch (param._type) {
+				auto parameters = it->second.GetMaterial().GetParameters();
+				_shaderManager->UseShader(it->second.GetMaterial().GetShaderIdentifier());
+				for (auto param = parameters.begin(); param != parameters.end(); param++) {
+					switch (param->_type) {
 						case UI::ShaderParameter::Type::Int:
-							_shaderManager->ActiveProgram().SetUniform(param._name, param._value.i);
+							_shaderManager->ActiveProgram().SetUniform(param->_name, param->_value.i);
 							break;
 						case UI::ShaderParameter::Type::Float:
-							_shaderManager->ActiveProgram().SetUniform(param._name, param._value.f);
+							_shaderManager->ActiveProgram().SetUniform(param->_name, param->_value.f);
 							break;
 						case UI::ShaderParameter::Type::Vec2:
-							_shaderManager->ActiveProgram().SetUniform(param._name, param._value.v2);
+							_shaderManager->ActiveProgram().SetUniform(param->_name, param->_value.v2);
 							break;
 						case UI::ShaderParameter::Type::Vec3:
-							_shaderManager->ActiveProgram().SetUniform(param._name, param._value.v3);
+							_shaderManager->ActiveProgram().SetUniform(param->_name, param->_value.v3);
 							break;
 						case UI::ShaderParameter::Type::Vec4:
-							_shaderManager->ActiveProgram().SetUniform(param._name, param._value.v4);
+							_shaderManager->ActiveProgram().SetUniform(param->_name, param->_value.v4);
 							break;
 						case UI::ShaderParameter::Type::Mat4:
-							_shaderManager->ActiveProgram().SetUniform(param._name, param._value.m4);
+							_shaderManager->ActiveProgram().SetUniform(param->_name, param->_value.m4);
 							break;
 					}
 				}
 
 				// Bind and draw the UI element.
-				element->second.GetMesh().Bind();
-				_renderer->DrawTriangles(element->second.GetMesh().GetVertexCount());
+				it->second.GetMesh().Bind();
+				_renderer->DrawTriangles(it->second.GetMesh().GetVertexCount());
 			}
 		}
 
