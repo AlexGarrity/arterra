@@ -4,6 +4,7 @@ namespace arterra {
 	
 	namespace UI {
 		
+		
 		ElementMesh::ElementMesh()
 			: _posVertices(), _uvVertices(), _vertexArray(), _posBuffer(), _texBuffer() {}
 		
@@ -36,7 +37,7 @@ namespace arterra {
 		void Element::Update(glm::vec2 mousePosition, int mouseClick) {
 			// Check whether the mouse is clicking over the UI element.
 			if (_isMouseOver && mouseClick >= 0) {
-				std::cout << "CLICKED" << std::endl;
+				OnMouseClick();
 			}else {
 				// Check the state of the cursor over the UI element has changed.
 				if (GetCollider()->ContainsPoint(mousePosition) && _isMouseOver == false) {
