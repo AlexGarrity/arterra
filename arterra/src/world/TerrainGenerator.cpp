@@ -2,10 +2,11 @@
 
 #include "block/BlockManager.hpp"
 
-#include "world/World.hpp"
-#include "world/Chunk.hpp"
-#include "world/SubChunk.hpp"
 #include "world/Block.hpp"
+#include "world/SubChunk.hpp"
+#include "world/Chunk.hpp"
+
+#include "world/World.hpp"
 
 namespace arterra {
 
@@ -52,7 +53,10 @@ namespace arterra {
 				for (auto x = 0; x < SubChunk::SIZE_X; ++x) {
 					auto height = _heightMap[x + SubChunk::SIZE_X * z];
 					auto pos = sc->GetPosition();
-					auto dY = std::max<int>(std::min<int>(height - pos._y, SubChunk::SIZE_Y), 0);
+					// std::max / std::min can't take a reference to a static const (by design),
+					// so use this little workaround
+					auto maxHeight = SubChunk::SIZE_Y;
+					auto dY = std::max<int>(std::min<int>(height - pos._y, maxHeight), 0);
 					for (auto y = 0; y < dY; ++y) {
 						if (pos._y + y < height - 3)
 							sc->SetBlockCS(x, y, z, *stoneBlock);

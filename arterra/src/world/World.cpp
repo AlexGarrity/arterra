@@ -2,8 +2,8 @@
 
 #include "block/BlockManager.hpp"
 #include "world/Block.hpp"
-#include "world/Chunk.hpp"
 #include "world/SubChunk.hpp"
+#include "world/Chunk.hpp"
 #include "world/TerrainGenerator.hpp"
 
 namespace arterra {
@@ -178,9 +178,12 @@ namespace arterra {
 			WorldToChunkSpace(playerPosition.z, SubChunk::SIZE_Z));
 
 		for (auto& c : _chunks) {
-			if (!ChunkInLoadDistance(c.second->GetPositionRaw(), playerPos)) {
-				_emptyChunks.push_back(c.second->GetPosition());
-				deletedChunks.push_back(ChunkPosition(c.second->GetPositionRaw()));
+			auto chunkPos = c.second->GetPositionRaw();
+			if (!ChunkInLoadDistance(chunkPos, playerPos)) {
+				for (auto subChunk : c.second->GetSubChunks()) {
+					_emptyChunks.emplace_back(subChunk.second->GetPosition());
+				}
+				deletedChunks.emplace_back(chunkPos);
 			}
 		}
 		for (auto& d : deletedChunks) {

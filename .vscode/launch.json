@@ -5,7 +5,15 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(gdb) Launch",
+            "name": "[lldb] Launch",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/arterra/arterra",
+            "args": [],
+            "cwd": "${workspaceFolder}/build/arterra"
+        },
+        {
+            "name": "[gdb] Launch",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/arterra/arterra",
@@ -24,7 +32,7 @@
             ]
         },
         {
-            "name": "Launch Debug",
+            "name": "[msvc] Launch Debug",
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/arterra/Debug/arterra.exe",
@@ -33,7 +41,7 @@
             "console": "internalConsole"
         },
         {
-            "name": "Launch Release",
+            "name": "[msvc] Launch Release",
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/arterra/Release/arterra.exe",
