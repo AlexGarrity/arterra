@@ -1,5 +1,7 @@
 #include "world/Chunk.hpp"
 
+#include "world/Block.hpp"
+#include "world/SubChunk.hpp"
 #include "world/World.hpp"
 
 namespace arterra {
@@ -10,15 +12,36 @@ namespace arterra {
 	{
 	}
 
+	Chunk::Chunk(World* world)
+		: Chunk(0, 0, world)
+	{
+	}
+
 	Chunk::Chunk(const Chunk& other)
 	{
 		_position = other._position;
 		_world = other._world;
 		_subChunks = std::move(other._subChunks);
 		for (auto& sc : _subChunks) {
-			sc.second.SetParent(this);
+			sc.second->SetParent(this);
 		}
 	}
+
+	Chunk::~Chunk()
+	{
+		for (auto& sc : _subChunks) {
+			if (sc.second)
+				delete sc.second;
+		}
+	}
+
+	void Chunk::SetPosition(int x, int z)
+	{
+		_position._x = x;
+		_position._z = z;
+	}
+
+	void Chunk::SetWorld(World* world) { _world = world; }
 
 	void Chunk::CreateSubChunk(int y) { CreateSubChunkCS(y / SubChunk::SIZE_Y); }
 
@@ -30,13 +53,13 @@ namespace arterra {
 	{
 		if (_subChunks.find(y) != _subChunks.end())
 			return;
-		_subChunks.emplace(y, SubChunk(y, this));
+		_subChunks.emplace(y, new SubChunk(y, this));
 	}
 
 	void Chunk::CreateSubChunksToHeightCS(int height)
 	{
 		for (auto iY = 0; iY <= height; ++iY) {
-			_subChunks.emplace(iY, SubChunk { iY, this });
+			CreateSubChunkCS(iY);
 		}
 	}
 
@@ -45,7 +68,7 @@ namespace arterra {
 		auto it = _subChunks.find(y);
 		if (it == _subChunks.end())
 			return nullptr;
-		return &it->second;
+		return it->second;
 	}
 
 	void Chunk::UpdateNeighbours()
@@ -68,7 +91,7 @@ namespace arterra {
 	void Chunk::UpdateBlocks()
 	{
 		for (auto& sc : _subChunks) {
-			for (auto& b : sc.second.GetBlocks()) {
+			for (auto b : sc.second->GetBlocks()) {
 				if (b)
 					b->Update(0);
 			}
@@ -79,32 +102,32 @@ namespace arterra {
 	{
 		switch (borderDirection) {
 			case Direction::PosY: {
-				Logger::Get().Log(Logger::Debug, "Updating positive Y border for chunk at (", _position._x, ", ", _position._z,
-					").  Whilst possible, was this intended?");
+				Logger::Get().Log(Logger::Debug, "Updating positive Y border for chunk at (", _position._x, ", ",
+					_position._z, ").  Whilst possible, was this intended?");
 				SubChunkMap::iterator highestSC;
 				for (auto it = _subChunks.begin(); it != _subChunks.end(); ++it) {
-					if (it->second.GetPositionRaw() > highestSC->second.GetPositionRaw()) {
+					if (it->second->GetPositionRaw() > highestSC->second->GetPositionRaw()) {
 						highestSC = it;
 					}
 				}
-				highestSC->second.UpdateBorder(PosY);
+				highestSC->second->UpdateBorder(PosY);
 			} break;
 
 			case Direction::NegY: {
-				Logger::Get().Log(Logger::Debug, "Updating negative Y border for chunk at (", _position._x, ", ", _position._z,
-					").  Whilst possible, was this intended?");
+				Logger::Get().Log(Logger::Debug, "Updating negative Y border for chunk at (", _position._x, ", ",
+					_position._z, ").  Whilst possible, was this intended?");
 				SubChunkMap::iterator lowestSC;
 				for (auto it = _subChunks.begin(); it != _subChunks.end(); ++it) {
-					if (it->second.GetPositionRaw() > lowestSC->second.GetPositionRaw()) {
+					if (it->second->GetPositionRaw() > lowestSC->second->GetPositionRaw()) {
 						lowestSC = it;
 					}
 				}
-				lowestSC->second.UpdateBorder(PosY);
+				lowestSC->second->UpdateBorder(PosY);
 			} break;
 
 			default:
 				for (auto& sc : _subChunks) {
-					sc.second.UpdateBorder(borderDirection);
+					sc.second->UpdateBorder(borderDirection);
 				}
 				break;
 		}
@@ -121,20 +144,27 @@ namespace arterra {
 		auto it = _subChunks.find(y);
 		if (it == _subChunks.end())
 			return;
-		it->second.UpdateBorder(borderDirection);
+		it->second->UpdateBorder(borderDirection);
 	}
 
 	SubChunkMap& Chunk::GetSubChunks() { return _subChunks; }
 
-	WorldPosition Chunk::GetPosition() { return { _position._x * SubChunk::SIZE_X, 0, _position._z * SubChunk::SIZE_Z }; }
+	WorldPosition Chunk::GetPosition()
+	{
+		return { _position._x * SubChunk::SIZE_X, 0, _position._z * SubChunk::SIZE_Z };
+	}
+
+	ChunkPosition Chunk::GetPositionRaw() { return _position; }
 
 	std::vector<SubChunk*> Chunk::Update(float deltaTime)
 	{
 		std::vector<SubChunk*> out;
-		out.reserve(4);
-		for (auto& sc : _subChunks) {
-			if (sc.second.Update(deltaTime)) {
-				out.push_back(&sc.second);
+		out.reserve(6);
+		for (auto sc : _subChunks) {
+			if (!sc.second)
+				continue;
+			if (sc.second->Update(deltaTime)) {
+				out.push_back(sc.second);
 			}
 		}
 		return { out.begin(), out.end() };

@@ -29,8 +29,8 @@ namespace arterra {
 
 		bool Create(std::string filepath);
 
-		std::vector<float_t> GetPosVertices(Direction direction);
-		std::vector<float_t> GetTexVertices(Direction direction);
+		std::vector<float_t> GetPosVertices(Direction direction) const;
+		std::vector<float_t> GetTexVertices(Direction direction) const;
 
 	private:
 		// PosX, NegX, PosY, NegY, PosZ, NegZ

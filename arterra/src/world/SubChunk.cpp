@@ -35,6 +35,14 @@ namespace arterra {
 		}
 	}
 
+	SubChunk::~SubChunk()
+	{
+		for (auto b : _blocks) {
+			if (b)
+				delete b;
+		}
+	}
+
 	void SubChunk::SetParent(Chunk* chunk) { _chunk = chunk; }
 
 	std::array<Block*, SubChunk::SIZE>& SubChunk::GetBlocks() { return _blocks; }
@@ -65,10 +73,9 @@ namespace arterra {
 		auto pos = ResolveArrayPosition(x, y, z);
 		if (pos == -1)
 			return;
-		if (!_blocks[pos])
-			_blocks[pos] = new Block(x, y, z, this, data);
-		else
-			*_blocks[pos] = Block(x, y, z, this, data);
+		if (_blocks[pos])
+			delete _blocks[pos];
+		_blocks[pos] = new Block(x, y, z, this, data);
 		_updated = true;
 	}
 

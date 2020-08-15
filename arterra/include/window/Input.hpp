@@ -2,16 +2,17 @@
 
 #include "PCH.hpp"
 
+#include "window/Window.hpp"
+
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Joystick.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>
-#include "window/Window.hpp"
 
 #include "window/Bind.hpp"
 
 namespace arterra {
-	
+
 	enum MouseAxis {
 		Horizontal = 0,
 		Vertical = 1,
@@ -20,7 +21,7 @@ namespace arterra {
 	class Input {
 
 	public:
-		Input(sf::Event &windowEvent, Window *window);
+		Input(sf::Event& windowEvent, Window* window);
 		// Update keybind data.
 		void Update(float_t deltaTime);
 		// Polling methods for keybinds.
@@ -37,21 +38,20 @@ namespace arterra {
 
 		// Lock/unlock the cursor to the window
 		void SetLockCursor(bool lock);
-		
+
 	private:
 		// List of current keybinds
 		// sf::Keyboard::Key = keycode, KeyBind = properties for this bind.
 		std::unordered_map<std::string, KeyBind> _keyBinds;
 		std::unordered_map<std::string, MouseBind> _mouseBinds;
-		
+
 		// Stores the mouse movement per frame.
 		sf::Vector2f _mouseDelta { 0, 0 };
 		bool _cursorLocked { false };
 		sf::Vector2f _inputSensitivity { 100.0f, 100.0f };
-		
-		sf::Event *_event;
+
+		sf::Event* _event;
 		Window* _window;
-		
 	};
 
 }

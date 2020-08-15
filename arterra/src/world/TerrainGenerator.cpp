@@ -1,5 +1,13 @@
 #include "world/TerrainGenerator.hpp"
 
+#include "block/BlockManager.hpp"
+
+#include "world/Block.hpp"
+#include "world/SubChunk.hpp"
+#include "world/Chunk.hpp"
+
+#include "world/World.hpp"
+
 namespace arterra {
 
 	TerrainGenerator::TerrainGenerator() {
@@ -40,19 +48,22 @@ namespace arterra {
 		auto stoneBlock = blockManager.GetBlock("stone");
 
 		for (auto& isc : out.GetSubChunks()) {
-			auto &sc = isc.second;
+			auto sc = isc.second;
 			for (auto z = 0; z < SubChunk::SIZE_Z; ++z) {
 				for (auto x = 0; x < SubChunk::SIZE_X; ++x) {
 					auto height = _heightMap[x + SubChunk::SIZE_X * z];
-					auto pos = sc.GetPosition();
-					auto dY = std::max<int>(std::min<int>(height - pos._y, SubChunk::SIZE_Y), 0);
+					auto pos = sc->GetPosition();
+					// std::max / std::min can't take a reference to a static const (by design),
+					// so use this little workaround
+					auto maxHeight = SubChunk::SIZE_Y;
+					auto dY = std::max<int>(std::min<int>(height - pos._y, maxHeight), 0);
 					for (auto y = 0; y < dY; ++y) {
 						if (pos._y + y < height - 3)
-							sc.SetBlockCS(x, y, z, *stoneBlock);
+							sc->SetBlockCS(x, y, z, *stoneBlock);
 						else if (pos._y + y < height - 1)
-							sc.SetBlockCS(x, y, z, *dirtBlock);
+							sc->SetBlockCS(x, y, z, *dirtBlock);
 						else
-							sc.SetBlockCS(x, y, z, *grassBlock);
+							sc->SetBlockCS(x, y, z, *grassBlock);
 					}
 				}
 			}

@@ -6,7 +6,6 @@
 
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Window.hpp>
-#include <SFML/Window/Mouse.hpp>
 
 namespace arterra {
 

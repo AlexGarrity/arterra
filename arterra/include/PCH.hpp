@@ -48,3 +48,6 @@
 
 // Utility classes
 #include "util/Logger.hpp"
+
+// GLM is always useful
+#include <glm/glm.hpp>

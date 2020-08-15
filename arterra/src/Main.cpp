@@ -1,6 +1,9 @@
 #include "Engine.hpp"
 #include "gamestate/Test.hpp"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 using namespace arterra;
 
 int main(int argc, char** argv)

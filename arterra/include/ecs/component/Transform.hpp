@@ -2,7 +2,6 @@
 
 #include "PCH.hpp"
 
-#include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
 #include "ecs/component/Base.hpp"

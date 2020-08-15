@@ -92,7 +92,7 @@ namespace arterra {
 		return true;
 	}
 
-	std::vector<float_t> CullableModel::GetPosVertices(Direction dir) { return _posVertices[dir]; }
+	std::vector<float_t> CullableModel::GetPosVertices(Direction dir) const { return _posVertices[dir]; }
 
-	std::vector<float_t> CullableModel::GetTexVertices(Direction dir) { return _texVertices[dir]; }
+	std::vector<float_t> CullableModel::GetTexVertices(Direction dir) const { return _texVertices[dir]; }
 }

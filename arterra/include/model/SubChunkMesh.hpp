@@ -7,12 +7,12 @@
 
 namespace arterra {
 
-	class ChunkMesh {
+	class SubChunkMesh {
 	public:
-		ChunkMesh();
-		ChunkMesh(SubChunk& subChunk);
-		ChunkMesh(const ChunkMesh& other);
-		~ChunkMesh();
+		SubChunkMesh();
+		SubChunkMesh(SubChunk& subChunk);
+		SubChunkMesh(const SubChunkMesh& other);
+		~SubChunkMesh();
 
 		void Destroy();
 
@@ -30,8 +30,8 @@ namespace arterra {
 		WorldPosition GetPosition();
 
 	private:
-		std::vector<float_t> _posVertices;
-		std::vector<float_t> _uvVertices;
+		bool _shouldRender = true;
+
 		VertexArray _vertexArray;
 
 		VertexBuffer _posBuffer;
@@ -39,7 +39,8 @@ namespace arterra {
 
 		WorldPosition _position;
 
-		bool _shouldRender = true;
+		std::vector<float_t> _posVertices;
+		std::vector<float_t> _uvVertices;
 	};
 
 }

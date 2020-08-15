@@ -2,8 +2,8 @@
 
 namespace arterra {
 
-	BlockData::BlockData(
-		AtlasTexture& topTexture, AtlasTexture& sideTexture, AtlasTexture& bottomTexture, CullableModel& model)
+	BlockData::BlockData(const AtlasTexture& topTexture, const AtlasTexture& sideTexture,
+		const AtlasTexture& bottomTexture, const CullableModel& model)
 		: _topTexture { topTexture }
 		, _sideTexture { sideTexture }
 		, _bottomTexture { bottomTexture }
@@ -11,17 +11,28 @@ namespace arterra {
 	{
 	}
 
-	void BlockData::operator=(const BlockData& other)
+	BlockData::BlockData(const BlockData& other)
+		: _topTexture { other._topTexture }
+		, _sideTexture { other._sideTexture }
+		, _bottomTexture { other._bottomTexture }
+		, _model { other._model }
+		, _cullingSettings { other._cullingSettings }
 	{
-		_topTexture = other._topTexture;
-		_sideTexture = other._sideTexture;
-		_bottomTexture = other._bottomTexture;
-		_model = other._model;
 	}
 
-	CullableModel& BlockData::GetModel() const { return _model; }
+	BlockData::BlockData(const BlockData&& other)
+		: _topTexture { other._topTexture }
+		, _sideTexture { other._sideTexture }
+		, _bottomTexture { other._bottomTexture }
+		, _model { other._model }
+		, _cullingSettings { other._cullingSettings }
+	{
+	}
 
-	AtlasTexture& BlockData::GetTexture(Direction direction) const {
+	const CullableModel& BlockData::GetModel() const { return _model; }
+
+	const AtlasTexture& BlockData::GetTexture(Direction direction) const
+	{
 		switch (direction) {
 			case Direction::PosY:
 				return _topTexture;
@@ -32,8 +43,6 @@ namespace arterra {
 		}
 	}
 
-	CullingSettings BlockData::GetCullingSettings() const {
-		return _cullingSettings;
-	}
+	const CullingSettings BlockData::GetCullingSettings() const { return _cullingSettings; }
 
 }
