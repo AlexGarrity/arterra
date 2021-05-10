@@ -93,8 +93,6 @@ namespace arterra {
 
 	void SubChunkMesh::Bind() { _vertexArray.Bind(); }
 
-	GLuint SubChunkMesh::GetVertexCount() { return _vertexArray.GetVertexCount(); }
-
-	WorldPosition SubChunkMesh::GetPosition() { return _position; }
+	GLuint SubChunkMesh::GetVertexCount() const { return _vertexArray.GetVertexCount(); }
 
 }

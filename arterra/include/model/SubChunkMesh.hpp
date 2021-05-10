@@ -26,8 +26,8 @@ namespace arterra {
 		bool ShouldRender() const { return _shouldRender; }
 
 		void Bind();
-		GLuint GetVertexCount();
-		WorldPosition GetPosition();
+		GLuint GetVertexCount() const;
+		const WorldPosition &GetPosition() const { return _position; }
 
 	private:
 		bool _shouldRender = true;

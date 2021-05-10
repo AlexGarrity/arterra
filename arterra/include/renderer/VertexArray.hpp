@@ -26,7 +26,7 @@ namespace arterra {
 
 		void Destroy();
 
-		GLuint GetVertexCount();
+		GLuint GetVertexCount() const;
 
 	private:
 		// The unique opengl id for this vertex array.
