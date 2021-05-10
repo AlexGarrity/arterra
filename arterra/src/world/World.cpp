@@ -43,11 +43,7 @@ namespace arterra {
 	SubChunk* World::GetSubChunk(int x, int y, int z)
 	{
 		int cX = WorldToChunkSpace(x, SubChunk::SIZE_X);
-		int cY;
-		if (y < 0)
-			cY = (y - SubChunk::SIZE_Y) / SubChunk::SIZE_Y;
-		else
-			cY = y / SubChunk::SIZE_Y;
+		int cY = y / SubChunk::SIZE_Y - ((y <0 )? 1 : 0);
 		int cZ = WorldToChunkSpace(z, SubChunk::SIZE_Z);
 
 		return GetSubChunkCS(cX, cY, cZ);

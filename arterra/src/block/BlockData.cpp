@@ -29,8 +29,6 @@ namespace arterra {
 	{
 	}
 
-	const CullableModel& BlockData::GetModel() const { return _model; }
-
 	const AtlasTexture& BlockData::GetTexture(Direction direction) const
 	{
 		switch (direction) {
@@ -42,7 +40,5 @@ namespace arterra {
 				return _sideTexture;
 		}
 	}
-
-	const CullingSettings BlockData::GetCullingSettings() const { return _cullingSettings; }
 
 }
