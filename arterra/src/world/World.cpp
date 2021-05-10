@@ -6,6 +6,20 @@
 #include "world/Chunk.hpp"
 #include "world/TerrainGenerator.hpp"
 
+#if defined(_MSC_VER)
+	#if defined(_DEBUG)
+		#define WORLD_SIZE 6
+	#else
+		#define WORLD_SIZE 16
+	#endif
+#else
+	#if defined(NDEBUG)
+		#define WORLD_SIZE 16
+	#else
+		#define WORLD_SIZE 6
+	#endif
+#endif
+
 namespace arterra {
 
 	int WorldToChunkSpace(int v, int axis)
@@ -17,9 +31,9 @@ namespace arterra {
 
 	World::World(TerrainGenerator* generator, BlockManager* blockManager)
 	{
-		_modifiedSubChunks.reserve(128);
-		ResizeLoadDistance(16);
-		_emptyChunks.reserve(16);
+		_modifiedSubChunks.reserve(WORLD_SIZE * 8);
+		ResizeLoadDistance(WORLD_SIZE);
+		_emptyChunks.reserve(WORLD_SIZE);
 		_terrainGenerator = generator;
 		_blockManager = blockManager;
 	}
@@ -125,6 +139,14 @@ namespace arterra {
 		DeleteOldChunks(playerPos);
 		GenerateNewChunks(playerPos);
 
+		auto &newChunks = _terrainGenerator->GetCompletedChunks();
+		for (auto c : newChunks) {
+			for (auto sc : c->GetSubChunks()) {
+				sc.second->SetUpdated(true);
+			}
+		}
+		newChunks.clear();
+
 		_modifiedSubChunks.clear();
 		for (auto& chunk : _chunks) {
 			if (!chunk.second)
@@ -160,7 +182,7 @@ namespace arterra {
 		for (auto& c : newChunks) {
 			if (!c)
 				continue;
-			_terrainGenerator->GenerateChunk(*c, *_blockManager);
+			_terrainGenerator->AddChunkToGeneratorQueue(c);
 		}
 	}
 

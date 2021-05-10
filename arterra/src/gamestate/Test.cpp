@@ -23,6 +23,7 @@ namespace arterra {
 			, _atlas { 256, 256 }
 			, _chunkRenderer { engine->GetRenderer() }
 			, _world { &_terrainGenerator, &_blockManager }
+			, _terrainGenerator{&_blockManager}
 		{
 
 			_engine->GetWindow()->SetVsync(true);
