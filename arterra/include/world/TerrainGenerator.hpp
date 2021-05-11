@@ -34,13 +34,10 @@ namespace arterra {
 			_completedChunks.emplace_back(c);
 			_completedChunksLock.unlock();
 		}
-		
+
 		std::vector<Chunk*>& GetCompletedChunks() { return _completedChunks; }
 
-		/**
-		 * @brief Checks if any chunks need to be generated and if so starts generating them
-		 **/
-		void Update();
+		void CreateChunkGeneratorThread();
 
 		void GenerateChunk(Chunk& out);
 		void GenerateBlock(int x, int y, int z, Block& block);

@@ -18,42 +18,59 @@ namespace arterra {
 		seedX = rand() % 65536;
 		seedY = rand() % 65536;
 		seedZ = rand() % 65536;
+	}
 
+	TerrainGenerator::~TerrainGenerator()
+	{
+		SetAwaitShutdown(true);
+		_chunkGeneratorThread.join();
+	}
+
+	void TerrainGenerator::CreateChunkGeneratorThread()
+	{
 		_chunkGeneratorThread = std::thread([this] {
 			while (!IsAwaitingShutdown()) {
 				auto nextJob = GetNextChunkToGenerate();
 				if (nextJob) {
 					GenerateChunk(*nextJob);
 					MarkChunkAsCompleted(nextJob);
-					PopChunk();
+				} else {
+					SetAwaitShutdown(true);
 				}
 			}
 		});
 	}
 
-	TerrainGenerator::~TerrainGenerator() {
-		_chunkGeneratorThread.join();
-	}
-
 	void TerrainGenerator::AddChunkToGeneratorQueue(Chunk* chunk)
 	{
-		_chunkQueueLock.lock();
-		_pendingChunks.emplace(chunk);
-		_chunkQueueLock.unlock();
-	}
-
-	Chunk *TerrainGenerator::GetNextChunkToGenerate()
-	{
+		//_chunkQueueLock.lock();
 		if (_pendingChunks.empty()) {
-			return nullptr;
+			if (_chunkGeneratorThread.joinable())
+				_chunkGeneratorThread.join();
+			SetAwaitShutdown(false);
+			CreateChunkGeneratorThread();
 		}
-		return *_pendingChunks.begin();
+		_pendingChunks.insert(_pendingChunks.end(), chunk);
+		//_chunkQueueLock.unlock();
 	}
 
-	void TerrainGenerator::PopChunk() {
-		_chunkQueueLock.lock();
+	Chunk* TerrainGenerator::GetNextChunkToGenerate()
+	{
+		Chunk* out = nullptr;
+		//_chunkQueueLock.lock();
+		if (!_pendingChunks.empty()) {
+			out = *_pendingChunks.begin();
+			_pendingChunks.erase(_pendingChunks.begin());
+		}
+		//_chunkQueueLock.unlock();
+		return out;
+	}
+
+	void TerrainGenerator::PopChunk()
+	{
+		//_chunkQueueLock.lock();
 		_pendingChunks.erase(_pendingChunks.begin());
-		_chunkQueueLock.unlock();
+		//_chunkQueueLock.unlock();
 	}
 
 	void TerrainGenerator::GenerateChunk(Chunk& out)
