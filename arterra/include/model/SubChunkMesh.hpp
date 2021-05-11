@@ -19,7 +19,7 @@ namespace arterra {
 		void AddChunk();
 		void AddSubChunk(SubChunk& subChunk);
 		void AddBlock(Block& block);
-		void AddFace(std::vector<float_t> posVertices, std::vector<float_t> texVertices);
+		void AddFace(std::vector<float_t> &posVertices, std::vector<float_t> &texVertices);
 
 		void GenerateMesh();
 		void SetShouldRender(bool shouldRender) { _shouldRender = shouldRender; }
@@ -41,6 +41,12 @@ namespace arterra {
 
 		std::vector<float_t> _posVertices;
 		std::vector<float_t> _uvVertices;
+
+		std::vector<float_t> _pv;
+		std::vector<float_t> _tv;
+
+		static const size_t ESTIMATED_POS_SIZE = 14000;
+		static const size_t ESTIMATED_UV_SIZE = 10000;
 	};
 
 }
