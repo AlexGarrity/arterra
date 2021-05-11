@@ -3,21 +3,77 @@
 #include "block/BlockManager.hpp"
 
 #include "world/Block.hpp"
-#include "world/SubChunk.hpp"
 #include "world/Chunk.hpp"
+#include "world/SubChunk.hpp"
 
 #include "world/World.hpp"
 
 namespace arterra {
 
-	TerrainGenerator::TerrainGenerator() {
+	TerrainGenerator::TerrainGenerator(BlockManager* blockManager)
+		: _blockManager { blockManager }
+		, _exiting { false }
+	{
 		std::srand(std::time(nullptr));
 		seedX = rand() % 65536;
 		seedY = rand() % 65536;
 		seedZ = rand() % 65536;
 	}
 
-	void TerrainGenerator::GenerateChunk(Chunk& out, BlockManager& blockManager)
+	TerrainGenerator::~TerrainGenerator()
+	{
+		SetAwaitShutdown(true);
+		_chunkGeneratorThread.join();
+	}
+
+	void TerrainGenerator::CreateChunkGeneratorThread()
+	{
+		_chunkGeneratorThread = std::thread([this] {
+			while (!IsAwaitingShutdown()) {
+				auto nextJob = GetNextChunkToGenerate();
+				if (nextJob) {
+					GenerateChunk(*nextJob);
+					MarkChunkAsCompleted(nextJob);
+				} else {
+					SetAwaitShutdown(true);
+				}
+			}
+		});
+	}
+
+	void TerrainGenerator::AddChunkToGeneratorQueue(Chunk* chunk)
+	{
+		//_chunkQueueLock.lock();
+		if (_pendingChunks.empty()) {
+			if (_chunkGeneratorThread.joinable())
+				_chunkGeneratorThread.join();
+			SetAwaitShutdown(false);
+			CreateChunkGeneratorThread();
+		}
+		_pendingChunks.insert(_pendingChunks.end(), chunk);
+		//_chunkQueueLock.unlock();
+	}
+
+	Chunk* TerrainGenerator::GetNextChunkToGenerate()
+	{
+		Chunk* out = nullptr;
+		//_chunkQueueLock.lock();
+		if (!_pendingChunks.empty()) {
+			out = *_pendingChunks.begin();
+			_pendingChunks.erase(_pendingChunks.begin());
+		}
+		//_chunkQueueLock.unlock();
+		return out;
+	}
+
+	void TerrainGenerator::PopChunk()
+	{
+		//_chunkQueueLock.lock();
+		_pendingChunks.erase(_pendingChunks.begin());
+		//_chunkQueueLock.unlock();
+	}
+
+	void TerrainGenerator::GenerateChunk(Chunk& out)
 	{
 		std::vector<uint16_t> _heightMap;
 		_heightMap.resize(256);
@@ -43,9 +99,9 @@ namespace arterra {
 
 		out.CreateSubChunksToHeight(largestHeight);
 
-		auto grassBlock = blockManager.GetBlock("grass");
-		auto dirtBlock = blockManager.GetBlock("dirt");
-		auto stoneBlock = blockManager.GetBlock("stone");
+		auto grassBlock = _blockManager->GetBlock("grass");
+		auto dirtBlock = _blockManager->GetBlock("dirt");
+		auto stoneBlock = _blockManager->GetBlock("stone");
 
 		for (auto& isc : out.GetSubChunks()) {
 			auto sc = isc.second;

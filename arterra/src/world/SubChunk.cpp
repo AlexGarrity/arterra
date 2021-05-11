@@ -1,6 +1,7 @@
 #include "world/SubChunk.hpp"
 
 #include "world/Chunk.hpp"
+#include "world/World.hpp"
 
 #include "util/Maths.hpp"
 
@@ -49,17 +50,29 @@ namespace arterra {
 
 	Block* SubChunk::GetBlock(int x, int y, int z) const
 	{
-		return GetBlockCS(PMod(x, SIZE_X), PMod(y, SIZE_Y), PMod(z, SIZE_Z));
+		auto px = PMod(x, SIZE_X);
+		auto py = PMod(y, SIZE_Y);
+		auto pz = PMod(z, SIZE_Z);
+
+		return GetBlockCS(px, py, pz);
 	}
 
 	void SubChunk::SetBlock(int x, int y, int z, BlockData& data)
 	{
-		SetBlockCS(PMod(x, SIZE_X), PMod(y, SIZE_Y), PMod(z, SIZE_Z), data);
+		auto px = PMod(x, SIZE_X);
+		auto py = PMod(y, SIZE_Y);
+		auto pz = PMod(z, SIZE_Z);
+
+		return SetBlockCS(px, py, pz, data);
 	}
 
 	void SubChunk::DeleteBlock(int x, int y, int z)
 	{
-		DeleteBlockCS(PMod(x, SIZE_X), PMod(y, SIZE_Y), PMod(z, SIZE_Z));
+		auto px = PMod(x, SIZE_X);
+		auto py = PMod(y, SIZE_Y);
+		auto pz = PMod(z, SIZE_Z);
+
+		return DeleteBlockCS(px, py, pz);
 	}
 
 	Block* SubChunk::GetBlockCS(int x, int y, int z) const
@@ -109,7 +122,10 @@ namespace arterra {
 				break;
 			case Direction::NegZ:
 				bounds = { 0, SIZE_X, 0, SIZE_Y, 0, 1 };
-
+				break;
+			case Direction::Always:
+				// Do nothing, I guess
+				// Should probably throw an error
 				break;
 		}
 

@@ -55,6 +55,12 @@ namespace arterra {
 		std::array<bool, 6> GetVisibleFaces() const;
 
 		/**
+		 * @brief Get the pointer to a block with a given (x,y,z) offset from this block
+		 * 
+		 **/
+		Block *ResolveBlockPositionOptimised(int v, int axis, int oA, int oX, int oY, int oZ, const WorldPosition &cpos, const WorldPosition &pos) const;
+
+		/**
 		 * @brief Update this block, rechecking whether it's faces are visible and optionally updating neighbours
 		 * @param width A size_t representing how far this update should travel.  Zero will update just this block,
 		 * one will update this and the blocks next to it, etc.
@@ -79,7 +85,7 @@ namespace arterra {
 
 	private:
 		bool _visible;
-		std::array<bool, 6> _visibleFaces;
+		std::array<bool, 6> _visibleFaces {false};
 
 		BlockData& _blockData;
 		SubChunk* _subChunk;

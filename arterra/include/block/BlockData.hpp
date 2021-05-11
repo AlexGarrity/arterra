@@ -26,9 +26,9 @@ namespace arterra {
 
 		void operator=(const BlockData &other) = delete;
 
-		const CullableModel& GetModel() const;
+		const CullableModel& GetModel() const { return _model; }
 		const AtlasTexture& GetTexture(Direction direction) const;
-		const CullingSettings GetCullingSettings() const;
+		const CullingSettings GetCullingSettings() const { return _cullingSettings; }
 
 	private:
 		const AtlasTexture& _topTexture;

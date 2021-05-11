@@ -62,7 +62,7 @@ namespace arterra {
 	{
 		auto frustum = camera.GetViewFrustum();
 		for (auto& r : _renderables) {
-			auto pos = r->GetPosition();
+			auto &pos = r->GetPosition();
 			auto inFrustum = frustum.ChunkInFrustum(pos);
 			r->SetShouldRender(inFrustum);
 		}

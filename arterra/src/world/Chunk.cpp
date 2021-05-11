@@ -74,15 +74,19 @@ namespace arterra {
 	void Chunk::UpdateNeighbours()
 	{
 		Chunk* n;
+		
 		n = _world->GetChunkCS(_position._x + 1, _position._z);
 		if (n)
 			n->UpdateBorder(Direction::NegX);
+
 		n = _world->GetChunkCS(_position._x - 1, _position._z);
 		if (n)
 			n->UpdateBorder(Direction::PosX);
+
 		n = _world->GetChunkCS(_position._x, _position._z + 1);
 		if (n)
 			n->UpdateBorder(Direction::NegZ);
+
 		n = _world->GetChunkCS(_position._x, _position._z - 1);
 		if (n)
 			n->UpdateBorder(Direction::PosZ);
@@ -163,7 +167,8 @@ namespace arterra {
 		for (auto sc : _subChunks) {
 			if (!sc.second)
 				continue;
-			if (sc.second->Update(deltaTime)) {
+			if (sc.second->IsUpdated()) {
+				sc.second->SetUpdated(false);
 				out.push_back(sc.second);
 			}
 		}

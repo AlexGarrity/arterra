@@ -133,6 +133,16 @@ namespace arterra {
 		 **/
 		bool Update(float deltaTime);
 
+		/**
+		 * @brief Gets whether the chunk has been updated this tick
+		 **/
+		bool IsUpdated() const { return _updated; };
+
+		/**
+		 * @brief Sets whether the chunk has been updated this tick
+		 **/
+		void SetUpdated(bool b) { _updated = b; }
+
 	private:
 		// Y coordinate of the subchunk (in CS)
 		int _position;

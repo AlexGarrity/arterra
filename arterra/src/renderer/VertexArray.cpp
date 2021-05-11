@@ -52,5 +52,5 @@ namespace arterra {
 
 	void VertexArray::Unbind() const { glBindVertexArray(0); }
 
-	GLuint VertexArray::GetVertexCount() { return _vertexCount; }
+	GLuint VertexArray::GetVertexCount() const { return _vertexCount; }
 }
