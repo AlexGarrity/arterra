@@ -1,5 +1,7 @@
 #include "renderer/Shader.hpp"
 
+#include "util/Resource.hpp"
+
 namespace arterra {
 
 	Shader::Shader(ShaderType shaderType, std::string path)

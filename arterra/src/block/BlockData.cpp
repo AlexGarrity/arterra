@@ -1,5 +1,7 @@
 #include "block/BlockData.hpp"
 
+#include "model/CullableModel.hpp"
+
 namespace arterra {
 
 	BlockData::BlockData(const AtlasTexture& topTexture, const AtlasTexture& sideTexture,
@@ -29,7 +31,7 @@ namespace arterra {
 	{
 	}
 
-	const AtlasTexture& BlockData::GetTexture(Direction direction) const
+	const AtlasTexture& BlockData::GetTexture(const Direction direction) const
 	{
 		switch (direction) {
 			case Direction::PosY:
@@ -37,8 +39,10 @@ namespace arterra {
 			case Direction::NegY:
 				return _bottomTexture;
 			default:
-				return _sideTexture;
+				break;
 		}
+		return _sideTexture;
 	}
+
 
 }

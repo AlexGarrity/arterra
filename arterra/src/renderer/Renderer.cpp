@@ -1,5 +1,7 @@
 #include "renderer/Renderer.hpp"
 
+#include <SFML/OpenGL.hpp>
+
 namespace arterra {
 
 	Renderer::Renderer()

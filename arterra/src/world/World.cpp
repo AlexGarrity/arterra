@@ -8,15 +8,15 @@
 
 #if defined(_MSC_VER)
 	#if defined(_DEBUG)
-		#define WORLD_SIZE 6
+		constexpr size_t WORLD_SIZE = 6;
 	#else
-		#define WORLD_SIZE 16
+		constexpr size_t WORLD_SIZE = 16;
 	#endif
 #else
 	#if defined(NDEBUG)
-		#define WORLD_SIZE 16
+		constexpr size_t WORLD_SIZE = 16;
 	#else
-		#define WORLD_SIZE 6
+		constexpr size_t WORLD_SIZE = 6;
 	#endif
 #endif
 
@@ -57,7 +57,7 @@ namespace arterra {
 	SubChunk* World::GetSubChunk(int x, int y, int z)
 	{
 		int cX = WorldToChunkSpace(x, SubChunk::SIZE_X);
-		int cY = y / SubChunk::SIZE_Y - ((y <0 )? 1 : 0);
+		int cY = y / SubChunk::SIZE_Y - ((y < 0) ? 1 : 0);
 		int cZ = WorldToChunkSpace(z, SubChunk::SIZE_Z);
 
 		return GetSubChunkCS(cX, cY, cZ);
@@ -77,7 +77,7 @@ namespace arterra {
 		if (chunk != _chunks.end())
 			return nullptr;
 
-		auto c = _chunks.emplace(ChunkPosition { x, z }, new Chunk(x, z, this));
+		auto c = _chunks.emplace(ChunkPosition{ x, z }, new Chunk(x, z, this));
 		return c.first->second;
 	}
 
@@ -99,7 +99,7 @@ namespace arterra {
 
 	void World::DeleteChunkCS(int x, int z)
 	{
-		ChunkPosition pos { x, z };
+		ChunkPosition pos{ x, z };
 		auto it = FindChunkCS(x, z);
 		if (it == _chunks.end()) {
 			Logger::Get().Log(
@@ -122,14 +122,14 @@ namespace arterra {
 	{
 		auto cX = WorldToChunkSpace(x, SubChunk::SIZE_X);
 		auto cZ = WorldToChunkSpace(z, SubChunk::SIZE_Z);
-		auto bPos = ChunkPosition { cX, cZ };
+		auto bPos = ChunkPosition{ cX, cZ };
 		auto pos = _chunks.find(bPos);
 		return pos;
 	}
 
 	ChunkMap::iterator World::FindChunkCS(int x, int z)
 	{
-		auto bPos = ChunkPosition { x, z };
+		auto bPos = ChunkPosition{ x, z };
 		auto pos = _chunks.find(bPos);
 		return pos;
 	}
@@ -139,12 +139,8 @@ namespace arterra {
 		DeleteOldChunks(playerPos);
 		GenerateNewChunks(playerPos);
 
-		auto &newChunks = _terrainGenerator->GetCompletedChunks();
-		for (auto c : newChunks) {
-			for (auto sc : c->GetSubChunks()) {
-				sc.second->SetUpdated(true);
-			}
-		}
+		auto& newChunks = _terrainGenerator->GetCompletedChunks();
+		for (auto c : newChunks) { for (auto sc : c->GetSubChunks()) { sc.second->SetUpdated(true); } }
 		newChunks.clear();
 
 		_modifiedSubChunks.clear();

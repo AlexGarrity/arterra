@@ -1,8 +1,6 @@
 #pragma once
 #include "PCH.hpp"
 
-#include <glad/glad.h>
-
 namespace arterra {
 	class Renderer {
 	public:

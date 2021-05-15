@@ -1,15 +1,15 @@
 #pragma once
 
 #include "PCH.hpp"
-
-#include "model/SubChunkMesh.hpp"
-#include "world/Chunk.hpp"
-#include "world/SubChunk.hpp"
-#include "renderer/Camera.hpp"
-#include "renderer/Renderer.hpp"
-
 namespace arterra {
 
+	class Renderer;
+	class Chunk;
+	class SubChunk;
+	class SubChunkMesh;
+	class Camera;
+	struct WorldPosition;
+	
 	class ChunkRenderer {
 	public:
 		ChunkRenderer(Renderer *renderer);
@@ -23,12 +23,12 @@ namespace arterra {
 
 		void CullRenderables(Camera &camera);
 		void DeleteRenderables(std::vector<WorldPosition> &chunks);
-		void DeleteRenderable(WorldPosition pos);
+		void DeleteRenderable(const WorldPosition &pos);
 
 		void UpdateSubChunks(std::vector<SubChunk*>& subChunks);
-		SubChunkMesh* GetMesh(WorldPosition position);
+		SubChunkMesh* GetMesh(const WorldPosition &position);
 		std::vector<SubChunkMesh*>::iterator GetMeshIterator(WorldPosition position);
-		void DeleteMesh(WorldPosition position);
+		void DeleteMesh(const WorldPosition &position);
 
 		void Render();
 

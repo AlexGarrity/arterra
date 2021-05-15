@@ -1,6 +1,8 @@
 #include "texture/TextureAtlas.hpp"
 
 #include <SFML/Graphics/Image.hpp>
+#include "util/Resource.hpp"
+#include "texture/AtlasTexture.hpp"
 
 namespace arterra {
 
@@ -43,18 +45,27 @@ namespace arterra {
 		AddTexture(16, 16, errorTexture, "error");
 	}
 
-	TextureAtlas::~TextureAtlas() { glDeleteTextures(1, &_glID); }
+	TextureAtlas::~TextureAtlas()
+	{
+		glDeleteTextures(1, &_glID);
+	}
 
-	void TextureAtlas::Bind() { glBindTexture(GL_TEXTURE_2D, _glID); }
+	void TextureAtlas::Bind()
+	{
+		glBindTexture(GL_TEXTURE_2D, _glID);
+	}
 
 	bool TextureAtlas::LoadTexture(std::string filepath, std::string identifier)
 	{
 		// Load the texture using the resource manager
 		auto result = ResourceManager::Get().Load(filepath);
-
+		if (!result) {
+			Logger::Get().Log(Logger::Severity::Error, "Texture not found: <" + identifier + ">");
+			return false;
+		}
 		sf::Image image;
 		{
-			// Get a handle to the resource, use stb to parse it properly
+			// Get a handle to the resource, use SFML to parse it properly
 			auto dataHandle = ResourceManager::Get().GetHandle(filepath);
 			image.loadFromMemory(dataHandle._resource->_data.data(), dataHandle._resource->_data.size());
 			image.flipVertically();
@@ -73,10 +84,11 @@ namespace arterra {
 			posX = 0;
 			posY += _lastHeight;
 		}
-		if (posY + height > _height) return;
+		if (posY + height > _height)
+			return;
 		glBindTexture(GL_TEXTURE_2D, _glID);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, posX, posY, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data.data());
-		_textures[identifier] = AtlasTexture { width, height, posX, posY, _width, _height };
+		_textures.emplace(identifier, AtlasTexture { width, height, posX, posY, _width, _height });
 		_lastX = posY;
 		_lastY = posX;
 		_lastWidth = width;
@@ -93,10 +105,11 @@ namespace arterra {
 			posX = 0;
 			posY += _lastHeight;
 		}
-		if (posY + height > _height) return;
+		if (posY + height > _height)
+			return;
 		glBindTexture(GL_TEXTURE_2D, _glID);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, posX, posY, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
-		_textures[identifier] = AtlasTexture { width, height, posX, posY, _width, _height };
+		_textures.emplace(identifier, AtlasTexture { width, height, posX, posY, _width, _height });
 		_lastX = posY;
 		_lastY = posX;
 		_lastWidth = width;

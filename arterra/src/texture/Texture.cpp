@@ -1,6 +1,7 @@
 #include "texture/Texture.hpp"
 
 #include <SFML/Graphics/Image.hpp>
+#include "util/Resource.hpp"
 
 namespace arterra {
 

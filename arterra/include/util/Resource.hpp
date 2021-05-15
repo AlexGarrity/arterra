@@ -37,6 +37,8 @@ namespace arterra {
 			// ctor
 			Handle(Data* resource)
 			{
+				if (!resource)
+					return;
 				// Increase the resource use since there is a new pointer
 				// pointing to it.
 				_resource = resource;

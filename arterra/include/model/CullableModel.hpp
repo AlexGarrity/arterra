@@ -2,22 +2,9 @@
 
 #include "PCH.hpp"
 
-#include "glad/glad.h"
-
-#include "renderer/VertexArray.hpp"
-#include "util/Resource.hpp"
+#include "util/Direction.hpp"
 
 namespace arterra {
-
-	enum Direction {
-		PosX = 0,
-		NegX = 1,
-		PosY = 2,
-		NegY = 3,
-		PosZ = 4,
-		NegZ = 5,
-		Always = 6,
-	};
 
 	class CullableModel {
 
@@ -25,17 +12,20 @@ namespace arterra {
 		// Default ctor
 		CullableModel() = default;
 		// RAII ctor
-		CullableModel(std::string filepath);
+		CullableModel(const std::string &filepath);
 
-		bool Create(std::string filepath);
+		bool Create(const std::string &filepath);
 
-		std::vector<float_t> GetPosVertices(Direction direction) const;
-		std::vector<float_t> GetTexVertices(Direction direction) const;
+		std::vector<float> &GetPosVertices(const Direction direction);
+		std::vector<float> &GetTexVertices(const Direction direction);
+
+		std::vector<float> GetPosVertices(const Direction direction) const;
+		std::vector<float> GetTexVertices(const Direction direction) const;
 
 	private:
-		// PosX, NegX, PosY, NegY, PosZ, NegZ
-		std::array<std::vector<float_t>, 7> _posVertices;
-		std::array<std::vector<float_t>, 7> _texVertices;
+		// PosX, NegX, PosY, NegY, PosZ, NegZ, ???
+		std::array<std::vector<float>, 7> _posVertices;
+		std::array<std::vector<float>, 7> _texVertices;
 
 		size_t _vertexCount;
 	};

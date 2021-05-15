@@ -4,8 +4,6 @@
 
 #include <glad/glad.h>
 
-#include "util/Resource.hpp"
-
 namespace arterra {
 
 	class TextureHandle {

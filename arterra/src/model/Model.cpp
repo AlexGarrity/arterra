@@ -1,6 +1,7 @@
 #include "model/Model.hpp"
 
 #include "model/OBJ.hpp"
+#include "util/Resource.hpp"
 
 namespace arterra {
 

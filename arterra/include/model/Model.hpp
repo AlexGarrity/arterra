@@ -2,10 +2,7 @@
 
 #include "PCH.hpp"
 
-#include "glad/glad.h"
-
 #include "renderer/VertexArray.hpp"
-#include "util/Resource.hpp"
 
 namespace arterra {
 

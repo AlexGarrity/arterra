@@ -4,43 +4,10 @@
 
 #include <glad/glad.h>
 
-#include "util/Resource.hpp"
-
 namespace arterra {
 
-	struct AtlasTexture {
-		float _width, _height;
-		float _x, _y;
-
-		AtlasTexture(float w, float h, float x, float y)
-			: _width { w }
-			, _height { h }
-			, _x { x }
-			, _y { y }
-		{
-		}
-
-		AtlasTexture()
-			: AtlasTexture(0.0f, 0.0f, 0.0f, 0.0f)
-		{
-		}
-
-		AtlasTexture(size_t w, size_t h, size_t x, size_t y, size_t aW, size_t aH)
-		{
-			float fAw = static_cast<float>(aW);
-			float fAh = static_cast<float>(aH);
-			float fW = static_cast<float>(w);
-			float fH = static_cast<float>(h);
-			float fX = static_cast<float>(x);
-			float fY = static_cast<float>(y);
-
-			_width = fW / fAw;
-			_height = fH / fAh;
-			_x = fX / fAw;
-			_y = fY / fAh;
-		}
-	};
-
+	struct AtlasTexture;
+	
 	class TextureAtlas {
 	public:
 		TextureAtlas(const size_t width, const size_t height);

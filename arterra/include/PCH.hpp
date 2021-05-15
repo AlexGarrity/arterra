@@ -29,6 +29,8 @@
 #include <random>
 // Fixed-width types
 #include <cstdint>
+// Time functions
+#include <chrono>
 
 // Lists
 #include <vector>

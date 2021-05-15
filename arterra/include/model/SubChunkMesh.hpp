@@ -2,11 +2,15 @@
 
 #include "PCH.hpp"
 
-#include "model/CullableModel.hpp"
-#include "world/SubChunk.hpp"
+#include "renderer/VertexArray.hpp"
+#include "world/WorldPosition.hpp"
 
 namespace arterra {
 
+	class SubChunk;
+	class Block;
+	struct WorldPosition;
+	
 	class SubChunkMesh {
 	public:
 		SubChunkMesh();

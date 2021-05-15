@@ -2,14 +2,13 @@
 
 #include "PCH.hpp"
 
-#include <glad/glad.h>
-
-#include "model/CullableModel.hpp"
-#include "texture/TextureAtlas.hpp"
+#include "util/Direction.hpp"
 
 namespace arterra {
 
 	class BlockData;
+	class CullableModel;
+	struct AtlasTexture;
 
 	struct CullingSettings {
 		enum Mode { Always, SameModel, SameBlock, Never };

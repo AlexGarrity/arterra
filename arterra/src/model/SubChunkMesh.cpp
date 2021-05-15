@@ -1,5 +1,12 @@
 #include "model/SubChunkMesh.hpp"
 
+#include <glad/glad.h>
+
+#include "texture/TextureAtlas.hpp"
+#include "texture/AtlasTexture.hpp"
+#include "world/SubChunk.hpp"
+#include "model/CullableModel.hpp"
+
 namespace arterra {
 
 	SubChunkMesh::SubChunkMesh() {}
@@ -19,8 +26,8 @@ namespace arterra {
 
 	SubChunkMesh::SubChunkMesh(const SubChunkMesh& other)
 	{
-		_posVertices = std::move(other._posVertices);
-		_uvVertices = std::move(other._uvVertices);
+		_posVertices = other._posVertices;
+		_uvVertices = other._uvVertices;
 		_vertexArray = other._vertexArray;
 		_posBuffer = other._posBuffer;
 		_texBuffer = other._texBuffer;
@@ -52,7 +59,7 @@ namespace arterra {
 
 	void SubChunkMesh::AddBlock(Block& block)
 	{
-		auto visibleFaces = block.GetVisibleFaces();
+		const auto visibleFaces = block.GetVisibleFaces();
 		for (auto i = 0; i < visibleFaces.size() + 1; ++i) {
 			if (i != 6) {
 				if (visibleFaces[i] == false)
@@ -60,23 +67,23 @@ namespace arterra {
 			}
 
 			const auto& blockData = block.GetData();
-			const auto& texture = blockData.GetTexture(Direction(i));
+			const auto& texture = blockData.GetTexture(static_cast<Direction>(i));
 
-			const auto &model = blockData.GetModel();
-			const auto posVertices = model.GetPosVertices(Direction(i));
-			const auto texVertices = model.GetTexVertices(Direction(i));
+			auto &model = blockData.GetModel();
+			auto posVertices = model.GetPosVertices(static_cast<Direction>(i));
+			auto texVertices = model.GetTexVertices(static_cast<Direction>(i));
 
 			_pv.resize(posVertices.size());
 			_tv.resize(texVertices.size());
 
-			auto position = block.GetPosition();
+			const auto position = block.GetPosition();
 			for (size_t j = 0; j < posVertices.size() / 3; ++j) {
-				auto iPos = j * 3;
-				_pv[iPos + 0] = posVertices[iPos + 0] + position._x;
-				_pv[iPos + 1] = posVertices[iPos + 1] + position._y;
-				_pv[iPos + 2] = posVertices[iPos + 2] + position._z;
+				const auto iPos = j * 3;
+				_pv[iPos + 0] = position._x + posVertices[iPos + 0];
+				_pv[iPos + 1] = position._y + posVertices[iPos + 1];
+				_pv[iPos + 2] = position._z + posVertices[iPos + 2];
 
-				auto iTex = j * 2;
+				const auto iTex = j * 2;
 				_tv[iTex + 0] = texVertices[iTex + 0] * texture._width;
 				_tv[iTex + 0] += texture._x;
 				_tv[iTex + 1] = texVertices[iTex + 1] * texture._height;

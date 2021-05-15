@@ -2,17 +2,20 @@
 
 #if defined(_MSC_VER)
 	#if defined(_DEBUG)
-		#define WORLD_SIZE 6
+		constexpr size_t WORLD_SIZE = 6;
 	#else
-		#define WORLD_SIZE 16
+		constexpr size_t WORLD_SIZE = 16;
 	#endif
 #else
 	#if defined(NDEBUG)
-		#define WORLD_SIZE 16
+		constexpr size_t WORLD_SIZE = 16;
 	#else
-		#define WORLD_SIZE 6
+		constexpr size_t WORLD_SIZE = 6;
 	#endif
 #endif
+
+#include "block/BlockData.hpp"
+#include "util/Resource.hpp"
 
 namespace arterra {
 

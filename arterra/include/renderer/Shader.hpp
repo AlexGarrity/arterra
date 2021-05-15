@@ -1,7 +1,6 @@
 #pragma once
 #include "PCH.hpp"
 
-#include "util/Resource.hpp"
 #include "util/DataObject.hpp"
 
 #include <glad/glad.h>
@@ -27,7 +26,7 @@ namespace arterra {
 
 	public:
 		ShaderProgram() = default;
-
+		
 		// Create a new shader (RAII)
 		ShaderProgram(std::string vertShaderPath, std::string fragShaderPath);
 
