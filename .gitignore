@@ -1,11 +1,13 @@
 # clangd language server files
 .clangd/
+.vs/
 
 # Build files
 build/
 
 # Compile commands
 compile_commands.json
+CMakeSettings.json
 
 # Helper scripts
 **.ps1
