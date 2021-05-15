@@ -1,5 +1,7 @@
 #include "renderer/VertexArray.hpp"
 
+#include "renderer/VertexBuffer.hpp"
+
 namespace arterra {
 
 	VertexArray::VertexArray()
@@ -38,7 +40,7 @@ namespace arterra {
 		//		GetCount = 3 ( vector has 3 coords x,y,z )
 		//		_type = GL_FLOAT ( since its a vector )
 		// 		_normalised = GL_FALSE ( not needed )
-		// 		GetStride() = 6 * sizeof(float_t) ( there are 3 position floats and 3 colour float_t)
+		// 		GetStride() = 6 * sizeof(float) ( there are 3 position floats and 3 colour float)
 		//		offset = 0 ( since position is first )
 		glVertexAttribPointer(
 			_lastBoundAttribute, vb.GetCount(), vb.GetType(), GL_FALSE, vb.GetCount() * vb.GetSize(), 0);

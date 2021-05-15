@@ -2,7 +2,7 @@
 
 namespace arterra {
 
-	bool OBJ::Load(std::vector<uint8_t> data, fVec& vertOut, fVec& uvOut, fVec& normOut)
+	bool OBJ::Load(const std::vector<uint8_t> &data, fVec& vertOut, fVec& uvOut, fVec& normOut)
 	{
 		// Check that there's at least enough data for the header
 		if (data.size() < 16) {
@@ -25,7 +25,7 @@ namespace arterra {
 
 		// Declare a load of vectors
 		std::vector<uint16_t> ivV, ivT, ivN;
-		std::vector<float_t> vertices, uvs, normals;
+		std::vector<float> vertices, uvs, normals;
 
 		// Extract relevant data from the header
 		vertexLength = static_cast<uint16_t>(data[4]) | static_cast<uint16_t>(data[5]) << 8;
@@ -51,7 +51,7 @@ namespace arterra {
 		size_t of = 16;
 		for (auto x = 0; x < vertexLength * 4; x += 4) {
 			uint32_t val = data[of] | data[of + 1] << 8 | data[of + 2] << 16 | data[of + 3] << 24;
-			float_t fVal = *reinterpret_cast<float_t*>(&val);
+			float fVal = *reinterpret_cast<float*>(&val);
 			vertices.emplace_back(fVal);
 			// Increase offset 4 bytes to account for read
 			of += 4;
@@ -59,7 +59,7 @@ namespace arterra {
 
 		for (auto x = 0; x < textureLength * 4; x += 4) {
 			uint32_t val = data[of] | data[of + 1] << 8 | data[of + 2] << 16 | data[of + 3] << 24;
-			float_t fVal = *reinterpret_cast<float_t*>(&val);
+			float fVal = *reinterpret_cast<float*>(&val);
 			uvs.emplace_back(fVal);
 			// Increase offset 4 bytes to account for read
 			of += 4;
@@ -67,7 +67,7 @@ namespace arterra {
 
 		for (auto x = 0; x < normalCount * 4; x += 4) {
 			uint32_t val = data[of] | data[of + 1] << 8 | data[of + 2] << 16 | data[of + 3] << 24;
-			float_t fVal = *reinterpret_cast<float_t*>(&val);
+			float fVal = *reinterpret_cast<float*>(&val);
 			normals.emplace_back(fVal);
 			// Increase offset 4 bytes to account for read
 			of += 4;

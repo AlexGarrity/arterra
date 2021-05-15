@@ -48,4 +48,14 @@ namespace arterra {
 
 	bool ChunkPosition::operator==(const ChunkPosition& other) const { return _x == other._x && _z == other._z; }
 
+	size_t WorldPositionHash::operator()(const WorldPosition& pos) const
+	{
+		return (pos._x * 131071) + (pos._y * 524287) + (pos._z * 8191);
+	}
+
+	size_t ChunkPositionHash::operator()(const ChunkPosition& pos) const
+	{
+		return (pos._x * 131071) ^ (pos._z * 8191);
+	}
+
 }

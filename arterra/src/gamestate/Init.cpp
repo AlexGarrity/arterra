@@ -9,11 +9,11 @@ namespace arterra {
 		{
 		}
 
-		void Init::Input(float_t deltaTime) {}
+		void Init::Input(const float deltaTime) {}
 
-		void Init::Update(float_t deltaTime) {}
+		void Init::Update(const float deltaTime) {}
 
-		void Init::Render(float_t deltaTime) {}
+		void Init::Render(const float deltaTime) {}
 
 	}
 

@@ -55,12 +55,12 @@ namespace arterra {
 		glBindTexture(GL_TEXTURE_2D, _glID);
 	}
 
-	bool TextureAtlas::LoadTexture(std::string filepath, std::string identifier)
+	bool TextureAtlas::LoadTexture(const std::string &filepath, const std::string &identifier)
 	{
 		// Load the texture using the resource manager
 		auto result = ResourceManager::Get().Load(filepath);
 		if (!result) {
-			Logger::Get().Log(Logger::Severity::Error, "Texture not found: <" + identifier + ">");
+			Logger::Error("Texture not found: <" + identifier + ">");
 			return false;
 		}
 		sf::Image image;
@@ -74,7 +74,7 @@ namespace arterra {
 		return true;
 	}
 
-	void TextureAtlas::AddTexture(size_t width, size_t height, std::vector<uint8_t>& data, std::string identifier)
+	void TextureAtlas::AddTexture(size_t width, size_t height, std::vector<uint8_t>& data, const std::string &identifier)
 	{
 		if (_textures.find(identifier) != _textures.end())
 			return;
@@ -95,7 +95,7 @@ namespace arterra {
 		_lastHeight = height;
 	}
 
-	void TextureAtlas::AddTexture(size_t width, size_t height, const void* data, std::string identifier)
+	void TextureAtlas::AddTexture(size_t width, size_t height, const void* data, const std::string &identifier)
 	{
 		if (_textures.find(identifier) != _textures.end())
 			return;
@@ -116,7 +116,7 @@ namespace arterra {
 		_lastHeight = height;
 	}
 
-	AtlasTexture* TextureAtlas::GetTexture(std::string identifier)
+	AtlasTexture* TextureAtlas::GetTexture(const std::string &identifier)
 	{
 		auto it = _textures.find(identifier);
 		if (it == _textures.end())

@@ -7,10 +7,10 @@ namespace arterra {
 		Renderer();
 
 		// Update the renderer to account for input
-		void Update();
+		void Update() const;
 
 		// Draw a triangle array
-		void DrawTriangles(size_t vertexCount);
+		void DrawTriangles(size_t vertexCount) const;
 
 	private:
 	};

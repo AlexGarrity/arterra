@@ -8,9 +8,9 @@
 
 namespace arterra {
 
-	ChunkRenderer::ChunkRenderer(Renderer* renderer)
+	ChunkRenderer::ChunkRenderer(const Renderer* renderer)
+		: _renderer{renderer}
 	{
-		_renderer = renderer;
 		_renderables.reserve(128);
 		_renderables.clear();
 	}

@@ -10,9 +10,9 @@ namespace arterra {
 		Random();
 
 		// Get a random integer in a specific range.
-		int64_t IntInRange(const int64_t min, const int64_t max);
-		// Get a random float_tin a specific range.
-		float_t FloatInRange(const float_t min, const float_t max);
+		int64_t IntInRange(int64_t min, int64_t max);
+		// Get a random float in a specific range.
+		float FloatInRange(float min, float max);
 
 		// Get a completely random number with no bounds.
 		long Generate();

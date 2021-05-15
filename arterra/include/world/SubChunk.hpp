@@ -124,7 +124,7 @@ namespace arterra {
 		 * @brief Get the parent Chunk of this SubChunk
 		 * @return A pointer to the Chunk this SubChunk is a child of
 		 **/
-		inline Chunk* GetChunk() { return _chunk; };
+		Chunk* GetChunk();;
 
 		/**
 		 * @brief Update this SubChunk
@@ -136,12 +136,12 @@ namespace arterra {
 		/**
 		 * @brief Gets whether the chunk has been updated this tick
 		 **/
-		bool IsUpdated() const { return _updated; };
+		bool IsUpdated() const;;
 
 		/**
 		 * @brief Sets whether the chunk has been updated this tick
 		 **/
-		void SetUpdated(bool b) { _updated = b; }
+		void SetUpdated(bool b);
 
 	private:
 		// Y coordinate of the subchunk (in CS)

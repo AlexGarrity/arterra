@@ -14,10 +14,10 @@ namespace arterra {
 		// Whether they key is currently actively pressed or not.
 		bool _isActive;
 		// The time the key has been currently pressed down for.
-		float_t _timePressed;
+		float _timePressed;
 		
 		KeyBindData();
-		KeyBindData(bool isActive, float_t timePressed);
+		KeyBindData(bool isActive, float timePressed);
 		
 	};
 	
@@ -28,9 +28,9 @@ namespace arterra {
 			// Keeps track of whether they key changes state.
 			void Update();
 			// Generate data struct for this keybind.
-			KeyBindData GetData();
+			KeyBindData GetData() const;
 			
-			virtual void DumpToLog(std::string title = "--- KEYBIND ---") override;
+			void DumpToLog(const std::string &title = "--- KEYBIND ---") const override;
 		
 		private:
 			// The keycode for this keybind.
@@ -46,10 +46,10 @@ namespace arterra {
 		// Whether they button is currently actively pressed or not.
 		bool _isActive;
 		// The time the button has been currently pressed down for.
-		float_t _timePressed;
+		float _timePressed;
 		
 		MouseBindData();
-		MouseBindData(bool isActive, float_t timePressed);
+		MouseBindData(bool isActive, float timePressed);
 	};
 	
 	class MouseBind : public DataObject {
@@ -59,9 +59,9 @@ namespace arterra {
 			// Keeps track of whether they button changes state.
 			void Update();
 			// Generate data struct for this mousebind.
-			MouseBindData GetData();
+			MouseBindData GetData() const;
 			
-			virtual void DumpToLog(std::string title = "--- MOUSEBIND ---") override;
+			void DumpToLog(const std::string &title = "--- MOUSEBIND ---") const override;
 		
 		private:
 			// The buttonCode for this mousebind.
@@ -75,10 +75,10 @@ namespace arterra {
 	
 	struct MouseAxisData {
 		// The movement amount on this axis.
-		float_t _delta;
+		float _delta;
 		
 		MouseAxisData();
-		MouseAxisData(float_t delta);
+		MouseAxisData(float delta);
 	};
 
 	

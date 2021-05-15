@@ -11,7 +11,7 @@ namespace arterra {
 	class Block;
 
 	class TerrainGenerator {
-		using GeneratorJob = std::function<void(void)>;
+		using GeneratorJob = std::function<void()>;
 
 	public:
 		TerrainGenerator(BlockManager* blockManager);
@@ -28,14 +28,9 @@ namespace arterra {
 		void SetAwaitShutdown(bool b) { _exiting = b; }
 		bool IsAwaitingShutdown() const { return _exiting; }
 
-		void MarkChunkAsCompleted(Chunk* c)
-		{
-			_completedChunksLock.lock();
-			_completedChunks.emplace_back(c);
-			_completedChunksLock.unlock();
-		}
+		void MarkChunkAsCompleted(Chunk* c);
 
-		std::vector<Chunk*>& GetCompletedChunks() { return _completedChunks; }
+		std::vector<Chunk*>& GetCompletedChunks();
 
 		void CreateChunkGeneratorThread();
 

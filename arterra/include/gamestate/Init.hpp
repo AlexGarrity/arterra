@@ -10,11 +10,11 @@ namespace arterra {
 
 		class Init : public Base {
 		public:
-			Init(Engine* engine);
+			explicit Init(Engine* engine);
 
-			virtual void Input(float_t deltaTime);
-			virtual void Update(float_t deltaTime);
-			virtual void Render(float_t deltaTime);
+			void Input(float deltaTime) override;
+			void Update(float deltaTime) override; 
+			void Render(float deltaTime) override;
 
 		private:
 		};

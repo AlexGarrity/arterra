@@ -11,7 +11,7 @@ namespace arterra {
 
 	public:
 		GuiElement();
-		GuiElement(std::vector<float_t> posVertices, std::vector<float_t> uvVertices);
+		GuiElement(std::vector<float> &posVertices, std::vector<float> &uvVertices);
 
 		void Destroy();
 		void GenerateMesh();
@@ -23,8 +23,8 @@ namespace arterra {
 		GLuint GetVertexCount();
 
 	private:
-		std::vector<float_t> _posVertices;
-		std::vector<float_t> _uvVertices;
+		std::vector<float> _posVertices;
+		std::vector<float> _uvVertices;
 		VertexArray _vertexArray;
 
 		VertexBuffer _posBuffer;

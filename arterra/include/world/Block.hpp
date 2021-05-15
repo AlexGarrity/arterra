@@ -46,7 +46,7 @@ namespace arterra {
 		BlockData& GetData() const;
 
 		// Return whether or not the block is visible
-		inline bool IsVisible() const { return _visible; }
+		bool IsVisible() const;
 
 		/**
 		 * @brief Get a list of the visible faces, in order of the direction enum

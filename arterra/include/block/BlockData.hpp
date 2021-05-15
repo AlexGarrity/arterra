@@ -12,8 +12,8 @@ namespace arterra {
 
 	struct CullingSettings {
 		enum Mode { Always, SameModel, SameBlock, Never };
-		std::array<bool, 6> _cullsOther { true, true, true, true, true, true };
-		std::array<bool, 6> _getsCulled { true, true, true, true, true, true };
+		std::array<bool, 6> _cullsOther { true };
+		std::array<bool, 6> _getsCulled { true };
 		Mode _cullingMode { CullingSettings::Always };
 	};
 
@@ -25,9 +25,9 @@ namespace arterra {
 
 		void operator=(const BlockData &other) = delete;
 
-		const CullableModel& GetModel() const { return _model; }
+		const CullableModel& GetModel() const;
 		const AtlasTexture& GetTexture(Direction direction) const;
-		const CullingSettings GetCullingSettings() const { return _cullingSettings; }
+		const CullingSettings GetCullingSettings() const;
 
 	private:
 		const AtlasTexture& _topTexture;

@@ -3,6 +3,7 @@
 #include "PCH.hpp"
 
 #include "renderer/VertexArray.hpp"
+#include "renderer/VertexBuffer.hpp"
 #include "world/WorldPosition.hpp"
 
 namespace arterra {
@@ -23,15 +24,15 @@ namespace arterra {
 		void AddChunk();
 		void AddSubChunk(SubChunk& subChunk);
 		void AddBlock(Block& block);
-		void AddFace(std::vector<float_t> &posVertices, std::vector<float_t> &texVertices);
+		void AddFace(std::vector<float> &posVertices, std::vector<float> &texVertices);
 
 		void GenerateMesh();
-		void SetShouldRender(bool shouldRender) { _shouldRender = shouldRender; }
-		bool ShouldRender() const { return _shouldRender; }
+		void SetShouldRender(bool shouldRender);
+		bool ShouldRender() const;
 
 		void Bind();
 		GLuint GetVertexCount() const;
-		const WorldPosition &GetPosition() const { return _position; }
+		const WorldPosition& GetPosition() const;
 
 	private:
 		bool _shouldRender = true;
@@ -43,11 +44,11 @@ namespace arterra {
 
 		WorldPosition _position;
 
-		std::vector<float_t> _posVertices;
-		std::vector<float_t> _uvVertices;
+		std::vector<float> _posVertices;
+		std::vector<float> _uvVertices;
 
-		std::vector<float_t> _pv;
-		std::vector<float_t> _tv;
+		std::vector<float> _pv;
+		std::vector<float> _tv;
 
 		static const size_t ESTIMATED_POS_SIZE = 14000;
 		static const size_t ESTIMATED_UV_SIZE = 10000;

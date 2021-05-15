@@ -19,10 +19,10 @@ namespace arterra {
 			Data(std::vector<uint8_t> data) { _data = data; }
 
 			// Log the resource data.
-			void DumpToLog(std::string title = "Resource.Data") override
+			void DumpToLog(const std::string &title = "Resource.Data") const override
 			{
 				// Write handle count and data size.
-				Logger::Get().Log("\t", title, " - ", "handleCount: ", handleCount, "; Data size:", _data.size());
+				Logger::Log("\t", title, " - ", "handleCount: ", handleCount, "; Data size:", _data.size());
 			}
 
 			// Serialise resource data.
@@ -54,9 +54,9 @@ namespace arterra {
 			}
 
 			// Log the resource data handle.
-			void DumpToLog(std::string title = "Resource.Handle") override
+			void DumpToLog(const std::string &title = "Resource.Handle") const override
 			{
-				Logger::Get().Log("\n\t", title, " - ", "handleCount: ", _resource);
+				Logger::Log("\n\t", title, " - ", "handleCount: ", _resource);
 			}
 		};
 

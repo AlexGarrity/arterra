@@ -12,7 +12,7 @@ namespace arterra {
 		// Default ctor
 		CullableModel() = default;
 		// RAII ctor
-		CullableModel(const std::string &filepath);
+		explicit CullableModel(const std::string &modelName);
 
 		bool Create(const std::string &filepath);
 

@@ -20,14 +20,14 @@ namespace arterra {
 
 		class Test : public Base {
 		public:
-			Test(Engine* engine);
+			explicit Test(Engine* engine);
 
-			virtual void Input(float_t deltaTime) override;
-			virtual void Update(float_t deltaTime) override;
-			virtual void Render(float_t deltaTime) override;
+			void Input(float deltaTime) override;
+			void Update(float deltaTime) override;
+			void Render(float deltaTime) override;
 
 		private:
-			float_t _timeToResourceUnload = 5.0f;
+			float _timeToResourceUnload = 5.0f;
 			CullableModel _blockModel;
 			World _world;
 
@@ -38,8 +38,8 @@ namespace arterra {
 			TextureAtlas _atlas;
 
 			// Temporary player controller.
-			float_t _speed = 2.0f;
-			float_t _rotSpeed = glm::radians(15.0f);
+			float _speed = 2.0f;
+			float _rotSpeed = glm::radians(15.0f);
 		};
 
 	}

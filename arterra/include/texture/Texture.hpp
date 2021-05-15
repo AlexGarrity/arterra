@@ -11,13 +11,13 @@ namespace arterra {
 		// Default ctor
 		TextureHandle() = default;
 		// RAII ctor
-		TextureHandle(std::string filepath);
+		TextureHandle(const std::string &filepath);
 		~TextureHandle();
 
-		bool Load(std::string filepath);
+		bool Load(const std::string &filepath);
 
-		inline GLint Handle() const { return _handle; }
-		inline void Bind() { glBindTexture(GL_TEXTURE_2D, _handle); }
+		GLint Handle() const;
+		void Bind();
 
 	private:
 		GLuint _handle;

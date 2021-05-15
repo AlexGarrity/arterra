@@ -102,8 +102,7 @@ namespace arterra {
 		ChunkPosition pos{ x, z };
 		auto it = FindChunkCS(x, z);
 		if (it == _chunks.end()) {
-			Logger::Get().Log(
-				Logger::Error, "Tried to delete a chunk at ", x, ", ", z, " but the chunk could not be found");
+			Logger::Error("Tried to delete a chunk at ", x, ", ", z, " but the chunk could not be found");
 			return;
 		}
 		delete it->second;
@@ -211,9 +210,9 @@ namespace arterra {
 		return (DistanceToChunk2(pos, c) <= _loadDistance2);
 	}
 
-	float_t World::DistanceToChunk(glm::vec3 pos, ChunkPosition c) { return sqrtf(DistanceToChunk2(pos, c)); }
+	float World::DistanceToChunk(glm::vec3 pos, ChunkPosition c) { return sqrtf(DistanceToChunk2(pos, c)); }
 
-	float_t World::DistanceToChunk2(glm::vec3 pos, ChunkPosition c)
+	float World::DistanceToChunk2(glm::vec3 pos, ChunkPosition c)
 	{
 		auto deltaX = pos.x - (c._x * 16.0f);
 		deltaX *= deltaX;
@@ -228,19 +227,19 @@ namespace arterra {
 		return (DistanceToChunk2(a, c) <= _loadDistance2);
 	}
 
-	float_t World::DistanceToChunk(ChunkPosition a, ChunkPosition c) { return sqrtf(DistanceToChunk2(a, c)); }
+	float World::DistanceToChunk(ChunkPosition a, ChunkPosition c) { return sqrtf(DistanceToChunk2(a, c)); }
 
-	float_t World::DistanceToChunk2(ChunkPosition a, ChunkPosition c)
+	float World::DistanceToChunk2(ChunkPosition a, ChunkPosition c)
 	{
 		auto deltaX = c._x - a._x;
 		deltaX *= deltaX;
 		auto deltaY = c._z - a._z;
 		deltaY *= deltaY;
 
-		return static_cast<float_t>(deltaX + deltaY);
+		return static_cast<float>(deltaX + deltaY);
 	}
 
-	void World::ResizeLoadDistance(float_t distance)
+	void World::ResizeLoadDistance(float distance)
 	{
 		_loadDistance = distance;
 		_loadDistance2 = distance * distance;

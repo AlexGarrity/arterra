@@ -5,25 +5,25 @@
 
 namespace arterra {
 
-	Model::Model(std::string filepath)
+	Model::Model(const std::string &filepath)
 		: Model()
 	{
 		Create(filepath);
 	}
 
-	bool Model::Create(std::string filepath)
+	bool Model::Create(const std::string &filepath)
 	{
 		// Load and get handle to the resource
 		auto resource = ResourceManager::Get().Load(filepath);
 		if (!resource) {
-			Logger::Get().Log(Logger::Warning, "Failed to load model '", filepath, "'");
+			Logger::Warning("Failed to load model '", filepath, "'");
 			return false;
 		}
 
 		// Create vectors for storing useful things
-		std::vector<float_t> vertices;
-		std::vector<float_t> normals;
-		std::vector<float_t> uvs;
+		std::vector<float> vertices;
+		std::vector<float> normals;
+		std::vector<float> uvs;
 
 		{
 			// Get a handle to the resource data
@@ -47,4 +47,5 @@ namespace arterra {
 		return true;
 	}
 
+	void Model::Bind() const { _buffers._vao.Bind(); }
 }

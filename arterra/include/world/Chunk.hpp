@@ -45,7 +45,7 @@ namespace arterra {
 		ChunkPosition GetPositionRaw();
 		std::vector<SubChunk*> Update(float deltaTime);
 
-		inline World *GetWorld() { return _world; }
+		World* GetWorld();
 
 	private:
 		SubChunkMap _subChunks;

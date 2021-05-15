@@ -15,10 +15,10 @@ namespace arterra {
 		return distribution(_engine);
 	}
 
-	float_t Random::FloatInRange(const float_t min, const float_t max)
+	float Random::FloatInRange(const float min, const float max)
 	{
-		// Generate a float_tin the range.
-		std::uniform_real_distribution<float_t> distribution(min, max);
+		// Generate a float in the range.
+		std::uniform_real_distribution<float> distribution(min, max);
 		return distribution(_engine);
 	}
 

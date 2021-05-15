@@ -4,8 +4,8 @@
 
 namespace arterra {
 
-	Shader::Shader(ShaderType shaderType, std::string path)
-		: _shaderType { shaderType }
+	Shader::Shader(ShaderType shaderType, const std::string &path)
+		: _shaderType{ shaderType }
 	{
 		// Load the shader resource
 		auto loadResult = ResourceManager::Get().Load(path);
@@ -39,27 +39,36 @@ namespace arterra {
 		glCompileShader(_glID);
 	}
 
-	// Override for DataObject function
-	void Shader::DumpToLog(std::string title)
+	Shader::~Shader()
 	{
-		Logger::Get().Log("\t", title, " - type: ", _shaderType, "; handle:", _glID);
+		glDeleteShader(_glID);
 	}
 
-	ShaderProgram::ShaderProgram(std::string vertPath, std::string fragPath) { Create(vertPath, fragPath); }
-
-	ShaderProgram::~ShaderProgram() { /* glDeleteProgram(_glID); */ }
-
-	bool ShaderProgram::Create(std::string vertPath, std::string fragPath)
+	// Override for DataObject function
+	void Shader::DumpToLog(const std::string &title) const
 	{
+		Logger::Log("\t", title, " - type: ", _shaderType, "; handle:", _glID);
+	}
 
+	GLuint Shader::Handle() const { return _glID; }
+
+	ShaderProgram::ShaderProgram(const std::string &vertPath, const std::string &fragPath) { Create(vertPath, fragPath); }
+
+	ShaderProgram::~ShaderProgram()
+	{
+		/* glDeleteProgram(_glID); */
+	}
+
+	bool ShaderProgram::Create(const std::string &vertPath, const std::string &fragPath)
+	{
 		// Create a new vertex shader.
-		Shader vert { Shader::Vertex, vertPath };
+		Shader vert{ Shader::Vertex, vertPath };
 		// Make sure it has compiled correctly.
 		if (!CheckShaderCompilation(vert.Handle()))
 			return false;
 
 		// Create a new fragment shader
-		Shader frag { Shader::Fragment, fragPath };
+		Shader frag{ Shader::Fragment, fragPath };
 		// Make sure it has compiled correctly.
 		if (!CheckShaderCompilation(frag.Handle()))
 			return false;
@@ -73,9 +82,57 @@ namespace arterra {
 		glBindFragDataLocation(_glID, 0, "outColor");
 		// Link the program.
 		glLinkProgram(_glID);
-		
+
 		return true;
 	}
+
+	GLuint ShaderProgram::GetProgram() const { return _glID; }
+
+	GLint ShaderProgram::GetUniform(const char* name) { return glGetUniformLocation(_glID, name); }
+
+	void ShaderProgram::SetUniform(std::string uniformName, glm::mat4 matrix)
+	{
+		auto uniform = GetUniform(uniformName.c_str());
+		glUniformMatrix4fv(uniform, 1, GL_FALSE, glm::value_ptr(matrix));
+	}
+
+	void ShaderProgram::SetUniform(std::string uniformName, float value)
+	{
+		auto uniform = GetUniform(uniformName.c_str());
+		glUniform1f(uniform, value);
+	}
+
+	void ShaderProgram::SetUniform(std::string uniformName, double value)
+	{
+		auto uniform = GetUniform(uniformName.c_str());
+		glUniform1d(uniform, value);
+	}
+
+	void ShaderProgram::SetUniform(std::string uniformName, glm::vec2 vector)
+	{
+		auto uniform = GetUniform(uniformName.c_str());
+		glUniform2fv(uniform, 1, glm::value_ptr(vector));
+	}
+
+	void ShaderProgram::SetUniform(std::string uniformName, glm::vec3 vector)
+	{
+		auto uniform = GetUniform(uniformName.c_str());
+		glUniform3fv(uniform, 1, glm::value_ptr(vector));
+	}
+
+	void ShaderProgram::SetUniform(std::string uniformName, glm::vec4 vector)
+	{
+		auto uniform = GetUniform(uniformName.c_str());
+		glUniform4fv(uniform, 1, glm::value_ptr(vector));
+	}
+
+	void ShaderProgram::SetUniform(std::string uniformName, GLint value)
+	{
+		auto uniform = GetUniform(uniformName.c_str());
+		glUniform1i(uniform, value);
+	}
+
+	void ShaderProgram::DumpToLog(const std::string &title) const { Logger::Log("\t", title, " - ", "handle: ", _glID); }
 
 	bool ShaderProgram::CheckShaderCompilation(GLuint shader)
 	{
@@ -88,11 +145,11 @@ namespace arterra {
 
 		// If the compilation was unsuccessful, log it.
 		if (result == GL_FALSE) {
-			Logger::Get().Log(Logger::Warning, "Shader failed to compile");
-			Logger::Get().Log(Logger::Warning, "Shader error log: ", buffer);
+			Logger::Warning("Shader failed to compile");
+			Logger::Warning("Shader error log: ", buffer);
 			return false;
 		}
-		Logger::Get().Log(Logger::Debug, "Shader compiled successfully");
+		Logger::Debug( "Shader compiled successfully");
 		return true;
 	}
 

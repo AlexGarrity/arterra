@@ -20,14 +20,14 @@ namespace arterra {
 		auto configPath = modelName + ".yaml";
 		auto modelResource = ResourceManager::Get().Load(modelPath);
 		if (!modelResource) {
-			Logger::Get().Log(Logger::Warning, "Failed to load CullableModel model'", modelName, "'");
+			Logger::Warning("Failed to load CullableModel model'", modelName, "'");
 			return false;
 		}
 
 		// Vectors for temporarily storing vertex data loaded from the model.
-		std::vector<float_t> vertices;
-		std::vector<float_t> normals;
-		std::vector<float_t> uvs;
+		std::vector<float> vertices;
+		std::vector<float> normals;
+		std::vector<float> uvs;
 
 		{
 			// Get a handle to the model resource data
@@ -39,7 +39,7 @@ namespace arterra {
 		// Parse in the yaml configuration file for the cullable model
 		auto configResource = ResourceManager::Get().Load(configPath);
 		if (!configResource) {
-			Logger::Get().Log(Logger::Warning, "Failed to load config for CullableModel '", modelName, "'");
+			Logger::Warning("Failed to load config for CullableModel '", modelName, "'");
 			return false;
 		}
 
@@ -48,7 +48,7 @@ namespace arterra {
 			dataHandle._resource->_data.end());
 		YAML::Node modelConfig = YAML::Load(configSrc);
 		if (!modelConfig["CullableIndicesData"]) {
-			Logger::Get().Log(Logger::Warning, "The CullableModel '", modelName,
+			Logger::Warning("The CullableModel '", modelName,
 				"' config does not contain 'CullableIndicesData'");
 		}
 
@@ -81,12 +81,12 @@ namespace arterra {
 		return true;
 	}
 
-	std::vector<float_t>& CullableModel::GetPosVertices(const Direction direction)
+	std::vector<float>& CullableModel::GetPosVertices(const Direction direction)
 	{
 		return _posVertices[direction];
 	}
 
-	std::vector<float_t>& CullableModel::GetTexVertices(const Direction direction)
+	std::vector<float>& CullableModel::GetTexVertices(const Direction direction)
 	{
 		return _texVertices[direction];
 	}

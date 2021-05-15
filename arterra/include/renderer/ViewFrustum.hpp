@@ -14,7 +14,7 @@ namespace arterra {
 
 	public:
 		ViewFrustum();
-		void Update(glm::mat4& viewProjetionMatrix);
+		void Update(glm::mat4& viewProjectionMatrix);
 
 		bool PointInFrustum(glm::vec3 point);
 		bool ChunkInFrustum(const WorldPosition& pos);

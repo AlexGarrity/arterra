@@ -106,7 +106,7 @@ namespace arterra {
 	{
 		switch (borderDirection) {
 			case Direction::PosY: {
-				Logger::Get().Log(Logger::Debug, "Updating positive Y border for chunk at (", _position._x, ", ",
+				Logger::Debug( "Updating positive Y border for chunk at (", _position._x, ", ",
 					_position._z, ").  Whilst possible, was this intended?");
 				SubChunkMap::iterator highestSC;
 				for (auto it = _subChunks.begin(); it != _subChunks.end(); ++it) {
@@ -118,7 +118,7 @@ namespace arterra {
 			} break;
 
 			case Direction::NegY: {
-				Logger::Get().Log(Logger::Debug, "Updating negative Y border for chunk at (", _position._x, ", ",
+				Logger::Debug( "Updating negative Y border for chunk at (", _position._x, ", ",
 					_position._z, ").  Whilst possible, was this intended?");
 				SubChunkMap::iterator lowestSC;
 				for (auto it = _subChunks.begin(); it != _subChunks.end(); ++it) {
@@ -174,5 +174,7 @@ namespace arterra {
 		}
 		return { out.begin(), out.end() };
 	}
+
+	World* Chunk::GetWorld() { return _world; }
 
 }

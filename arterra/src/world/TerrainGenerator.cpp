@@ -26,6 +26,15 @@ namespace arterra {
 		_chunkGeneratorThread.join();
 	}
 
+	void TerrainGenerator::MarkChunkAsCompleted(Chunk* c)
+	{
+		_completedChunksLock.lock();
+		_completedChunks.emplace_back(c);
+		_completedChunksLock.unlock();
+	}
+
+	std::vector<Chunk*>& TerrainGenerator::GetCompletedChunks() { return _completedChunks; }
+
 	void TerrainGenerator::CreateChunkGeneratorThread()
 	{
 		_chunkGeneratorThread = std::thread([this] {

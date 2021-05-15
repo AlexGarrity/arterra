@@ -21,7 +21,7 @@ namespace arterra {
 		glDeleteBuffers(1, &_glID);
 	}
 
-	void VertexBuffer::Create(std::vector<float_t>& data, GLint count, GLenum type)
+	void VertexBuffer::Create(std::vector<float>& data, GLint count, GLenum type)
 	{
 		// Initialise the variables.
 		_count = count;
@@ -42,5 +42,11 @@ namespace arterra {
 	void VertexBuffer::Unbind() const { glBindBuffer(GL_ARRAY_BUFFER, 0); }
 
 	GLsizei VertexBuffer::GetSize() const { return GetTypeSize(_type); }
+	
+	GLint VertexBuffer::GetCount() const { return _count; }
+	
+	GLenum VertexBuffer::GetType() const { return _type; }
+	
+	GLint VertexBuffer::GetVertexCount() const { return _vertexCount; }
 
 }

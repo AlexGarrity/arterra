@@ -47,7 +47,7 @@ namespace arterra {
 
 	void Transform::Rotate(glm::vec3 rotation) { _rotation += rotation; }
 
-	void Transform::Rotate(float_t x, float_t y, float_t z)
+	void Transform::Rotate(float x, float y, float z)
 	{
 		_rotation += glm::vec3(glm::radians(x), glm::radians(y), glm::radians(z));
 	}

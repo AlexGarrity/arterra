@@ -4,64 +4,52 @@
 
 namespace arterra {
 
-	class Logger {
-	public:
-		// Severity levels for organising the output.
-		// (Enum classes are scoped-ish)
-		enum Severity { Info, Debug, Warning, Error, Fatal };
+	// Static methods for logging information/data to the console.
+	namespace Logger {
 
-		// Ctor
-		Logger() { Log(Debug, "Logger initialised"); }
+		static void Log() { std::cout << "\033[0m" << std::endl; }
 
-		// Singleton getter
-		static Logger& Get()
+		template <typename T, typename... Args> static void Log(T first, Args... args)
 		{
-			// Return a local static logger.
-			static Logger logger;
-			return logger;
-		}
-
-		// End the message write.
-		void Log() { std::cout << std::endl; }
-
-		// Recursively write the message objects.
-		template <typename T, typename... Args> void Log(T first, Args... args)
-		{
-			std::cout << first;
+			std::cout << first << " ";
 			Log(args...);
 		}
 
-		// First write the severity level.
-		template <typename... Args> void Log(Severity first, Args... args)
+		/// @brief Print an `Informative` statement. For status updates/general feedback.
+		template <typename T, typename... Args> static void Info(T first, Args... args)
 		{
-			std::cout << "<" << ResolveSeverityLevel(first) << ">\t: ";
-			Log(args...);
+			std::cout << "\033[92m<INFO>\t: ";
+			Log(first, args...);
 		}
 
-		// Set a minimum level for a log to be printed.
-		void SetMinimumLogLevel(Severity severity) { _minSLevel = severity; }
-
-	private:
-		// Convert enum level to char.
-		std::string ResolveSeverityLevel(Severity severity)
+		/// @brief Print a `Debugging` statement. For debugging purposes.
+		template <typename T, typename... Args> static void Debug(T first, Args... args)
 		{
-			switch (severity) {
-				case Info:
-					return "INFO";
-				case Debug:
-					return "DEBUG";
-				case Warning:
-					return "WARN";
-				case Error:
-					return "ERROR";
-				case Fatal:
-					return "FATAL";
-			}
-			// Umm..?
-			return "?????";
+			std::cout << "\033[94m<DEBUG>\t: ";
+			Log(first, args...);
 		}
 
-		// Minimum level for something to be logged (DEBUG).
-		char _minSLevel = 1;
-	};
-} // namespace arterra
+		/// @brief Print a `Warning` statement. For issues which don't cause any runtime errors.
+		template <typename T, typename... Args> static void Warning(T first, Args... args)
+		{
+			std::cout << "\033[93m<WARN>\t: ";
+			Log(first, args...);
+		}
+
+		/// @brief Print an `Error` statement. For issues which do cause runtime errors.
+		template <typename T, typename... Args> static void Error(T first, Args... args)
+		{
+			std::cout << "\033[33m<ERROR>\t: ";
+			Log(first, args...);
+		}
+
+		/// @brief Print a `Fatal` statement. For issues which cause the program to crash immediately.
+		template <typename T, typename... Args> static void Fatal(T first, Args... args)
+		{
+			std::cout << "\033[31m<FATAL>\t: ";
+			Log(first, args...);
+		}
+
+	}
+
+};

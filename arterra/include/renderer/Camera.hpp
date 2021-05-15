@@ -16,14 +16,14 @@ namespace arterra {
 		Camera();
 
 		// Update camera position and view projection matrix
-		void Update(Window& window, float_t deltaTime);
+		void Update(Window& window, float deltaTime);
 
 		// Get the view projection
-		inline glm::mat4 ViewProjection() const { return _viewProjection; }
-		inline glm::mat4 GuiProjection() const { return _guiProjection; }
-		inline ViewFrustum& GetViewFrustum() { return _viewFrustum; }
+		glm::mat4 ViewProjection() const;
+		glm::mat4 GuiProjection() const;
+		ViewFrustum& GetViewFrustum();
 
-		inline Transform& GetTransform() { return _transform; }
+		Transform& GetTransform();
 
 	private:
 		glm::mat4 _projection;

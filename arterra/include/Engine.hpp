@@ -29,13 +29,13 @@ namespace arterra {
 		void PushState(gamestate::Base* state);
 		void PopState();
 
-		const inline bool StateQueueEmpty() const { return _stateQueue.empty(); }
-		inline void SetShouldExit(bool b) { _shouldExit = b; }
+		const bool StateQueueEmpty() const;
+		void SetShouldExit(bool b);
 
-		inline Window* GetWindow() const { return _window; }
-		inline Renderer* GetRenderer() const { return _renderer; }
-		inline Camera* GetCamera() const { return _camera; }
-		inline Input* GetInput() const { return _input; }
+		Window* GetWindow() const;
+		Renderer* GetRenderer() const;
+		Camera* GetCamera() const;
+		Input* GetInput() const;
 
 	private:
 		bool _shouldExit = false;

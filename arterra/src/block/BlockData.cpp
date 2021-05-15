@@ -6,30 +6,26 @@ namespace arterra {
 
 	BlockData::BlockData(const AtlasTexture& topTexture, const AtlasTexture& sideTexture,
 		const AtlasTexture& bottomTexture, const CullableModel& model)
-		: _topTexture { topTexture }
-		, _sideTexture { sideTexture }
-		, _bottomTexture { bottomTexture }
-		, _model { model }
-	{
-	}
+		: _topTexture{ topTexture }
+		  , _sideTexture{ sideTexture }
+		  , _bottomTexture{ bottomTexture }
+		  , _model{ model } { }
 
 	BlockData::BlockData(const BlockData& other)
-		: _topTexture { other._topTexture }
-		, _sideTexture { other._sideTexture }
-		, _bottomTexture { other._bottomTexture }
-		, _model { other._model }
-		, _cullingSettings { other._cullingSettings }
-	{
-	}
+		: _topTexture{ other._topTexture }
+		  , _sideTexture{ other._sideTexture }
+		  , _bottomTexture{ other._bottomTexture }
+		  , _model{ other._model }
+		  , _cullingSettings{ other._cullingSettings } { }
 
 	BlockData::BlockData(const BlockData&& other)
-		: _topTexture { other._topTexture }
-		, _sideTexture { other._sideTexture }
-		, _bottomTexture { other._bottomTexture }
-		, _model { other._model }
-		, _cullingSettings { other._cullingSettings }
-	{
-	}
+		: _topTexture{ other._topTexture }
+		  , _sideTexture{ other._sideTexture }
+		  , _bottomTexture{ other._bottomTexture }
+		  , _model{ other._model }
+		  , _cullingSettings{ other._cullingSettings } { }
+
+	const CullableModel& BlockData::GetModel() const { return _model; }
 
 	const AtlasTexture& BlockData::GetTexture(const Direction direction) const
 	{
@@ -43,6 +39,8 @@ namespace arterra {
 		}
 		return _sideTexture;
 	}
+
+	const CullingSettings BlockData::GetCullingSettings() const { return _cullingSettings; }
 
 
 }

@@ -4,23 +4,24 @@ namespace arterra {
 
 	ShaderManager::ShaderManager() {}
 
-	bool ShaderManager::LoadShader(std::string fragPath, std::string vertPath, std::string identifier)
+	bool ShaderManager::LoadShader(
+		const std::string &fragPath, const std::string &vertPath, const std::string &identifier)
 	{
 		// Create a new shader program in the map.
 		bool result = _shaders[identifier].Create(vertPath, fragPath);
 		// Check if the shader was successfully compiled.
 		if (result) {
-			Logger::Get().Log(Logger::Debug, "Shader [", identifier, "] loaded successfully");
+			Logger::Debug( "Shader [", identifier, "] loaded successfully");
 			return true;
 		} else {
-			Logger::Get().Log(Logger::Warning, "Shader [", identifier, "] failed to load");
+			Logger::Warning("Shader [", identifier, "] failed to load");
 			// It didn't work so don't save it.
 			_shaders.erase(identifier);
 			return false;
 		}
 	}
 
-	bool ShaderManager::UnloadShader(std::string identifier)
+	bool ShaderManager::UnloadShader(const std::string &identifier)
 	{
 		// Find the requested shader by name.
 		auto i = _shaders.find(identifier);
@@ -34,7 +35,7 @@ namespace arterra {
 		return true;
 	}
 
-	bool ShaderManager::UseShader(std::string identifier)
+	bool ShaderManager::UseShader(const std::string& identifier)
 	{
 		// Set the active shader to the one specified by name.
 		_activeShader = _shaders.find(identifier);
@@ -47,7 +48,7 @@ namespace arterra {
 		return true;
 	}
 
-	GLuint ShaderManager::GetShader(std::string identifier)
+	GLuint ShaderManager::GetShader(const std::string &identifier)
 	{
 		// Find the shader requested by name.
 		auto i = _shaders.find(identifier);
@@ -59,10 +60,12 @@ namespace arterra {
 		return i->second.GetProgram();
 	}
 
-	GLuint ShaderManager::GetShader(std::unordered_map<std::string, ShaderProgram>::iterator it)
+	GLuint ShaderManager::GetShader(const std::unordered_map<std::string, ShaderProgram>::iterator it)
 	{
 		// Return the shader program gl id.
 		return it->second.GetProgram();
 	}
+
+	ShaderProgram ShaderManager::ActiveProgram() const { return _activeShader->second; }
 
 }

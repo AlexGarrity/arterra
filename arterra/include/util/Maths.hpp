@@ -6,9 +6,9 @@ namespace arterra {
 
 	namespace Maths {
 
-		unsigned PMod(int value, unsigned m)
+		inline unsigned PMod(const int value, const unsigned m)
 		{
-			int r = value % m;
+			const auto r = value % static_cast<int>(m);
 			return (r < 0) ? (r + m) : r;
 		}
 	}

@@ -28,9 +28,9 @@ namespace arterra {
 		// Loading GL straight after the context avoids access violation errors
 		// Load GL core using GLAD, if it fails then error and return
 		if (!gladLoadGL()) {
-			Logger::Get().Log(Logger::Fatal, "GLAD failed to initialise");
+			Logger::Fatal("GLAD failed to initialise");
 		} else
-			Logger::Get().Log(Logger::Debug, "Successfully initialised GLAD");
+			Logger::Debug( "Successfully initialised GLAD");
 	}
 
 	Window::~Window() { _window.close(); }
@@ -42,20 +42,20 @@ namespace arterra {
 	void Window::SwapBuffers() { _window.display(); }
 
 	// Set colour to specified 0-1 floats
-	void Window::SetClearColour(float_t red, float_t green, float_t blue, float_t alpha)
+	void Window::SetClearColour(float red, float green, float blue, float alpha)
 	{
 		glClearColor(red, green, blue, alpha);
 	}
 
-	// Cast 0-255 values to 0-1 float_t, then set clear colour
+	// Cast 0-255 values to 0-1 float, then set clear colour
 	void Window::SetClearColour(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
 	{
 		// Multiply all values by inverse of 255
-		float_t x = 1.0f / 254.99f;
-		auto fRed = static_cast<float_t>(red) * x;
-		auto fGreen = static_cast<float_t>(green) * x;
-		auto fBlue = static_cast<float_t>(blue) * x;
-		auto fAlpha = static_cast<float_t>(alpha) * x;
+		float x = 1.0f / 254.99f;
+		auto fRed = static_cast<float>(red) * x;
+		auto fGreen = static_cast<float>(green) * x;
+		auto fBlue = static_cast<float>(blue) * x;
+		auto fAlpha = static_cast<float>(alpha) * x;
 		// Call previous function to save retyping
 		SetClearColour(fRed, fGreen, fBlue, fAlpha);
 	}
@@ -73,7 +73,7 @@ namespace arterra {
 
 	void Window::SetShouldClose(bool shouldClose) { _shouldClose = shouldClose; }
 
-	void Window::Update(float_t deltaTime)
+	void Window::Update(float deltaTime)
 	{
 		PollEvents();
 		SwapBuffers();

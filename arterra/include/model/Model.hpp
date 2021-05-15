@@ -3,6 +3,7 @@
 #include "PCH.hpp"
 
 #include "renderer/VertexArray.hpp"
+#include "renderer/VertexBuffer.hpp"
 
 namespace arterra {
 
@@ -20,11 +21,11 @@ namespace arterra {
 		// Default ctor
 		Model() = default;
 		// RAII ctor
-		Model(std::string filepath);
+		explicit Model(const std::string &filepath);
 
-		bool Create(std::string filepath);
+		bool Create(const std::string &filepath);
 
-		inline void Bind() const { _buffers._vao.Bind(); }
+		void Bind() const;
 
 	private:
 		ModelBuffers _buffers;

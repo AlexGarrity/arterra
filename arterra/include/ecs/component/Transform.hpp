@@ -11,7 +11,7 @@ namespace arterra {
 	// Basic transform component
 	class Transform : public ComponentBase {
 	public:
-		virtual void Update() override;
+		void Update() override;
 
 		// Full ctor.  Parent should be world if nothing else.
 		Transform(glm::vec3 position = glm::vec3(0.0f), glm::vec3 rotation = glm::vec3(0.0f),
@@ -33,7 +33,7 @@ namespace arterra {
 		void Translate(glm::vec3 translation);
 		void Rotate(glm::quat rotation);
 		void Rotate(glm::vec3 rotation);
-		void Rotate(float_t x, float_t y, float_t z);
+		void Rotate(float x, float y, float z);
 
 	private:
 		// Position as a Vector (x,y,z).

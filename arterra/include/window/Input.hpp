@@ -22,7 +22,7 @@ namespace arterra {
 	public:
 		Input(sf::Event& windowEvent, Window* window);
 		// Update keybind data.
-		void Update(float_t deltaTime);
+		void Update(float deltaTime);
 		// Polling methods for keybinds.
 		void RegisterKeyBind(const std::string identifier, sf::Keyboard::Key key);
 		KeyBindData PollKeyBind(const std::string identifier);
@@ -33,7 +33,7 @@ namespace arterra {
 		MouseAxisData PollMouseAxis(MouseAxis axis);
 
 		// Set the sensitivity of a mouse axis, where sensitivity is a percentage as an integer
-		void SetMouseSensitivity(MouseAxis axis, float_t sensitivity);
+		void SetMouseSensitivity(MouseAxis axis, float sensitivity);
 
 		// Lock/unlock the cursor to the window
 		void SetLockCursor(bool lock);

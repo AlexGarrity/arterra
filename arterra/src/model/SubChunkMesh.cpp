@@ -12,7 +12,7 @@ namespace arterra {
 	SubChunkMesh::SubChunkMesh() {}
 
 	SubChunkMesh::SubChunkMesh(SubChunk& subChunk)
-		: _position { subChunk.GetPosition() }
+		: _position{ subChunk.GetPosition() }
 	{
 		_posVertices.reserve(ESTIMATED_POS_SIZE);
 		_uvVertices.reserve(ESTIMATED_UV_SIZE);
@@ -69,7 +69,7 @@ namespace arterra {
 			const auto& blockData = block.GetData();
 			const auto& texture = blockData.GetTexture(static_cast<Direction>(i));
 
-			auto &model = blockData.GetModel();
+			auto& model = blockData.GetModel();
 			auto posVertices = model.GetPosVertices(static_cast<Direction>(i));
 			auto texVertices = model.GetTexVertices(static_cast<Direction>(i));
 
@@ -93,7 +93,7 @@ namespace arterra {
 		}
 	}
 
-	void SubChunkMesh::AddFace(std::vector<float_t> &posVertices, std::vector<float_t> &texVertices)
+	void SubChunkMesh::AddFace(std::vector<float>& posVertices, std::vector<float>& texVertices)
 	{
 		_posVertices.insert(_posVertices.end(), posVertices.begin(), posVertices.end());
 		_uvVertices.insert(_uvVertices.end(), texVertices.begin(), texVertices.end());
@@ -112,8 +112,14 @@ namespace arterra {
 		_tv.clear();
 	}
 
+	void SubChunkMesh::SetShouldRender(bool shouldRender) { _shouldRender = shouldRender; }
+
+	bool SubChunkMesh::ShouldRender() const { return _shouldRender; }
+
 	void SubChunkMesh::Bind() { _vertexArray.Bind(); }
 
 	GLuint SubChunkMesh::GetVertexCount() const { return _vertexArray.GetVertexCount(); }
+
+	const WorldPosition& SubChunkMesh::GetPosition() const { return _position; }
 
 }

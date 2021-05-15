@@ -13,18 +13,18 @@ namespace arterra {
 	class GuiRenderer {
 		
 		public:
-			GuiRenderer(Renderer *renderer);
+			GuiRenderer(const Renderer* renderer);
 			~GuiRenderer();
 			
 			void AddElement(GuiElement* element);
 			
 			void Render();
 			
-			std::vector<GuiElement>& GetRenderables();
+			std::vector<GuiElement*>& GetRenderables();
 		
 		private:
 			std::vector<GuiElement*> _renderables;
-			Renderer* _renderer;
+			const Renderer* _renderer;
 			
 	};
 	

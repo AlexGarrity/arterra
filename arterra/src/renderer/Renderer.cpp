@@ -19,9 +19,9 @@ namespace arterra {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
-	void Renderer::Update() {}
+	void Renderer::Update() const {}
 
-	void Renderer::DrawTriangles(size_t vertexCount) {
+	void Renderer::DrawTriangles(size_t vertexCount) const {
 		glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 	}
 

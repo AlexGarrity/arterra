@@ -28,17 +28,11 @@ namespace arterra {
 	};
 
 	struct WorldPositionHash {
-		size_t operator()(const WorldPosition& pos) const
-		{
-			return (pos._x * 131071) + (pos._y * 524287) + (pos._z * 8191);
-		}
+		size_t operator()(const WorldPosition& pos) const;
 	};
 
 	struct ChunkPositionHash {
-		size_t operator()(const ChunkPosition& pos) const
-		{
-			return (pos._x * 131071) ^ (pos._z * 8191);
-		}
+		size_t operator()(const ChunkPosition& pos) const;
 	};
 
 }

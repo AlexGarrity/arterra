@@ -39,15 +39,15 @@ namespace arterra {
 		std::vector<SubChunk*>& GetModifiedSubChunks();
 		std::vector<WorldPosition>& GetEmptyChunks();
 
-		float_t DistanceToChunk(glm::vec3 pos, ChunkPosition c);
-		float_t DistanceToChunk2(glm::vec3 pos, ChunkPosition c);
+		float DistanceToChunk(glm::vec3 pos, ChunkPosition c);
+		float DistanceToChunk2(glm::vec3 pos, ChunkPosition c);
 		bool ChunkInLoadDistance(glm::vec3 pos, ChunkPosition c);
 
-		float_t DistanceToChunk(ChunkPosition a, ChunkPosition c);
-		float_t DistanceToChunk2(ChunkPosition a, ChunkPosition c);
+		float DistanceToChunk(ChunkPosition a, ChunkPosition c);
+		float DistanceToChunk2(ChunkPosition a, ChunkPosition c);
 		bool ChunkInLoadDistance(ChunkPosition a, ChunkPosition c);
 
-		void ResizeLoadDistance(float_t distance);
+		void ResizeLoadDistance(float distance);
 
 	private:
 		ChunkMap::iterator FindChunk(int x, int z);
@@ -62,8 +62,8 @@ namespace arterra {
 		BlockManager* _blockManager;
 
 		// Number of chunks to load
-		float_t _loadDistance { 10 };
-		float_t _loadDistance2 { _loadDistance * _loadDistance };
+		float _loadDistance { 10 };
+		float _loadDistance2 { _loadDistance * _loadDistance };
 	};
 
 }

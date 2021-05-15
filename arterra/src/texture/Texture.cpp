@@ -5,18 +5,21 @@
 
 namespace arterra {
 
-	TextureHandle::TextureHandle(std::string filepath) { Load(filepath); }
+	TextureHandle::TextureHandle(const std::string &filepath) { Load(filepath); }
 
-	TextureHandle::~TextureHandle() { glDeleteTextures(1, &_handle); }
+	TextureHandle::~TextureHandle()
+	{
+		glDeleteTextures(1, &_handle);
+	}
 
-	bool TextureHandle::Load(std::string filepath)
+	bool TextureHandle::Load(const std::string &filepath)
 	{
 		// Get a new texture handle
 		glGenTextures(1, &_handle);
 		// Load the texture using the resource manager
 		auto result = ResourceManager::Get().Load(filepath);
 		if (!result) {
-			Logger::Get().Log(Logger::Debug, "Failed to load texture '", filepath, "'");
+			Logger::Debug( "Failed to load texture '", filepath, "'");
 			return false;
 		}
 		sf::Image image;
@@ -40,6 +43,13 @@ namespace arterra {
 
 		// Success
 		return true;
+	}
+
+	GLint TextureHandle::Handle() const { return _handle; }
+
+	void TextureHandle::Bind()
+	{
+		glBindTexture(GL_TEXTURE_2D, _handle);
 	}
 
 }

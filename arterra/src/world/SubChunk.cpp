@@ -148,6 +148,8 @@ namespace arterra {
 	}
 
 	int SubChunk::GetPositionRaw() { return _position; }
+	
+	Chunk* SubChunk::GetChunk() { return _chunk; }
 
 	bool SubChunk::Update(float deltaTime)
 	{
@@ -157,4 +159,8 @@ namespace arterra {
 		}
 		return false;
 	}
+
+	bool SubChunk::IsUpdated() const { return _updated; }
+	
+	void SubChunk::SetUpdated(bool b) { _updated = b; }
 }

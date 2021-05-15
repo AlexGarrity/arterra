@@ -2,7 +2,7 @@
 
 namespace arterra {
 
-	ResourceManager::ResourceManager() { Logger::Get().Log(Logger::Debug, "Resource Manager Initialised"); }
+	ResourceManager::ResourceManager() { Logger::Debug( "Resource Manager Initialised"); }
 
 	ResourceManager& ResourceManager::Get()
 	{
@@ -16,13 +16,13 @@ namespace arterra {
 	{
 		// Only load a specific resource once into memory.
 		if (_resources.find(name) != _resources.end()) {
-			Logger::Get().Log(Logger::Error, "Resource '", name, "' is already loaded");
+			Logger::Error("Resource '", name, "' is already loaded");
 			return false;
 		}
 		// Get the full filepath to the resource.
 		std::string path = (std::filesystem::current_path() / "res" / name).string();
 		if (!std::filesystem::exists(path)) {
-			Logger::Get().Log(Logger::Error, "Requested file '", name, "' does not exist");
+			Logger::Error("Requested file '", name, "' does not exist");
 			return false;
 		}
 		// Open the file if it exists.
@@ -31,8 +31,8 @@ namespace arterra {
 		try {
 			file.open(path, std::ios::binary);
 		} catch (const std::exception& e) {
-			Logger::Get().Log(Logger::Error, "Could not load resource '", name, "'");
-			Logger::Get().Log("<TRACE>", e.what());
+			Logger::Error("Could not load resource '", name, "'");
+			Logger::Debug(e.what());
 			return false;
 		}
 
@@ -55,8 +55,7 @@ namespace arterra {
 		_resources[name] = Data { data };
 		_memoryUsage += _resources[name]._data.size();
 
-		Logger::Get().Log(
-			Logger::Debug, "Loaded a new resource '", name, "'; size=", _resources[name]._data.size(), " Bytes");
+		Logger::Debug("Loaded a new resource '", name, "'; size=", _resources[name]._data.size(), " Bytes");
 
 		return true;
 	}
@@ -67,7 +66,7 @@ namespace arterra {
 		if (_resources.empty())
 			return;
 
-		Logger::Get().Log(Logger::Debug, "Running automatic resource unloading");
+		Logger::Debug( "Running automatic resource unloading");
 		std::vector<std::unordered_map<std::string, Data>::iterator> unloadObjects;
 		// Iterate all currently loaded resources.
 		for (auto i = _resources.begin(); i != _resources.end(); i++) {
@@ -80,20 +79,19 @@ namespace arterra {
 		// No objects to unload so return.
 		if (unloadObjects.empty())
 			return;
-		Logger::Get().Log(Logger::Debug, "Unloading ", unloadObjects.size(), " resource",
+		Logger::Debug( "Unloading ", unloadObjects.size(), " resource",
 			(unloadObjects.size() == 1) ? "" : "s");
 
 		// Get memory usage before freeing memory.
 		auto memory = _memoryUsage;
 		// Unload objects which are set to be unloaded.
 		for (auto o : unloadObjects) {
-			Logger::Get().Log(Logger::Debug, "Unloading a resource '", o->first, "'");
+			Logger::Debug( "Unloading a resource '", o->first, "'");
 			_memoryUsage -= o->second._data.size();
 			_resources.erase(o);
 		}
 		// Log memory saving statistic.
-		Logger::Get().Log(
-			Logger::Debug, "Freed ", memory - _memoryUsage, " Bytes (", memory, "B => ", _memoryUsage, "B)");
+		Logger::Debug("Freed ", memory - _memoryUsage, " Bytes (", memory, "B => ", _memoryUsage, "B)");
 	}
 
 	ResourceManager::Handle ResourceManager::GetHandle(std::string name)

@@ -10,18 +10,18 @@ namespace arterra {
 		ShaderManager();
 
 		// Load a shader using the given paths and save it to the shader index.
-		bool LoadShader(std::string fragPath, std::string vertPath, std::string identifier);
+		bool LoadShader(const std::string &fragPath, const std::string &vertPath, const std::string &identifier);
 		// Unload a shader and delete it from memory.
-		bool UnloadShader(std::string identifier);
+		bool UnloadShader(const std::string &identifier);
 		// Set a shader as active.
-		bool UseShader(std::string identifier);
+		bool UseShader(const std::string &identifier);
 
 		// Get a shader program gl id by name.
-		GLuint GetShader(std::string identifier);
+		GLuint GetShader(const std::string& identifier);
 		// Get a shader program gl id by index position in the index.
 		GLuint GetShader(std::unordered_map<std::string, ShaderProgram>::iterator it);
 
-		inline ShaderProgram ActiveProgram() const { return _activeShader->second; }
+		ShaderProgram ActiveProgram() const;
 
 	private:
 		// Map of loaded shader programs.

@@ -12,7 +12,7 @@ namespace arterra {
 	
 	class ChunkRenderer {
 	public:
-		ChunkRenderer(Renderer *renderer);
+		explicit ChunkRenderer(const Renderer* renderer);
 		~ChunkRenderer();
 
 		void AddChunk(Chunk* chunk);
@@ -36,7 +36,7 @@ namespace arterra {
 
 	private:
 		std::vector<SubChunkMesh*> _renderables;
-		Renderer *_renderer;
+		const Renderer *_renderer;
 	};
 
 }

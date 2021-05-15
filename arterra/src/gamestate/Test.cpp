@@ -52,11 +52,11 @@ namespace arterra {
 			_engine->GetInput()->RegisterMouseBind("rot-right", sf::Mouse::Button::Right);
 
 			// ===GUI===
-			std::vector<float_t> vPos = { 400.0f, 200.0f, 400.0f, 500.0f, 800.0f, 200.0f, 800.0f, 200.0f, 400.0f,
+			std::vector<float> vPos = { 400.0f, 200.0f, 400.0f, 500.0f, 800.0f, 200.0f, 800.0f, 200.0f, 400.0f,
 				500.0f, 800.0f, 500.0f };
-			std::vector<float_t> vPos2 = { 805.0f, 200.0f, 805.0f, 500.0f, 1100.0f, 200.0f, 1100.0f, 200.0f,
+			std::vector<float> vPos2 = { 805.0f, 200.0f, 805.0f, 500.0f, 1100.0f, 200.0f, 1100.0f, 200.0f,
 				805.0f, 500.0f, 1100.0f, 500.0f };
-			std::vector<float_t> vUV = { 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f };
+			std::vector<float> vUV = { 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f };
 
 			// Load the shaders.
 			_shaderManager.LoadShader("shaders/basic.frag", "shaders/basic.vert", "basic");
@@ -84,13 +84,13 @@ namespace arterra {
 			_blockManager.AddBlock(BlockData { *sandTexture, *sandTexture, *sandTexture, _blockModel }, "sand");
 		}
 
-		void Test::Input(float_t deltaTime)
+		void Test::Input(const float deltaTime)
 		{
 			Transform& cameraTransform = _engine->GetCamera()->GetTransform();
 			_speed = deltaTime * 6.0f;
 			_rotSpeed = deltaTime * 30.0f;
 
-			float_t aa = _engine->GetInput()->PollMouseAxis(MouseAxis::Horizontal)._delta;
+			float aa = _engine->GetInput()->PollMouseAxis(MouseAxis::Horizontal)._delta;
 
 			// Poll for player control inputs.
 			if (_engine->GetInput()->PollKeyBind("forward")._isActive) {
@@ -113,11 +113,11 @@ namespace arterra {
 			}
 
 			if (_engine->GetInput()->PollKeyBind("log")._isActive) {
-				Logger::Get().Log("Renderable count: ", _chunkRenderer.GetRenderables().size());
+				Logger::Debug("Renderable count: ", _chunkRenderer.GetRenderables().size());
 			}
 
-			float_t mouseX = _engine->GetInput()->PollMouseAxis(MouseAxis::Horizontal)._delta;
-			float_t mouseY = _engine->GetInput()->PollMouseAxis(MouseAxis::Vertical)._delta;
+			float mouseX = _engine->GetInput()->PollMouseAxis(MouseAxis::Horizontal)._delta;
+			float mouseY = _engine->GetInput()->PollMouseAxis(MouseAxis::Vertical)._delta;
 			cameraTransform.Rotate(-_rotSpeed * -mouseY, -_rotSpeed * mouseX, 0.0f);
 
 			// Close the window with [Esc]
@@ -130,7 +130,7 @@ namespace arterra {
 
 		}
 
-		void Test::Update(float_t deltaTime)
+		void Test::Update(const float deltaTime)
 		{
 			_engine->GetCamera()->Update(*_engine->GetWindow(), deltaTime);
 
@@ -153,7 +153,7 @@ namespace arterra {
 			}
 		}
 
-		void Test::Render(float_t deltaTime)
+		void Test::Render(const float deltaTime)
 		{
 			// Clear the window
 			_engine->GetWindow()->Clear();

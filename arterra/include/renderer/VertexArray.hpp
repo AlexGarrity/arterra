@@ -3,10 +3,10 @@
 #include "PCH.hpp"
 #include <glad/glad.h>
 
-#include "renderer/VertexBuffer.hpp"
-
 namespace arterra {
 
+	class VertexBuffer;
+	
 	class VertexArray {
 
 	public:

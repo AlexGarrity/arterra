@@ -21,7 +21,7 @@ namespace arterra {
 		// Swap buffers (advance frame)
 		void SwapBuffers();
 		// Set the clear colour using 0-1 floats
-		void SetClearColour(float_t red, float_t green, float_t blue, float_t alpha);
+		void SetClearColour(float red, float green, float blue, float alpha);
 		// Set the clear colour using 0-255 uints
 		void SetClearColour(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha);
 		// Clear the window
@@ -31,7 +31,7 @@ namespace arterra {
 		// Set the window to close
 		void SetShouldClose(bool shouldClose);
 		// Helper for updating
-		void Update(float_t deltaTime);
+		void Update(float deltaTime);
 
 		// Inline const getters
 		inline uint32_t GetWidth() const { return _width; }

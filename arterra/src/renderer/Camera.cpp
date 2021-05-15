@@ -13,7 +13,7 @@ namespace arterra {
 		_projection = glm::perspective(glm::radians(55.0f), 16.f / 9.f, 0.1f, 1000.0f);
 	}
 
-	void Camera::Update(Window& window, float_t deltaTime)
+	void Camera::Update(Window& window, float deltaTime)
 	{
 		// Update the ortho projection in case the window gets resized.
 		_guiProjection = glm::ortho(
@@ -27,6 +27,26 @@ namespace arterra {
 		_view = glm::lookAt(_transform.Position(), _transform.Position() + _transform.Forward(), _transform.Up());
 		_viewProjection = _projection * _view;
 		_viewFrustum.Update(_viewProjection);
+	}
+
+	glm::mat4 Camera::ViewProjection() const
+	{
+		return _viewProjection;
+	}
+	
+	glm::mat4 Camera::GuiProjection() const
+	{
+		return _guiProjection;
+	}
+
+	ViewFrustum& Camera::GetViewFrustum()
+	{
+		return _viewFrustum;
+	}
+	
+	Transform& Camera::GetTransform()
+	{
+		return _transform;
 	}
 
 }

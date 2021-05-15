@@ -8,7 +8,7 @@ namespace arterra {
 		_window = window;
 	}
 
-	void Input::Update(float_t deltaTime)
+	void Input::Update(float deltaTime)
 	{
 		// Iterate through all keys to check if they're getting pressed down,
 		// to start the held timer.
@@ -48,7 +48,7 @@ namespace arterra {
 	{
 		auto it = _keyBinds.find(identifier);
 		if (it != _keyBinds.end()) {
-			Logger::Get().Log(Logger::Warning, "Trying to bind key `", key, "` which already is bound!");
+			Logger::Warning("Trying to bind key `", key, "` which already is bound!");
 			return;
 		}
 		_keyBinds.emplace(identifier, key);
@@ -58,7 +58,7 @@ namespace arterra {
 	{
 		auto it = _keyBinds.find(identifier);
 		if (it == _keyBinds.end()) {
-			Logger::Get().Log(Logger::Warning, "Trying to access keybind `", identifier, "' which doesn't exist!");
+			Logger::Warning("Trying to access keybind `", identifier, "' which doesn't exist!");
 			return KeyBindData();
 		}
 		return it->second.GetData();
@@ -68,13 +68,13 @@ namespace arterra {
 	{
 		auto it = _mouseBinds.find(identifier);
 		if (it != _mouseBinds.end()) {
-			Logger::Get().Log(Logger::Warning, "Trying to bind button `", button, "` which already is bound!");
+			Logger::Warning("Trying to bind button `", button, "` which already is bound!");
 			return;
 		}
 		_mouseBinds.emplace(identifier, button);
 	}
 
-	void Input::SetMouseSensitivity(MouseAxis axis, float_t sensitivity) {
+	void Input::SetMouseSensitivity(MouseAxis axis, float sensitivity) {
 		if (axis == Horizontal) {
 			_inputSensitivity.x = sensitivity;
 		}
@@ -96,8 +96,7 @@ namespace arterra {
 	{
 		auto it = _mouseBinds.find(identifier);
 		if (it == _mouseBinds.end()) {
-			Logger::Get().Log(
-				Logger::Warning, "Trying to access mousebind `", identifier, "' which doesn't exist!");
+			Logger::Warning("Trying to access mousebind `", identifier, "' which doesn't exist!");
 			return MouseBindData();
 		}
 		return it->second.GetData();
@@ -107,9 +106,9 @@ namespace arterra {
 	MouseAxisData Input::PollMouseAxis(MouseAxis axis)
 	{
 		if (axis == MouseAxis::Horizontal) {
-			return MouseAxisData { static_cast<float_t>(_mouseDelta.x) };
+			return MouseAxisData { static_cast<float>(_mouseDelta.x) };
 		} else if (axis == MouseAxis::Vertical) {
-			return MouseAxisData { static_cast<float_t>(_mouseDelta.y) };
+			return MouseAxisData { static_cast<float>(_mouseDelta.y) };
 		}
 		return MouseAxisData {};
 	}

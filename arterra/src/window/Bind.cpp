@@ -6,7 +6,7 @@ namespace arterra {
 	KeyBindData::KeyBindData()
 		: _isActive(false), _timePressed(0.0f) {}
 	
-	KeyBindData::KeyBindData(bool isActive, float_t timePressed)
+	KeyBindData::KeyBindData(bool isActive, float timePressed)
 		: _isActive(isActive), _timePressed(timePressed) {}
 	
 	KeyBind::KeyBind(sf::Keyboard::Key key)
@@ -32,25 +32,25 @@ namespace arterra {
 		
 	}
 	
-	KeyBindData KeyBind::GetData() {
+	KeyBindData KeyBind::GetData() const {
 		std::chrono::high_resolution_clock::time_point now = std::chrono::high_resolution_clock::now();
-		float_t duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - _pressedTime).count() / 1000.0f;
+		float duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - _pressedTime).count() / 1000.0f;
 		return KeyBindData { _isActive, duration };
 	}
 	
-	void KeyBind::DumpToLog(std::string title) {
-		Logger::Get().Log(Logger::Debug, title);
+	void KeyBind::DumpToLog(const std::string &title) const {
+		Logger::Debug( title);
 		KeyBindData data = GetData(); 
-		Logger::Get().Log(Logger::Debug, "KeyCode: ", _keyCode, " IsActive: ", data._isActive,
+		Logger::Debug( "KeyCode: ", _keyCode, " IsActive: ", data._isActive,
 			" TimePressed: ", data._timePressed);
-		Logger::Get().Log(Logger::Debug, "---------------");
+		Logger::Debug( "---------------");
 	}
 	
 	// ===Mouse Buttons===
 	MouseBindData::MouseBindData()
 		: _isActive(false), _timePressed(0.0f) {}
 	
-	MouseBindData::MouseBindData(bool isActive, float_t timePressed)
+	MouseBindData::MouseBindData(bool isActive, float timePressed)
 		: _isActive(isActive), _timePressed(timePressed) {}
 	
 	MouseBind::MouseBind(sf::Mouse::Button button)
@@ -76,25 +76,25 @@ namespace arterra {
 		
 	}
 	
-	MouseBindData MouseBind::GetData() {
+	MouseBindData MouseBind::GetData() const {
 		std::chrono::high_resolution_clock::time_point now = std::chrono::high_resolution_clock::now();
-		float_t duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - _pressedTime).count() / 1000.0f;
+		float duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - _pressedTime).count() / 1000.0f;
 		return MouseBindData { _isActive, duration };
 	}
 	
-	void MouseBind::DumpToLog(std::string title) {
-		Logger::Get().Log(Logger::Debug, title);
+	void MouseBind::DumpToLog(const std::string &title) const {
+		Logger::Debug(title);
 		MouseBindData data = GetData(); 
-		Logger::Get().Log(Logger::Debug, "KeyCode: ", _buttonCode, " IsActive: ", data._isActive,
+		Logger::Debug( "KeyCode: ", _buttonCode, " IsActive: ", data._isActive,
 			" TimePressed: ", data._timePressed);
-		Logger::Get().Log(Logger::Debug, "-----------------");
+		Logger::Debug( "-----------------");
 	}
 	
 	// ===Mouse Axis===
 	MouseAxisData::MouseAxisData()
 		: _delta(0.0f) {}
 		
-	MouseAxisData::MouseAxisData(float_t delta)
+	MouseAxisData::MouseAxisData(float delta)
 		: _delta(delta) {}
 		
 	

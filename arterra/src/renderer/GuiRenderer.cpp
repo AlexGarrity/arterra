@@ -5,8 +5,10 @@
 
 namespace arterra {
 
-	GuiRenderer::GuiRenderer(Renderer *renderer) {
-		_renderer = renderer;
+	GuiRenderer::GuiRenderer(const Renderer* renderer)
+		: _renderer { renderer }
+	{
+	
 	}
 	
 	GuiRenderer::~GuiRenderer() {
@@ -31,6 +33,11 @@ namespace arterra {
 			}		
 		}
 		
+	}
+
+	std::vector<GuiElement*>& GuiRenderer::GetRenderables()
+	{
+		return _renderables;
 	}
 	
 }

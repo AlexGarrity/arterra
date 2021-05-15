@@ -23,7 +23,7 @@ namespace arterra {
 		//
 		// data = array making up the data.
 		// size = total size of the array in bytes.
-		void Create(std::vector<float_t>& data, GLint count, GLenum type);
+		void Create(std::vector<float>& data, GLint count, GLenum type);
 
 		// Set this buffer to be the current buffer to work on.
 		void Bind() const;
@@ -32,10 +32,10 @@ namespace arterra {
 
 		GLsizei GetSize() const;
 
-		inline GLint GetCount() const { return _count; }
-		inline GLenum GetType() const { return _type; }
+		GLint GetCount() const;
+		GLenum GetType() const;
 
-		inline GLint GetVertexCount() const { return _vertexCount; }
+		GLint GetVertexCount() const;
 
 	private:
 		// The unique opengl id for this buffer.

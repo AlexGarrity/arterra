@@ -33,6 +33,8 @@ namespace arterra {
 	WorldPosition Block::GetPositionRaw() const { return { _position._x, _position._y, _position._z }; }
 
 	BlockData& Block::GetData() const { return _blockData; }
+	
+	bool Block::IsVisible() const { return _visible; }
 
 	std::array<bool, 6> Block::GetVisibleFaces() const { return _visibleFaces; }
 

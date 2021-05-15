@@ -4,7 +4,7 @@ namespace arterra {
 
 	GuiElement::GuiElement() {}
 
-	GuiElement::GuiElement(std::vector<float_t> posVertices, std::vector<float_t> uvVertices)
+	GuiElement::GuiElement(std::vector<float> &posVertices, std::vector<float> &uvVertices)
 		: _posVertices(posVertices)
 		  , _uvVertices(uvVertices) { GenerateMesh(); }
 
