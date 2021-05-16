@@ -20,7 +20,7 @@ namespace arterra {
 		void ThreadFunction();
 
 		std::priority_queue<ThreadJob> _jobQueue;
-		std::vector<std::thread*> _threadPool;
+		std::vector<std::thread> _threadPool;
 		const std::size_t _systemThreadCount;
 
 		bool _awaitingShutdown;

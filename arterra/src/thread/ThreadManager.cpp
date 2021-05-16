@@ -20,8 +20,7 @@ namespace arterra {
 	void ThreadManager::CreateThreads(const size_t threadCount)
 	{
 		for (std::size_t i = 0; i < std::min(threadCount, _systemThreadCount - 1); ++i) {
-			auto* t = new std::thread([this] { ThreadFunction(); });
-			_threadPool.emplace_back(t);
+			_threadPool.emplace_back(std::thread([this] { ThreadFunction(); }));
 		}
 	}
 
@@ -31,9 +30,8 @@ namespace arterra {
 		_awaitingShutdown = true;
 		_threadCondition.notify_all();
 
-		for (const auto& t : _threadPool) {
-			t->join();
-			delete t;
+		for (auto& t : _threadPool) {
+			t.join();
 		}
 	}
 
