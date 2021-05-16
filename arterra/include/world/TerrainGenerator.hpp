@@ -2,10 +2,11 @@
 
 #include "PCH.hpp"
 
-#include <glm/gtc/noise.hpp>
+
 
 namespace arterra {
 
+	class ThreadManager;
 	class Chunk;
 	class BlockManager;
 	class Block;
@@ -14,7 +15,7 @@ namespace arterra {
 		using GeneratorJob = std::function<void()>;
 
 	public:
-		TerrainGenerator(BlockManager* blockManager);
+		TerrainGenerator(ThreadManager *threadManager, BlockManager* blockManager);
 		~TerrainGenerator();
 
 		/**
@@ -22,17 +23,9 @@ namespace arterra {
 		 **/
 		void AddChunkToGeneratorQueue(Chunk* chunk);
 
-		Chunk* GetNextChunkToGenerate();
-		void PopChunk();
-
-		void SetAwaitShutdown(bool b) { _exiting = b; }
-		bool IsAwaitingShutdown() const { return _exiting; }
-
 		void MarkChunkAsCompleted(Chunk* c);
 
 		std::vector<Chunk*>& GetCompletedChunks();
-
-		void CreateChunkGeneratorThread();
 
 		void GenerateChunk(Chunk& out);
 		void GenerateBlock(int x, int y, int z, Block& block);
@@ -42,12 +35,9 @@ namespace arterra {
 
 		std::set<Chunk*> _pendingChunks;
 		std::vector<Chunk*> _completedChunks;
-		std::queue<GeneratorJob> _pendingJobs;
-		BlockManager* _blockManager;
 
-		std::thread _chunkGeneratorThread;
-		std::mutex _chunkQueueLock;
-		std::mutex _completedChunksLock;
+		ThreadManager* _threadManager;
+		BlockManager* _blockManager;
 		bool _exiting;
 	};
 

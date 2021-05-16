@@ -4,13 +4,12 @@
 
 #include "util/Time.hpp"
 
-#include "renderer/Camera.hpp"
-#include "renderer/Renderer.hpp"
-
-#include "window/Input.hpp"
-#include "window/Window.hpp"
-
 namespace arterra {
+	class ThreadManager;
+	class Window;
+	class Input;
+	class Renderer;
+	class Camera;
 
 	// Forward decl of Base gamestate to prevent circular inclusion
 	namespace gamestate {
@@ -36,6 +35,7 @@ namespace arterra {
 		Renderer* GetRenderer() const;
 		Camera* GetCamera() const;
 		Input* GetInput() const;
+		ThreadManager* GetThreadManager() const;
 
 	private:
 		bool _shouldExit = false;
@@ -46,6 +46,7 @@ namespace arterra {
 		Renderer* _renderer;
 		Camera* _camera;
 		Input* _input;
+		ThreadManager* _threadManager;
 
 		Time _time;
 	};

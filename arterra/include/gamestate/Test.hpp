@@ -11,7 +11,6 @@
 #include "world/TerrainGenerator.hpp"
 #include "block/BlockManager.hpp"
 #include "texture/TextureAtlas.hpp"
-#include "texture/Texture.hpp"
 
 namespace arterra {
 

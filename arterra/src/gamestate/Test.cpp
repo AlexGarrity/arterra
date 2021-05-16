@@ -17,6 +17,13 @@
 #include "block/BlockData.hpp"
 #include "util/Resource.hpp"
 
+#include "Engine.hpp"
+#include "texture/Texture.hpp"
+#include "window/Window.hpp"
+#include "window/Input.hpp"
+#include "renderer/Camera.hpp"
+#include "ecs/component/Transform.hpp"
+
 namespace arterra {
 
 	namespace gamestate {
@@ -26,7 +33,7 @@ namespace arterra {
 			, _atlas { 256, 256 }
 			, _chunkRenderer { engine->GetRenderer() }
 			, _world { &_terrainGenerator, &_blockManager }
-			, _terrainGenerator{&_blockManager}
+			, _terrainGenerator{_engine->GetThreadManager(), &_blockManager}
 		{
 
 			_engine->GetWindow()->SetVsync(true);

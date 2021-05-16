@@ -2,6 +2,14 @@
 
 #include "gamestate/Base.hpp"
 
+#include "renderer/Camera.hpp"
+#include "renderer/Renderer.hpp"
+
+#include "window/Input.hpp"
+#include "window/Window.hpp"
+
+#include "thread/ThreadManager.hpp"
+
 namespace arterra {
 
 	Engine::Engine()
@@ -17,6 +25,9 @@ namespace arterra {
 		_camera = new Camera();
 		Logger::Debug( "Constructing renderer");
 		_renderer = new Renderer();
+		Logger::Debug("Constructing thread manager");
+		_threadManager = new ThreadManager();
+		_threadManager->CreateThreads(7);
 	}
 
 	Engine::~Engine()
@@ -68,10 +79,17 @@ namespace arterra {
 	}
 
 	const bool Engine::StateQueueEmpty() const { return _stateQueue.empty(); }
+	
 	void Engine::SetShouldExit(bool b) { _shouldExit = b; }
+	
 	Window* Engine::GetWindow() const { return _window; }
+	
 	Renderer* Engine::GetRenderer() const { return _renderer; }
+	
 	Camera* Engine::GetCamera() const { return _camera; }
+	
 	Input* Engine::GetInput() const { return _input; }
+	
+	ThreadManager* Engine::GetThreadManager() const { return _threadManager; }
 
 }

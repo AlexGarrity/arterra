@@ -36,6 +36,7 @@ namespace arterra {
 
 	private:
 		std::vector<SubChunkMesh*> _renderables;
+		
 		const Renderer *_renderer;
 	};
 
