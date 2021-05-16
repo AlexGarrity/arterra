@@ -19,12 +19,11 @@ namespace arterra {
 	private:
 		void ThreadFunction();
 
-		bool _awaitingShutdown;
-		
-		std::queue<ThreadJob> _jobQueue;
+		std::priority_queue<ThreadJob> _jobQueue;
 		std::vector<std::thread*> _threadPool;
 		const std::size_t _systemThreadCount;
-		
+
+		bool _awaitingShutdown;
 		std::mutex _threadJobLock;
 		std::condition_variable _threadCondition;
 	};

@@ -4,11 +4,11 @@
 	#if defined(_DEBUG)
 		constexpr size_t WORLD_SIZE = 6;
 	#else
-		constexpr size_t WORLD_SIZE = 16;
+		constexpr size_t WORLD_SIZE = 8;
 	#endif
 #else
 	#if defined(NDEBUG)
-		constexpr size_t WORLD_SIZE = 16;
+		constexpr size_t WORLD_SIZE = 8;
 	#else
 		constexpr size_t WORLD_SIZE = 6;
 	#endif
@@ -31,7 +31,7 @@ namespace arterra {
 		Test::Test(Engine* engine)
 			: Base(engine)
 			, _atlas { 256, 256 }
-			, _chunkRenderer { engine->GetRenderer() }
+			, _chunkRenderer { engine->GetRenderer(), engine->GetThreadManager() }
 			, _world { &_terrainGenerator, &_blockManager }
 			, _terrainGenerator{_engine->GetThreadManager(), &_blockManager}
 		{

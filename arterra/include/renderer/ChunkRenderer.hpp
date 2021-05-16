@@ -2,7 +2,8 @@
 
 #include "PCH.hpp"
 namespace arterra {
-
+	
+	class ThreadManager;
 	class Renderer;
 	class Chunk;
 	class SubChunk;
@@ -12,13 +13,13 @@ namespace arterra {
 	
 	class ChunkRenderer {
 	public:
-		explicit ChunkRenderer(const Renderer* renderer);
+		ChunkRenderer(const Renderer* renderer, ThreadManager *threadManager);
 		~ChunkRenderer();
 
 		void AddChunk(Chunk* chunk);
 		void AddChunk(Chunk& chunk);
-		void AddSubChunk(SubChunk* subChunk);
-		void AddSubChunk(SubChunk& subChunk);
+		void AddSubChunk(SubChunk* sc);
+		void AddSubChunk(SubChunk& sc);
 		void AddMesh(SubChunkMesh *mesh);
 
 		void CullRenderables(Camera &camera);
@@ -30,14 +31,16 @@ namespace arterra {
 		std::vector<SubChunkMesh*>::iterator GetMeshIterator(WorldPosition position);
 		void DeleteMesh(const WorldPosition &position);
 
-		void Render();
-
 		std::vector<SubChunkMesh*>& GetRenderables();
+
+		void Render();
 
 	private:
 		std::vector<SubChunkMesh*> _renderables;
+		std::unordered_set<Chunk*> _chunksPendingGeneration;
 		
 		const Renderer *_renderer;
+		ThreadManager* _threadManager;
 	};
 
 }

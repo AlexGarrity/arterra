@@ -32,7 +32,7 @@ namespace arterra {
 		if (!chunk)
 			return;
 		_pendingChunks.emplace(chunk);
-		const ThreadJob j([this, chunk]()
+		ThreadJob j([this, chunk]()
 		{
 			GenerateChunk(*chunk);
 			MarkChunkAsCompleted(chunk);

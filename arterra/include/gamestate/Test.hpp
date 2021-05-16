@@ -28,13 +28,13 @@ namespace arterra {
 		private:
 			float _timeToResourceUnload = 5.0f;
 			CullableModel _blockModel;
-			World _world;
-
-			ChunkRenderer _chunkRenderer;
-			ShaderManager _shaderManager;
-			TerrainGenerator _terrainGenerator;
-			BlockManager _blockManager;
+			
 			TextureAtlas _atlas;
+			ChunkRenderer _chunkRenderer;
+			World _world;
+			TerrainGenerator _terrainGenerator;
+			ShaderManager _shaderManager;
+			BlockManager _blockManager;
 
 			// Temporary player controller.
 			float _speed = 2.0f;

@@ -3,19 +3,16 @@
 namespace arterra {
 
 	ThreadManager::ThreadManager()
-		: _awaitingShutdown{ false }
-		  , _systemThreadCount(std::thread::hardware_concurrency()) { }
+		: _systemThreadCount{ std::thread::hardware_concurrency() }
+		  , _awaitingShutdown{ false } { }
 
-	ThreadManager::~ThreadManager()
-	{
-		TerminateThreads();
-	}
+	ThreadManager::~ThreadManager() { TerminateThreads(); }
 
 	void ThreadManager::PushJob(ThreadJob& threadJob)
 	{
 		{
 			std::unique_lock<std::mutex> lock(_threadJobLock);
-			_jobQueue.push(std::move(threadJob));
+			_jobQueue.emplace(std::move(threadJob));
 		}
 		_threadCondition.notify_one();
 	}
@@ -42,16 +39,17 @@ namespace arterra {
 
 	void ThreadManager::ThreadFunction()
 	{
-		std::function<void()> j;
 		while (true) {
 			{
-				std::unique_lock<std::mutex> lock(_threadJobLock);
-				_threadCondition.wait(lock, [this] {
-                    return _awaitingShutdown | !_jobQueue.empty(); });
-				j = _jobQueue.front()._job;
-				_jobQueue.pop();
+				ThreadJob j;
+				{
+					std::unique_lock<std::mutex> lock(_threadJobLock);
+					_threadCondition.wait(lock, [this] { return _awaitingShutdown | !_jobQueue.empty(); });
+					j = _jobQueue.top();
+					_jobQueue.pop();
+				}
+				j();
 			}
-			j();
 		}
 	}
 
