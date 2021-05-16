@@ -11,7 +11,7 @@ namespace arterra {
 		ThreadManager();
 		~ThreadManager();
 
-		void PushJob(const ThreadJob& threadJob);
+		void PushJob(ThreadJob& threadJob);
 
 		void CreateThreads(size_t threadCount = 3);
 		void TerminateThreads();

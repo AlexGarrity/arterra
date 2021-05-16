@@ -11,7 +11,7 @@ namespace arterra {
 		TerminateThreads();
 	}
 
-	void ThreadManager::PushJob(const ThreadJob& threadJob)
+	void ThreadManager::PushJob(ThreadJob& threadJob)
 	{
 		{
 			std::unique_lock<std::mutex> lock(_threadJobLock);
